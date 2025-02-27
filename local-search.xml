@@ -4,6 +4,19 @@
   
   
   <entry>
+    <title>Scr1w_reply_brief</title>
+    <link href="/2025/02/28/Scr1w_reply_brief/"/>
+    <url>/2025/02/28/Scr1w_reply_brief/</url>
+    
+    <content type="html"><![CDATA[<h1 id="Scr1w答辩-2025"><a href="#Scr1w答辩-2025" class="headerlink" title="Scr1w答辩[2025]"></a>Scr1w答辩[2025]</h1><p><strong>[ 基础知识 ]</strong></p><p>调用栈的相关约定知识，栈的基本结构，内外平栈，调用函数的相关知识，汇编语言，栈溢出原理，系统调用，浮点数的存储[IEEE 754规则] ， C++ ， 二进制文件 ， Linux操作系统的基本命令 ， python的基本语法 ， pwntools利用 ，延迟绑定机制  ， tmux终端复用器 ，</p><p><strong>[ 已经有学习并且比较熟悉基本的漏洞 ]</strong></p><p>ret2text , ret2shellcode , ret2syscall , ret2libc , 格式化字符串 ，整数溢出 ，下标溢出 ，str函数的漏洞 [strlen]及相关函数的漏洞 ， canary绕过</p><p><strong>[有了解但不熟悉并目前准备学习]</strong></p><p>栈迁移 ，非格式化字符串漏洞 ，更多的gadget ，一些题解中的方法 ， 题解模板的学习利用 ,   srop ， ret2csu  ， io的劫持 ， </p><p><strong>[ 使用工具 ]</strong></p><p>pwngdb ， ROPgadget ， IDA Pro </p>]]></content>
+    
+    
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>Hello World</title>
     <link href="/2025/02/27/hello-world/"/>
     <url>/2025/02/27/hello-world/</url>
