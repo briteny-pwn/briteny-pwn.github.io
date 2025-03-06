@@ -1,0 +1,753 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="briteny-pwn">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="基础ROP">
+<meta property="og:type" content="article">
+<meta property="og:title" content="pwn.college">
+<meta property="og:url" content="http://example.com/2025/03/06/pwn.college/index.html">
+<meta property="og:site_name" content="Briteny&#39;s Blog">
+<meta property="og:description" content="基础ROP">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-03-06T07:46:00.000Z">
+<meta property="article:modified_time" content="2025-03-06T07:48:01.120Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>pwn.college - Briteny&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":100,"cursorChar":".","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>briteny-pwn&#39;s blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="pwn.college"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-03-06 15:46" pubdate>
+          2025年3月6日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          1.4k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          12 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">pwn.college</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="pwn-college学习笔记"><a href="#pwn-college学习笔记" class="headerlink" title="pwn.college学习笔记"></a>pwn.college学习笔记</h1><h2 id="Linux-Luminarium"><a href="#Linux-Luminarium" class="headerlink" title="Linux Luminarium"></a>Linux Luminarium</h2><h3 id="Hello-Hackers"><a href="#Hello-Hackers" class="headerlink" title="Hello Hackers"></a>Hello Hackers</h3><p>1.介绍了whoami命令，输出当前用户名称</p>
+<p>2.然后通过简单的示例介绍了如何使用命令的arguements</p>
+<h3 id="Pondering-Paths"><a href="#Pondering-Paths" class="headerlink" title="Pondering Paths"></a>Pondering Paths</h3><p>1.了解&#x2F;代表root，也就是根目录</p>
+<p>2.了解什么是绝对路径</p>
+<p>3.了解cd命令，change directory</p>
+<p>4.同上</p>
+<p>5.同上</p>
+<p>6.相对路径以及..的含义，也就是上级目录</p>
+<p>7.‘.’ 代表当前目录</p>
+<p>8.用.&#x2F;来表示运行程序</p>
+<p>9.~代表用户目录</p>
+<h3 id="Comprehending-Commands"><a href="#Comprehending-Commands" class="headerlink" title="Comprehending Commands"></a>Comprehending Commands</h3><p>1.cat命令</p>
+<p>4.grep命令</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">hacker@dojo:~$ grep SEARCH_STRING /path/to/file<br></code></pre></td></tr></table></figure>
+
+<p>5.ls命令，就是列出文件和文件夹</p>
+<p>6.touch创建文件</p>
+<p>7.rm删除文件</p>
+<p>8.ls -a 显示隐藏文件</p>
+<p>9.组合使用</p>
+<p>10.mkdir创建文件夹</p>
+<p>11.find命令</p>
+<p>12.创建软链接[符号链接]和硬链接</p>
+<p>硬链接是一个代替地址，它指向这些数据，通过硬链接访问与直接访问无异</p>
+<p>而软链接在Linux执行时会意识到这是一个软链接,读取文件**名称,**然后通常自动访问该文件,大多数情况下，两种情况都能访问原始数据，但是方式不同</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">hacker@dojo:~$ ln -s /tmp/myfile /home/hacker/ourfile <br></code></pre></td></tr></table></figure>
+
+<p>上述过程创造ourfile指向 myfile</p>
+<p>file命令可以监测软连接</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell">hacker@dojo:~$ file ~/ourfile  <br>/home/hacker/ourfile: symbolic link to /tmp/myfile<br></code></pre></td></tr></table></figure>
+
+<p>原文的题目含义如下：</p>
+<p>好的，现在轮到你来尝试了！在这个关卡中，标志（flag）一如既往地位于 <code>/flag</code>，但 <code>/challenge/catflag</code> 会输出 <code>/home/hacker/not-the-flag</code> 的内容。使用符号链接，欺骗它，让它给你标志！</p>
+<p>这个时候我们可以把not-the-flag删除，然后创建相同名字的软连接指向&#x2F;flag</p>
+<p>然后就可以通过有读权限的软链接读取内容</p>
+<p>大致思路如下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell">hacker@dojo:~$ rm /home/hacker/not-the-flag<br>hacker@dojo:~$ ln -s /flag /home/hacker/not-the-flag<br></code></pre></td></tr></table></figure>
+
+
+
+<h3 id="Digesting-Documentation"><a href="#Digesting-Documentation" class="headerlink" title="Digesting Documentation"></a>Digesting Documentation</h3><p>1.ls -a</p>
+<p>2.更复杂的方式熟悉联系</p>
+<p>3.man命令，manual的简称,作用就是查询命令相关信息,退出查询输入q</p>
+<p>4.说明书的阅读便捷指令</p>
+<p>5.man man操作</p>
+<p>6.–help选项，并不是所有的命令都有man</p>
+<p>7.help</p>
+<h3 id="File-Globbing"><a href="#File-Globbing" class="headerlink" title="File Globbing"></a>File Globbing</h3><p>1.*代表任何字符，可以代表多个</p>
+<p>2.?也代表任何字符，不过只代表一个</p>
+<p>3.通配符[ab]只筛选在其中的</p>
+<p>4.用[]通配符寻找路径</p>
+<p>5.综合使用</p>
+<p>6.[]中加上了！或者^含义是不需要找列出的字符的通配符</p>
+<h3 id="Practicing-Piping"><a href="#Practicing-Piping" class="headerlink" title="Practicing Piping"></a>Practicing Piping</h3><p>1.重定向输出 &gt;</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">hacker@dojo:~$ echo hi &gt; asdf<br></code></pre></td></tr></table></figure>
+
+<p>2.命令输出的重定向</p>
+<p>3.&gt;总是回创造一个新的重定向输出文件，同时删除内容，&gt;&gt;可以追加重定向</p>
+<p>4.文件描述符</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs shell">FD 0:标准输入#默认指向键盘输入<br>FD 1:标准输出#和正常情况相同<br>FD 2:标准错误#输入错误信息<br></code></pre></td></tr></table></figure>
+
+<p>5.重定向输入 &lt;</p>
+<p>6.grep</p>
+<p>7.grep实时输出的信息   |</p>
+<p>8.grep标准错误信息</p>
+<p>9.&gt;&amp;操作符，将一个文件描述符重定向给另一个文件描述符</p>
+<p>10.tee，T型分叉器，可以将管道上的数据复制到命令行上的任意数量的文件中去</p>
+<p>11.tee的更多用法</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell">hacker@dojo:~$ echo HACK | tee THE &gt; PLANET#将数据复制到两个文件中<br>hacker@dojo:~$ echo HACK | tee THE | cat#将数据复制到文件和命令<br></code></pre></td></tr></table></figure>
+
+<p>进程替换</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs shell">hacker@dojo:~$ echo &gt;(rev)<br>/dev/fd/63<br>hacker@dojo:~$<br></code></pre></td></tr></table></figure>
+
+<p>写入一个参数</p>
+<p>会将其输入连接到一个临时文件（它会创建）</p>
+<p>这不是一个真正的文件，它被称为<strong>命名管道</strong>，因为他有一个文件名</p>
+<p>随后bash会把命名管道文件的路径连接到rev</p>
+<p>示例及其过程：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs shell">hacker@dojo:~$ echo HACK | rev<br>KCAH<br>hacker@dojo:~$ echo HACK | tee &gt;(rev)<br>HACK<br>KCAH<br></code></pre></td></tr></table></figure>
+
+<ol>
+<li>bash 启动了 <code>rev</code> 命令，并将一个命名管道（可能是 <code>/dev/fd/63</code>）连接到 <code>rev</code> 的标准输入。</li>
+<li>bash 启动了 <code>tee</code> 命令，将管道连接到它的标准输入，并将 <code>tee</code> 的第一个参数替换为 <code>/dev/fd/63</code>。<code>tee</code> 甚至没有看到参数 <code>&gt;(rev)</code>； shell 在启动 <code>tee</code> 之前已经替换了它。</li>
+<li>bash 使用 <code>echo</code> 内置命令将 <code>HACK</code> 写入 <code>tee</code> 的标准输入。</li>
+<li><code>tee</code> 读取了 <code>HACK</code>，将其写入标准输出，然后写入 <code>/dev/fd/63</code>（它连接到 <code>rev</code> 的标准输入）。</li>
+<li><code>rev</code> 从其标准输入读取 <code>HACK</code>，将其反转，并将 <code>KCAH</code> 写入标准输出。</li>
+</ol>
+<p>12.综合利用</p>
+<h3 id="Shell-Variables"><a href="#Shell-Variables" class="headerlink" title="Shell Variables"></a>Shell Variables</h3><p>1.$变量名，存储在shell的工作目录路径中</p>
+<p>2.也可以用&#x3D;为变量赋值，注意&#x3D;周围不能有空格</p>
+<p>3.空格不能随便使用，复制后使用空格后的部分会被识别为命令</p>
+<p>若要为变量的值赋出含空格的内容可以参考</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">hacker@dojo:~$ VAR=&quot;1337 SAUCE&quot;<br></code></pre></td></tr></table></figure>
+
+<p>4.$最小提示符[shell]</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs shell">hacker@dojo:~$ VAR=1337<br>hacker@dojo:~$ echo &quot;VAR is: $VAR&quot;<br>VAR is: 1337<br>hacker@dojo:~$ sh<br><span class="hljs-meta prompt_">$ </span><span class="language-bash"><span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;VAR is: <span class="hljs-variable">$VAR</span>&quot;</span></span><br>VAR is: <br></code></pre></td></tr></table></figure>
+
+<p>5.env命令：打印出你在 Shell 中设置的所有导出变量</p>
+<p>6.命令替换</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs shell">hacker@dojo:~$ FLAG=$(cat /flag)<br>hacker@dojo:~$ echo &quot;$FLAG&quot;<br>pwn.college&#123;blahblahblah&#125;<br>hacker@dojo:~$<br></code></pre></td></tr></table></figure>
+
+<p>7.内置read函数读取标准数据</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs shell">hacker@dojo:~$ read -p &quot;INPUT: &quot; MY_VARIABLE<br>INPUT: Hello!<br>hacker@dojo:~$ echo &quot;You entered: $MY_VARIABLE&quot;<br>OUTPUT: You entered: Hello!<br></code></pre></td></tr></table></figure>
+
+<p>8.综合考察</p>
+<h2 id="Computing-101"><a href="#Computing-101" class="headerlink" title="Computing 101"></a>Computing 101</h2><h3 id="Your-First-Program"><a href="#Your-First-Program" class="headerlink" title="Your First Program"></a>Your First Program</h3><p>1.学习了汇编指令mov，给寄存器赋值</p>
+<p>2.系统调用syscall，系统调用的情况由对应的ax寄存器的值确定</p>
+<p>3.系统调用参数传递，rdi转递第一个参数</p>
+<p>4.构建一个二进制文件</p>
+<ol>
+<li>step_1: 用.s语法写一个文件</li>
+<li>step_2: 用as命令将二进制文件组装成可执行的对象文件</li>
+</ol>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/CTF/" class="category-chain-item">CTF</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/CTF/Personal-wp/" class="category-chain-item">Personal_wp</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>pwn.college</div>
+      <div>http://example.com/2025/03/06/pwn.college/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>briteny-pwn</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2025年3月6日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2025/02/28/ROP/" title="ROP">
+                        <span class="hidden-mobile">ROP</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

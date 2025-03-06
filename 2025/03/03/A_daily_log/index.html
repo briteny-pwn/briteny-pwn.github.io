@@ -1,0 +1,644 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="briteny-pwn">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="基础ROP">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ROP">
+<meta property="og:url" content="http://example.com/2025/03/03/A_daily_log/index.html">
+<meta property="og:site_name" content="Briteny&#39;s Blog">
+<meta property="og:description" content="基础ROP">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-03-03T12:27:00.000Z">
+<meta property="article:modified_time" content="2025-03-06T07:06:58.779Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>ROP - Briteny&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":100,"cursorChar":".","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>briteny-pwn&#39;s blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="ROP"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-03-03 20:27" pubdate>
+          2025年3月3日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          4.2k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          35 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">ROP</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="2025-3-3"><a href="#2025-3-3" class="headerlink" title="2025.3.3"></a>2025.3.3</h1><p>其实昨晚，或者说今天凌晨就没睡好，我感觉我们的关系变得有点僵，但是也不是一天两天了。我知道大概是我那次心情突然不好，可能让你觉得怎么怎么样，然后就没有那么愿意搭理我，可能主要原因是我说暂时不想和你讲的原因吧，我也不是很清楚，我也没那么厉害能猜到你在想什么，但是我这么说你肯定不高兴的。</p>
+<p>嗯…….有点像小作文，好吧应该就是了，其实也算我对我心里话的一种宣泄吧，我也不敢再你面前矫情啥的，感觉你不是很愿意搭理我，我发的信息啥的也不怎么看了。嗯…….有点难过，但是我知道是我的问题，但是我现在也解决不了，嗯…….我的性格就有很大的问题呢，所以看看我厚脸皮能不能一直到去找你，然后按照我的计划表明心意然后我就有相对合适的身份去解释说明我为啥突然不高兴，虽然不是什么正当理由也。</p>
+<p>好了，废话不多说了，按照我的计划呢，给你看到这个，应该是我表白了之后，嗯……对于这次表白的预期我没有很高，只是希望不会被删掉或者直接非常决绝地拒绝然后告诉我一点机会都没有的就好，最高地期望当然我们能在一起，不过没实现我也不觉得奇怪，毕竟这个时候我们之间的关系我还不能预测。</p>
+<p>嗯……我先解释我为什么突然跟个傻逼一样地不高兴吧，其实就是看到你也可以和别的男生聊得很开心啦，嗯…..然后我就觉得和你的关系也许没有什么特别地对你来说，可能你把我就当个正常的和别人一样的朋友，我也说了，我这个人脑子就是不太好，什么事我总喜欢往坏处想，然后我又觉得，唉，我还不在你身边，能陪你的时间也不多，然后能照顾到的方方面面都没有你周围的男生多，可能对你来说万一有个还不错的男生追你，我站在你的角度我就觉得我完全没有任何胜算，然后可能我也哪哪都没人家好，然后还对这些事情这么敏感啥的，感觉完全就是累赘，嗯,,,,,,,,,,,,然后我短短一两分钟我就想到了我的下场，然后就很难过，然后我一时间也调整不过来，还有我这人可能也傻逼，可以装一下然后晚上再难过嘛，但是我也不知道咋想的，可能突然难过就有点不理智了吧，就很明显地表现出情绪，我也能感觉到我当时也想让你知道我不高兴，但是我没有想过你知道了会怎么样，我要说什么，怎么说，反正就是很傻逼的行为，造成的很傻逼的结果。我也不清楚怎么改正，其实就是怕，有些东西我感觉不是我输得起的。嗯，我看着蛮独立啥的，自己一个人也死不了，但是我也没有那么成熟，我就非常非常喜欢吃醋，然后我就喜欢往坏处想，但是我也不能强迫别人怎么怎么样，我觉得吃点醋合理，但是我可能有点过头了，这就是我需要改正的地方，但是一直很难做到，我觉得很大一部分原因也有可能就是我这人就一般，感觉也比不过别人啥的，然后换位思考一下我就觉得你不会偏向我一些这种。嗯……反正东说西说，就是我这人比较傻逼，一方面是能力优点啥的太少，然后对自己不自信，另一方面就是自己不知道为啥明明是个男生但是为什么总喜欢东想西想然后这么敏感啥的，其实我也知道想多了没什么好结果，但是我也控制不住自己，可能就是正反馈循环，我越难过越不理性，越不理性越想，越想越难过，就像这次，搞得你也不开心我也不开心，但是我现在不敢表现了，目前还是比较理性的，虽然写这些的时候有点情绪上头，但是我还是知道我做错了事的，然后这个时候还去跟你说我怎么怎么不高兴，我觉得就更有病了，你也不高兴，还要考试，压力也大，如果这件事影响了你考试我也很抱歉的，嗯……我现在对我接下的规划就是每天都死皮赖脸找你，反正无论如何不能到时候我去找你的时候我们每天都不聊啥，到时候我也不确定我有没有机会表白，所以虽然我现在可能心情不好，但是我也还是非常想和你报备我在做些什么，然后你回个一两个，这样也算有交流的，对了，我现在心情不好纯粹是后悔我做的事，觉得自己傻逼，没有对你不满然后矫情的意思</p>
+<p>嗯……我也不知道我这张臭嘴到时候表白能说出什么逆天的话，但是我现在还蛮理性的，我觉得这里表达的可能更清楚全面一些，如果我表白跟神经病一样，那就可以看完然后去疯狂喷我说我傻逼，我能想象自己多傻逼的。</p>
+<p>我也不敢说自己多深情什么，也不会扯鬼淡说一直着喜欢你，你也见过我喜欢别人，我觉得在大部分时候我对一个人比较执着可能很大原因来自我自己，我虽然人不咋滴，但是还蛮要强的，我不是很希望自己付出了时间精力得不到结果，我也清楚的，我说是说喜欢人家多久多久，但是我自己什么也没干过，连聊天可能也就只聊过一两次，我敢说的是我绝对放下了之前的事和人，没有留恋怀念啥的，我现在喜欢你，也就只喜欢你一个人，我本来就喜欢多想，也没那个本事同时喜欢别人</p>
+<p>我也不知道，有些事情我确实忘记了，有些事又能想起来，我记得第一次喜欢你，是因为初中的我比较自大，总觉得自己数学很好之类的，然后看到你问别人题目想教你出出风头吧，然后就被你臭骂一顿，说我又没问你 [ 原话不是很清楚，但是差不多就这个意思吧 ]，以前的事情没有一个善始也没有一个善终，我也知道都是我的问题，那个时候确实不懂事，还会被外界影响自己，这也说明那个时候的我人确实不太行。</p>
+<p>可能我在心理也有这个顾虑，所以我觉得我可能在你眼里比不过一个普通点的男生，有可能我就是负分的那种人哈，但我胆子蛮大的脸皮蛮厚的。</p>
+<p>随后就是一些比较重要的原因，我一直觉得你很好看，真的就是会有那种一群人里面我第一眼就觉得你好看的那种离谱感觉，我可能现实点说可能你就正好长在审美点上了。。。。写到这里我突然觉得我不如不写，感觉自己更傻逼了。其实也没那么多原因，我就是喜欢你，感觉很自然的吸引我，能把我安安心心地锁住地感觉，感觉一切都很好，只是对我不好的点就是我觉得我不行，然后会担心留不住，我会努力加油的，至少让自己有底气一些吧。</p>
+<p>真的感觉越说越无语，突然感觉说不定可能我原本在你心理有点好形象然后现在全被我自己这么傻逼的话给覆盖了</p>
+<p>可能只有第一天能写这么多了，可能后面就是发发牢骚，讲点我们交流过程种我遇到的困难</p>
+<p>组长今天通知我请假了3.21出发去哈工大，3.22是我的生日呢，你会记得的对吧，没记得也没关系，可能那个时候还在有点烦我的阶段吧，自作孽不可活…….</p>
+<p>从20：27写到21：32了，你刚刚给我发信息了呢，我也该回寝室了</p>
+<h1 id="2025-3-4"><a href="#2025-3-4" class="headerlink" title="2025.3.4"></a>2025.3.4</h1><p>7：42</p>
+<p>这个时候我已经到组里了，嗯……我觉得你应该已经起床了，也应该看见我的消息了，但是可能就是不愿意理我吧。这几天貌似都是，我可能向你表现出的就是我觉得你备考压力大，但实际上我想的还蛮多的，我觉得可能你还在生我的气，可能有点自恋了，自己哪有那么重要。可能有些时候，你就是没看手机，但是大部分的时候我觉得你应该还是已读不回，我和你分享的日常，你也都不看了，也不再和我说每天发生了什么事，我现在也完全不知道你的情况。现在刚起床可能还好，昨天晚上想的就比较糟糕，但是我觉得也是合理的，是不是你有别的分享日常的对象了呢，还在身边，什么事情都能面面俱到，这不是比我好很多，聊天的时候我也不是所有细节都记住了，问出一些已经说过的问题，你也会觉得我不上心，觉得我很烦人吧。这是最坏的情况吧，不过至少我没被删除拉黑，但是你如果身边真的有别人的话，现在的我应该已经完全没有机会了吧。我不敢把这些话挑明了说，我没有这个身份，凭什么要你给我分享呢，就像先前吃醋一样，也是没来由没身份的小丑行为吧。嗯…….如果我表白没有被明确拒绝，我想我应该会和你说，如果你身边有那种你也比较喜欢的，比我更好的人，你想和他在一起那请第一时间告诉我。嗯…….我也不会争啥，因为肯定没有胜算的，可能就是会很难过一段。比起这些猜想，我还有更切合实际更担心的事情，我们每天的聊天，你都不愿意理我，那到了后来，还有30天我们才会见面，那到那个时候你会不会从一开始只是不愿意搭理我，然后我还一直烦你，变成讨厌我，觉得我打扰你生活，我觉得每天都这样可能性很大了，现在你也在准备考试，我也不敢让你分心出来想这些事，而且我该以什么身份，说些什么话，我也界定不了自己的身份了。为了不挑起这种生气的争端，我在这个礼拜可能就假装不知道你在生气或者已经不是生气就是不愿意再理我了，考完试可能不会影响重要的事的时候我会找个机会道道歉说说啥的，我感觉可能也不会有很好的结果，唉，我犹犹豫豫的，都是当时情绪上头做的错事，已经上课迟到了，可能晚上再看看今天发生什么吧</p>
+<p>12：21</p>
+<p>刚到组里，你回复我了耶，还蛮高兴的，至少愿意回复一下，可能真的是我想得太多了吧，你可能只是太忙了。而且确实压力大。哈哈哈哈，和我说两句话我就不想坏事了，真好！！！！！！！我现在写写pwn.college,晚点休息休息，也希望你能休息好，状态更好捏。</p>
+<p>14：20</p>
+<p>下雪了，给你发信息了，雪景也拍了，到时候等你回我我再发给你吧，我也不是很清楚你具体几点考试，万一打扰到了就不太好，毕竟之前好像就有一次是这样，我们也会有一天和以前一样一起看雪玩雪的吧！</p>
+<p>14：35</p>
+<p>pwn.college 打到一半校园网全死了，组里的网也挂了，真无语</p>
+<p>15：42</p>
+<p>偶然发现一个小时前添加了状态呢，嗯…..果然是没有想多，希望你还没那么讨厌我</p>
+<p>17：51</p>
+<p>哈哈哈哈，刚吃完饭你就回我信息了，考试考到这么晚。看你的样子应该考得还不错呢，我也跟着享福和我聊得挺好的捏，一下子又让我觉得是我多想了呢，我现在打computer101</p>
+<h1 id="2025-3-5"><a href="#2025-3-5" class="headerlink" title="2025.3.5"></a>2025.3.5</h1><p>今天来组里比较晚，感觉我们聊天比前一段时间要多一些了，我也不知道是不是好事，是你就单纯把我当普通朋友了还是没那么生气，亦或是考试考完压力小了些，我也不是很清楚。</p>
+<p>今天我把大英二退了，准备以考代修，上午起的也晚，不知道你今天考试时间是啥时候，嗯….我发现有时候我经常不能记住所有的细节，重复问问题也显得我有点呆，所以我打算空出时间了我就写个脚本自动提取信息内容，具体关键词到时候就自己分析一下。好的，我也该努力学习了</p>
+<h1 id="2025-3-6"><a href="#2025-3-6" class="headerlink" title="2025.3.6"></a>2025.3.6</h1><p>嗯……认清个人身份地位情况有助于我更清楚地面对现状，我只是一个追求者。所以已读不回或者其他的事我应该接受，想多了对自己也不好，不应该总把自己摆在某个还没达到的地点上，投入已经到达所需要做的事。长期骚扰并且没什么重要的事确实会让人不耐烦，只是我对你有分享的想法私心，这件事情在一开始就不是对等的，因为提出表示的人的问题。想到这里我已经能基本稳定住自己了，嗯…….接下来我该做什么表达什么态度可能就取决于两个场景，一个是你考完试之后对我消息的回复频率是不是会上升，另一件就是我两场比赛全天制断网场内，我应该会提前说，如果，嗯…..聊天情况和现在差不多，其实感觉就没什么必要去见面玩了，因为大概率就是被我整得烦了，我去线下你可能都未必愿意和我一起出去玩，但是我也已经计划好了，可能是我太悲观了吧，嗯……如果两个场景都是坏结果，那我还会表白吗？应该不会吧，反正已经知道结果了不是吗，那就该考虑后续的问题吧，是一直这样内耗自己还是就这么放弃，按照我的性格应该会一直内耗到自己受不了严重影响到日常生活然后再放弃吧，明显是一个不明智的决定，但是貌似一直这样，除非真的受不了不然在这件事上理智总是会弱一些，嗯…..那我需要修改前面吗？不改吧，见人了就是笑话，改了，见人好像也是个笑话，我自己都不敢看自己写的什么，两个不同时空不同心境的同一个人，我自己都已经没办法和自己共鸣了，还是少想一些吧，这些的主动权不在我手上，我好好准备接下来的两场比赛，最后综合平时情况简单分析应该就能有一个合适的答案了，感觉自己有种等死的平静感，实际内心还是很担心的吧。还有，为什么我这么想反而冷静一些，大概可能是我想到的最差的情况吧。我该打靶了。</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Security/" class="category-chain-item">Security</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>ROP</div>
+      <div>http://example.com/2025/03/03/A_daily_log/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>briteny-pwn</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2025年3月3日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
