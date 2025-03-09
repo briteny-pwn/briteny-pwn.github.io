@@ -19,15 +19,15 @@
   <meta name="author" content="briteny-pwn">
   <meta name="keywords" content="">
   
-    <meta name="description" content="基础ROP">
+    <meta name="description" content="pwn.college学习笔记">
 <meta property="og:type" content="article">
 <meta property="og:title" content="pwn.college">
 <meta property="og:url" content="http://example.com/2025/03/06/pwn.college/index.html">
 <meta property="og:site_name" content="Briteny&#39;s Blog">
-<meta property="og:description" content="基础ROP">
+<meta property="og:description" content="pwn.college学习笔记">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-03-06T07:46:00.000Z">
-<meta property="article:modified_time" content="2025-03-06T07:48:01.120Z">
+<meta property="article:modified_time" content="2025-03-07T03:06:00.738Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary_large_image">
   
@@ -222,7 +222,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.4k 字
+          2k 字
         
       </span>
     
@@ -233,7 +233,7 @@
         
         
         
-          12 分钟
+          17 分钟
         
       </span>
     
@@ -386,7 +386,45 @@
 <p>4.构建一个二进制文件</p>
 <ol>
 <li>step_1: 用.s语法写一个文件</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs assembly">.intel_syntax noprefix#告诉编译器使用的intel语法，不需要在每条命令前都加上额外的前缀<br>mov rdi, 42<br>mov rax, 60<br>syscall<br></code></pre></td></tr></table></figure>
+
+<ol start="2">
 <li>step_2: 用as命令将二进制文件组装成可执行的对象文件</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs shell">hacker@dojo:~$ ls<br>asm.s<br>hacker@dojo:~$ cat asm.s<br>.intel_syntax noprefix<br>mov rdi, 42<br>mov rax, 60<br>syscall<br>hacker@dojo:~$ as -o asm.o asm.s<br>hacker@dojo:~$ ls<br>asm.o   asm.s<br>hacker@dojo:~$<br></code></pre></td></tr></table></figure>
+
+<p>as工具读取asm.s文件，将其汇编成二进制代码，并输出一个名为asm.o的对象文件，它包含了实际的汇编二进制代码，但是还不能直接运行，我们要将它链接起来</p>
+<ol start="3">
+<li>step_3: 使用ld命令将一个或多个可执行的对象文件链接成最终的可执行文件</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs shell">hacker@dojo:~$ ls<br>asm.o   asm.s<br>hacker@dojo:~$ ld -o exe asm.o<br>ld: warning: cannot find entry symbol _start; defaulting to 0000000000401000<br>hacker@dojo:~$ ls<br>asm.o   asm.s   exe<br>hacker@dojo:~$<br></code></pre></td></tr></table></figure>
+
+<p>这时已经创建了一个名为exe的可执行文件</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">这里的第三步可以看到有一个没找到_start symbol的标识</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">在代码中没有设定_start标识程序就会从最开始开始执行</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">所以我们可以修改成如下代码，就可以避免报错的弹出</span><br></code></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs assembly">.intel_syntax noprefix<br>.global _start<br>_start:<br>mov rdi, 42<br>mov rax, 60<br>syscall<br></code></pre></td></tr></table></figure>
+
+<p>其实就是多了两行，第二行是添加了 _start的标签,指向代码的开头，第一行的.global _start指示链接器将 _start标签设置为全局可见，而不仅仅是对象文件级局部可见</p>
+<p>由于 <code>ld</code> 是链接器，这个指令对于 <code>_start</code> 标签被识别是必要的</p>
+<p>5.就是详细介绍了mov，也可以在两个寄存器之间使用</p>
+<h3 id="Software-Introspection"><a href="#Software-Introspection" class="headerlink" title="Software Introspection"></a>Software Introspection</h3><p>1.strace 系统调用追踪器</p>
+<p>范例：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs shell">hacker@dojo:~$ strace /tmp/your-program<br>execve(&quot;/tmp/your-program&quot;, [&quot;/tmp/your-program&quot;], 0x7ffd48ae28b0 /* 53 vars */) = 0<br>exit(42)                                 = ?<br>+++ exited with 42 +++<br>hacker@dojo:~$<br></code></pre></td></tr></table></figure>
+
+<p>strace 指明了触发了什么系统调用，传递的参数是什么</p>
+<p>输出语法为system_call(parameter,parameter,parameter…….)</p>
+<p>例子中报告了两个系统调用，第二个是程序请求终止自生的exit的系统调用，你可以看到给它传递的参数42，一个是execve的系统调用，它启动一个新程序，但是并不是由这个程序调用的，strace检测到它是由于strace的独特工作机制导致的</p>
+<p>最后可以看到exit(42)，以退出码42退出！</p>
+<p>exit的系统调用很容易在不使用strace的条件下使用，因为exit的一个目的就是像你提供一个你可以访问的退出码</p>
+<p>这道题目strace的是alarm</p>
+<p>2.gdb的启动</p>
+<p>3.gdb的指令：starti启动程序</p>
+<h3 id="Computer-Memory"><a href="#Computer-Memory" class="headerlink" title="Computer Memory"></a>Computer Memory</h3><p>1.[addr]标识地址的内容</p>
+<p>2.巩固联系</p>
+<p>3.寄存器中存地址并访问获取该地址的值</p>
+<ol start="4">
+<li></li>
 </ol>
 
                 
@@ -477,6 +515,12 @@
                 <div class="post-prevnext my-3">
                   <article class="post-prev col-6">
                     
+                    
+                      <a href="/2025/03/08/ADWORLD/" title="">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile"></span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
                     
                   </article>
                   <article class="post-next col-6">
