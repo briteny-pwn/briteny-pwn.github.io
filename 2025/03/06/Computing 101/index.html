@@ -27,7 +27,7 @@
 <meta property="og:description" content="pwn.college学习笔记">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-03-06T07:46:00.000Z">
-<meta property="article:modified_time" content="2025-03-18T11:14:24.149Z">
+<meta property="article:modified_time" content="2025-03-25T06:24:39.831Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary_large_image">
   
@@ -222,7 +222,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.8k 字
+          2.6k 字
         
       </span>
     
@@ -233,7 +233,7 @@
         
         
         
-          16 分钟
+          22 分钟
         
       </span>
     
@@ -457,6 +457,106 @@
 <li></li>
 </ol>
 <p>同上操作，但是增加了16位，32位，64位</p>
+<ol start="17">
+<li></li>
+</ol>
+<p>**小端序：**存储数据的情况和我们看到的实际上是相反的</p>
+<p>但是这个题目和大小端序没什么关系，就是给地址送值，但是需要注意，给地址送入比较大的值时，不能直接进行操作，而是要通过寄存器来协助，具体原因如下</p>
+<ol>
+<li><strong>指令集限制</strong></li>
+</ol>
+<ul>
+<li>x86 汇编指令集的设计中，直接将一个较大的常量（例如 64 位常量）写入内存地址的操作可能会受到指令长度和编码的限制。</li>
+<li>汇编指令的编码空间有限，直接将一个大常量写入内存可能需要额外的指令来实现，而不是一条简单的指令。</li>
+</ul>
+<ol start="2">
+<li><strong>操作数大小限制</strong></li>
+</ol>
+<ul>
+<li>x86 架构支持多种操作数大小（如 8 位、16 位、32 位和 64 位）。直接将一个大常量写入内存时，需要明确操作数的大小。</li>
+<li>如果直接使用类似 <code>mov [rdi], 0xdeadbeef00001337</code> 的指令，可能会导致指令过长或无法正确解析。</li>
+</ul>
+<ol start="3">
+<li><strong>寄存器间接寻址的限制</strong></li>
+</ol>
+<ul>
+<li>在 x86 架构中，寄存器间接寻址（如 <code>[rdi]</code>）通常用于访问内存，但直接将一个大常量赋值给内存地址可能需要先将常量加载到寄存器中，然后再通过寄存器间接寻址写入内存。</li>
+</ul>
+<ol start="18">
+<li></li>
+</ol>
+<p>连续读取内存</p>
+<p>这里有一个小技巧，题目要求我们除以4，实际上可以shr rax，2来做到同样的效果</p>
+<ol start="19">
+<li></li>
+</ol>
+<p>介绍栈及其特性(FILO)</p>
+<ol start="20">
+<li></li>
+</ol>
+<p>通过栈交换寄存器的值</p>
+<ol start="21">
+<li></li>
+</ol>
+<p>通过栈顶指针esp读取写入内存</p>
+<ol start="22">
+<li></li>
+</ol>
+<p>跳转学习</p>
+<p>对于所有跳转，有三种类型：</p>
+<ul>
+<li><strong>相对跳转</strong>：相对于下一条指令向前或向后跳转。</li>
+<li><strong>绝对跳转</strong>：跳转到一个特定的地址。</li>
+<li><strong>间接跳转</strong>：跳转到寄存器中指定的内存地址。</li>
+</ul>
+<p>这一关是绝对跳转jmp reg</p>
+<ol start="23">
+<li></li>
+</ol>
+<p>相对跳转</p>
+<p>这里还介绍了一种便于重复的汇编指令</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs assembly">.rept num<br>assembly<br>.endr<br></code></pre></td></tr></table></figure>
+
+<p>重复num遍assembly的指令</p>
+<p>jmp sign</p>
+<p>跳转到标签sign处</p>
+<ol start="24">
+<li></li>
+</ol>
+<p>绝对跳转和相对跳转交换使用</p>
+<ol start="25">
+<li></li>
+</ol>
+<p>条件跳转</p>
+<p>x86 中有许多跳转类型，学习它们的使用方法会很有帮助。几乎所有跳转指令都依赖于一个叫做 ZF（Zero Flag，零标志位）的东西。当 <code>cmp</code> 的结果相等时，ZF 被设置为 1，否则为 0。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs assembly">cmp reg ,some_values<br>je sign<br></code></pre></td></tr></table></figure>
+
+<p>如果 reg 和 some_values 相等，ZF标志位则会设置为1，否则为0，而ZF标志位设置为1，则可进行后续的条件跳转，否则不进行</p>
+<ol start="26">
+<li></li>
+</ol>
+<p>间接跳转：</p>
+<p>地址表，减少cmp的使用</p>
+<p>题解：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs python3">from pwn import *<br><br>context.arch = &#x27;amd64&#x27;<br>p = process(&#x27;/challenge/run&#x27;)<br><br>p.send(asm(&#x27;&#x27;&#x27;<br>cmp rdi, 4<br>jae default<br>jmp [rsi + rdi * 8]<br>jmp end<br>default:<br>jmp [rsi + 4 * 8]<br>end:<br>nop<br>           &#x27;&#x27;&#x27;.strip()))<br>sleep(0.5)<br><br>print(p.recvallS())<br></code></pre></td></tr></table></figure>
+
+<ol start="27">
+<li></li>
+</ol>
+<p>题解：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs python3">from pwn import *<br><br>context.arch = &#x27;amd64&#x27;<br>p = process(&#x27;/challenge/run&#x27;)<br><br>p.send(asm(&#x27;&#x27;&#x27;<br>           mov rax, 0x00<br>           mov rbx, 0x00<br>           mov rcx, 0x00<br>           mov rdx, 0x00<br>           start:<br>           cmp rax, rsi<br>           je end<br>           add rbx, [rdi + 8 * rax]<br>           add rax, 0x01<br>           jmp start<br>           end:<br>           mov rax, rbx<br>           div rsi<br>           &#x27;&#x27;&#x27;.strip()))<br>sleep(0.5)<br><br>print(p.recvallS())<br></code></pre></td></tr></table></figure>
+
+<ol start="28">
+<li></li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs python3">from pwn import *<br><br>context.arch = &#x27;amd64&#x27;<br>p = process(&#x27;/challenge/run&#x27;)<br><br>p.send(asm(&#x27;&#x27;&#x27;<br>           mov rax, 0x00<br>           mov rbx, 0x00<br>           mov rcx, 0x00<br>           mov rdx, 0x00<br>           start:<br>           cmp rdi, rdx<br>           je end<br>           cmp [rdi + rax], rbx<br>           je end<br>           add rax, 0x01<br>           jmp start<br>           end:<br>           nop<br>           &#x27;&#x27;&#x27;.strip()))<br>sleep(0.5)<br><br>print(p.recvallS())<br></code></pre></td></tr></table></figure>
+
+<ol start="29">
+<li></li>
+</ol>
+<p>call指令和ret指令：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs"><br></code></pre></td></tr></table></figure>
+
 
                 
               </div>
