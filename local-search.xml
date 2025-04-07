@@ -4,6 +4,27 @@
   
   
   <entry>
+    <title>堆利用</title>
+    <link href="/%E5%A0%86%E5%88%A9%E7%94%A8/"/>
+    <url>/%E5%A0%86%E5%88%A9%E7%94%A8/</url>
+    
+    <content type="html"><![CDATA[<h1 id="堆利用"><a href="#堆利用" class="headerlink" title="堆利用"></a>堆利用</h1><p>目前堆的实现有很多种，具体如下</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs shell">dlmalloc  – General purpose allocator<br>ptmalloc2 – glibc<br>jemalloc  – FreeBSD and Firefox<br>tcmalloc  – Google<br>libumem   – Solaris<br></code></pre></td></tr></table></figure><h2 id="part-1"><a href="#part-1" class="headerlink" title="part_1"></a>part_1</h2><p>学习文章：<a href="https://blog.csdn.net/weixin_52622200/article/details/135722769">【Linux 内核源码分析】堆内存管理-CSDN博客</a></p><h4 id="堆"><a href="#堆" class="headerlink" title="堆"></a>堆</h4><p>堆是一种动态分配内存的数据结构，用于存储和管理动态分配的对象。它是一块连续的内存空间，用于存储程序运行时动态申请的内存。</p><p>堆可以被看作是<strong>一个由各个内存块组成的堆栈</strong>，其中每个内存块都有一个地址指针，指向下一个内存块。当程序需要分配内存时，堆会根据分配算法找到一块足够大的连续内存空间，并将其分配给程序。程序可以在堆中动态创建和销毁对象，而不需要在编译时确定对象的数量或大小。</p><p>与静态分配的栈不同，堆的内存分配不是自动的，需要显式地通过内存分配函数（如malloc、new等）来申请内存空间，并在不使用时通过释放函数（如free、delete等）来释放已分配的内存。这种动态的内存管理方式使得程序能够根据实际需要来动态调整内存的使用情况。</p><h4 id="堆内存管理"><a href="#堆内存管理" class="headerlink" title="堆内存管理"></a>堆内存管理</h4><p>在Linux操作系统中，堆内存是指用于动态分配的一块内存区域。它与程序的堆栈（stack）不同，堆内存是由程序员通过函数如malloc()、calloc()或realloc()等来手动申请和释放的。</p><p><strong>堆内存的特点：</strong></p><ol><li>大小可变：堆内存的大小可以在运行时动态地调整，适应不同需求。</li><li>手动管理：开发人员需要手动申请和释放堆内存，并且负责确保正确使用和及时释放，以避免内存泄漏或悬挂指针等问题。</li><li>随机访问：程序可以随机访问堆内存中的数据。</li><li>生命周期长：除非显式释放或程序结束，否则分配给堆内存的空间会一直存在</li></ol><p>堆内存是连续分配的内存，在大多数操作系统中，包括Linux，堆内存是通过动态分配内存来管理的。它<strong>通常是一个连续的内存区域</strong>，用于动态分配和释放内存块。</p><p>堆内存的生长方向是自下而上：在传统的内存布局中，堆内存的生长方向是<strong>从低地址向高地址增长</strong>。这意味着每次分配新的内存块时，堆会从较低的地址向上移动。</p><p>堆内存的管理由 Linux 内核实现：Linux 内核提供了一些系统调用和函数，用于管理堆内存。这些系统调用和函数使开发者能够请求分配和释放堆内存，但开发者并不直接知道堆的管理细节。</p><p>系统调用用于调用相关函数：开发者可以使用系统调用来请求堆内存的扩展和收缩。其中一个常用的系统调用是 <code>brk</code>，它负责调整程序的堆边界，以便在需要时扩展或收缩堆内存。</p><p>在 Linux 内核中，<code>mm_struct</code> 结构体表示进程的内存管理信息，其中包含了堆的起始地址和结束地址：</p><ul><li><code>start_brk</code> 表示堆内存在虚拟地址空间中的起始地址，通常是初始的堆边界。</li><li><code>brk</code> 表示堆内存在虚拟地址空间中的结束地址，即当前的堆边界。</li></ul><p><code>start_brk</code> 和 <code>brk</code> 之间的地址空间就是堆内存的大小。在进程运行过程中，可以通过相应的系统调用（如 <code>brk</code> 或 <code>sbrk</code>）来动态扩展或收缩堆内存的大小，从而改变堆边界的位置。</p><p>需要注意的是，<code>mm_struct</code> 结构体中还包含了其他与内存管理相关的信息，如代码段、数据段、栈等的起始地址和结束地址。这些信息共同构成了进程的虚拟地址空间，用于进行内存管理和保护。</p><p>Slab 是一种基于对象缓存的内存分配器。它将内核对象按照类型进行分类，并为每种类型分配一个独立的缓存池，缓存池中包含了若干个连续的 Slab 对象，当内核对象需要分配内存时，Slab 分配器会从相应的缓存池中申请一个 Slab 对象，并将其划分为多个小块以供程序使用。当程序释放内存时，Slab 分配器会将该内存块标记为空闲状态，并加入到 Slab 缓存池中以供后续的内存分配使用。Slab 分配器通过对象缓存机制，可以提高内存分配效率和内存利用率，并减少内存碎片的产生。</p><p>SLOB（Simple List Of Blocks）是一种基于 Free 链表的简单内存分配器。它通过维护一个链表来记录空闲块的位置和大小，当程序需要分配内存时，SLOB 分配器会在 Free 链表中查找一个大小合适的空闲块，并将该块分配给程序。当程序释放内存时，SLOB 分配器会将该内存块加入到 Free 链表中，以供后续的内存分配使用。SLOB 分配器由于实现简单，因此可以在内核体积和性能之间进行权衡。</p><h4 id="内存描述mm-struct结构体"><a href="#内存描述mm-struct结构体" class="headerlink" title="内存描述mm_struct结构体"></a>内存描述mm_struct结构体</h4><p>在 Linux 内核源码的 <code>include/linux/mm_types.h</code> 文件中包含了 <code>mm_struct</code> 结构体的定义。</p><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">mm_struct</span> &#123;</span><br><span class="hljs-class"><span class="hljs-keyword">struct</span> &#123;</span><br><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">vm_area_struct</span> *<span class="hljs-title">mmap</span>;</span>     <span class="hljs-comment">/* VMA链表 */</span><br><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">rb_root</span> <span class="hljs-title">mm_rb</span>;</span><br>u64 vmacache_seqnum;              <span class="hljs-comment">/* 每个线程的vmacache */</span><br><br><span class="hljs-comment">// ...</span><br><br><span class="hljs-type">unsigned</span> <span class="hljs-type">long</span> hiwater_rss;        <span class="hljs-comment">/* RSS使用的高水位标记 */</span><br><span class="hljs-type">unsigned</span> <span class="hljs-type">long</span> hiwater_vm;         <span class="hljs-comment">/* 虚拟内存使用的高水位标记 */</span><br><br><span class="hljs-type">unsigned</span> <span class="hljs-type">long</span> total_vm;           <span class="hljs-comment">/* 映射的总页数 */</span><br><span class="hljs-type">unsigned</span> <span class="hljs-type">long</span> locked_vm;          <span class="hljs-comment">/* 设置了 PG_mlocked 的页面 */</span><br><span class="hljs-type">atomic64_t</span>    pinned_vm;          <span class="hljs-comment">/* 引用计数永久增加的页面 */</span><br><span class="hljs-type">unsigned</span> <span class="hljs-type">long</span> data_vm;            <span class="hljs-comment">/* VM_WRITE &amp; ~VM_SHARED &amp; ~VM_STACK */</span><br><span class="hljs-type">unsigned</span> <span class="hljs-type">long</span> exec_vm;            <span class="hljs-comment">/* VM_EXEC &amp; ~VM_WRITE &amp; ~VM_STACK */</span><br><span class="hljs-type">unsigned</span> <span class="hljs-type">long</span> stack_vm;           <span class="hljs-comment">/* VM_STACK */</span><br><span class="hljs-type">unsigned</span> <span class="hljs-type">long</span> def_flags;<br><br><span class="hljs-type">spinlock_t</span> arg_lock;              <span class="hljs-comment">/* 保护下面的字段 */</span><br><span class="hljs-type">unsigned</span> <span class="hljs-type">long</span> start_code, end_code, start_data, end_data;   <span class="hljs-comment">/* 代码段、数据段的起始和结束地址 */</span><br><span class="hljs-type">unsigned</span> <span class="hljs-type">long</span> start_brk, brk, start_stack;                  <span class="hljs-comment">/* 堆、栈的起始地址 */</span><br><span class="hljs-type">unsigned</span> <span class="hljs-type">long</span> arg_start, arg_end, env_start, env_end;       <span class="hljs-comment">/* 命令行参数、环境变量的起始和结束地址 */</span><br><br><span class="hljs-type">unsigned</span> <span class="hljs-type">long</span> saved_auxv[AT_VECTOR_SIZE]; <span class="hljs-comment">/* 用于 /proc/PID/auxv */</span><br><br><span class="hljs-comment">// ...</span><br>&#125; __randomize_layout;<br><br><span class="hljs-comment">/*</span><br><span class="hljs-comment"> * mm_cpumask 需要放在 mm_struct 的末尾，因为它的大小是根据 nr_cpu_ids 动态确定的。</span><br><span class="hljs-comment"> */</span><br><span class="hljs-type">unsigned</span> <span class="hljs-type">long</span> cpu_bitmap[];<br>&#125;;<br></code></pre></td></tr></table></figure><p>mm_struct 结构体中的 start_brk、brk 成员<br>在 mm_struct 结构体中，start_brk 和 brk 是与进程的堆内存相关的成员变量。</p><p>start_brk 表示进程堆的起始地址。<br>brk 表示进程堆的结束地址。<br>虚拟地址空间是一个抽象的概念，用于表示进程可用的地址范围。它将进程的内存分为多个区域，包括代码段、数据段、堆、栈等。堆是其中的一个区域，用于动态分配内存。</p><p>start_brk 是堆内存的起始地址，表示堆的开始位置。在该地址之前的内存区域属于其他区域（如数据段），而在该地址之后的内存区域则属于堆。</p><p>brk 是堆内存的结束地址，表示堆的结束位置。堆的所有分配的内存都位于 start_brk 和 brk 之间。</p><p>通过控制 brk 的值，可以动态调整堆内存的大小。当需要分配更多的堆内存时，可以通过增加 brk 的值来扩展堆，使其占用更多的虚拟地址空间。相反，当释放不再需要的堆内存时，可以通过减小 brk 的值来缩小堆的大小，从而释放占用的虚拟地址空间。</p><p>在 Linux 内核源码的 include&#x2F;linux&#x2F;mm_types.h 文件中，包含了 start_brk 和 brk 成员的定义。</p><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-type">unsigned</span> <span class="hljs-type">long</span> start_brk; <span class="hljs-comment">// 堆内存的起始地址</span><br><span class="hljs-type">unsigned</span> <span class="hljs-type">long</span> brk;       <span class="hljs-comment">// 堆内存的结束地址</span><br></code></pre></td></tr></table></figure><h4 id="动态分配内存堆"><a href="#动态分配内存堆" class="headerlink" title="动态分配内存堆"></a>动态分配内存堆</h4><p>在 Linux 系统中，有两种常见的方式用于动态分配堆内存：</p><p><strong>1.brk() 和 sbrk()</strong>：这是最基本和最原始的动态内存分配方式。brk() 函数用于将进程的堆结束地址设置为指定的值，从而控制堆内存的大小。sbrk() 函数则通过增加进程的堆结束地址来分配内存，通过减小堆结束地址来释放内存。这些函数存在于 POSIX 标准中，是 C 语言标准库中的一部分。</p><p><strong>2.malloc() 和 free()</strong>：这是更高级的动态内存分配方式。malloc() 函数用于在堆内存中分配指定大小的内存块，并返回指向该内存块的指针。free() 函数用于释放先前分配的内存块。这些函数在 C 标准库中实现，通常会比 brk() 和 sbrk() 更易于使用和管理。</p><p>这两种动态内存分配方式各有优点和缺点。brk() 和 sbrk() 的优势在于它们非常简单且直接，可以轻松地控制堆内存的大小。但是，它们的缺点是<strong>需要手动管理内存</strong>，并且容易出现<strong>内存泄漏</strong>和其他问题。malloc() 和 free() 则提供了更高级的内存管理功能，使得内存分配和释放更容易且更安全。但是，它们的实现可能会比较复杂，可能需要使用锁和其他机制来确保多线程环境下的正确性。</p><h5 id="brk系统调用"><a href="#brk系统调用" class="headerlink" title="brk系统调用"></a><strong>brk系统调用</strong></h5><p><img src="/./../00000000/image-20250407185611211.png" alt="image-20250407185611211"></p><p>在Linux内核源码中的<code>mm/mmap.c</code>文件中，可以找到<code>brk</code>系统调用的定义。</p><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><code class="hljs c">SYSCALL_DEFINE1(brk, <span class="hljs-type">unsigned</span> <span class="hljs-type">long</span>, brk)<br>&#123;<br><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">mm_struct</span> *<span class="hljs-title">mm</span> =</span> current-&gt;mm; <span class="hljs-comment">// 获取当前进程的内存管理结构体</span><br><br><span class="hljs-type">unsigned</span> <span class="hljs-type">long</span> newbrk, oldbrk; <span class="hljs-comment">// 定义新旧的堆结束地址</span><br><br>down_write(&amp;mm-&gt;mmap_sem); <span class="hljs-comment">// 获取内存管理信号量，防止并发访问</span><br><br>oldbrk = mm-&gt;brk; <span class="hljs-comment">// 保存旧的堆结束地址</span><br>newbrk = PAGE_ALIGN(brk); <span class="hljs-comment">// 对传入的新堆结束地址进行页面对齐操作</span><br><br><span class="hljs-comment">// 检查新的堆结束地址是否在合法范围内</span><br><span class="hljs-keyword">if</span> (newbrk &lt; mm-&gt;start_brk || newbrk &gt; TASK_SIZE) &#123;<br>up_write(&amp;mm-&gt;mmap_sem); <span class="hljs-comment">// 释放内存管理信号量</span><br><span class="hljs-keyword">return</span> -ENOMEM; <span class="hljs-comment">// 返回内存分配错误</span><br>&#125;<br><br><span class="hljs-comment">// 调用 expand_brk() 函数扩展堆内存</span><br><span class="hljs-keyword">if</span> (expand_brk(mm, newbrk)) &#123;<br>up_write(&amp;mm-&gt;mmap_sem); <span class="hljs-comment">// 释放内存管理信号量</span><br><span class="hljs-keyword">return</span> -ENOMEM; <span class="hljs-comment">// 返回内存分配错误</span><br>&#125;<br><br>mm-&gt;brk = newbrk; <span class="hljs-comment">// 更新堆结束地址为新的值</span><br>up_write(&amp;mm-&gt;mmap_sem); <span class="hljs-comment">// 释放内存管理信号量</span><br><br><span class="hljs-keyword">return</span> oldbrk; <span class="hljs-comment">// 返回旧的堆结束地址</span><br>&#125;<br></code></pre></td></tr></table></figure><p>通过使用brk系统调用，可以指定堆内存在虚拟内存空间的结束地址。</p><p>当需要扩展堆内存时，可以将结束地址设置为大于当前值。这样，系统会增加虚拟内存空间以容纳更多的堆内存，并将新的结束地址返回给调用者。</p><p>而当需要收缩堆内存时，可以将结束地址设置为小于当前值。这样，系统会释放超过该结束地址的部分虚拟内存空间，使其可供其他用途使用。</p><h5 id="mmap系统调用"><a href="#mmap系统调用" class="headerlink" title="mmap系统调用"></a><strong>mmap系统调用</strong></h5><p><code>mmap</code>系统调用的相关代码可以在Linux内核源码的<code>mm/mmap.c</code>文件中找到。</p><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs c">SYSCALL_DEFINE6(mmap, <span class="hljs-type">unsigned</span> <span class="hljs-type">long</span>, addr, <span class="hljs-type">unsigned</span> <span class="hljs-type">long</span>, len,<br><span class="hljs-type">unsigned</span> <span class="hljs-type">long</span>, prot, <span class="hljs-type">unsigned</span> <span class="hljs-type">long</span>, flags,<br><span class="hljs-type">unsigned</span> <span class="hljs-type">long</span>, fd, <span class="hljs-type">off_t</span>, offset)<br>&#123;<br><span class="hljs-comment">/* ...其他代码... */</span><br><br><span class="hljs-keyword">if</span> (!(flags &amp; MAP_FIXED)) &#123;<br>addr = vm_mmap_pgoff(file, addr, len, prot, flags, offset);<br><span class="hljs-keyword">if</span> (unlikely(IS_ERR_VALUE(addr)))<br><span class="hljs-keyword">return</span> addr;<br><span class="hljs-keyword">goto</span> out;<br>&#125;<br><br><span class="hljs-comment">/* ...其他代码... */</span><br><br>out:<br><span class="hljs-keyword">return</span> addr;<br>&#125;<br><br></code></pre></td></tr></table></figure><p><code>mmap</code> 系统调用执行成功时，返回映射区域的起始地址，该地址与请求的 <code>addr</code> 可能会有所不同（如果 <code>addr</code> 是 <code>NULL</code>，则由操作系统自动分配合适的地址）。如果发生错误，<code>mmap</code> 返回 <code>MAP_FAILED</code>。</p><h4 id="heap-info"><a href="#heap-info" class="headerlink" title="heap_info"></a>heap_info</h4><p>在 Linux 中，堆管理是通过内核提供的系统调用和库函数来实现的。其中，glibc 库是 Linux 上最常用的 C 语言库之一，它提供了一组用于堆管理的函数，如 malloc、free、calloc、realloc 等。</p><p>在 glibc 中，堆是由多个内存块组成的链表，每个内存块都有一个 heap_info 结构体来描述它所在的堆。heap_info 结构体定义在 glibc 的 malloc&#x2F;malloc.c 文件中，它包含以下字段：</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs shell">ar_ptr：指向 arena 结构体的指针，表示该堆所属的 arena。<br>prev：指向前一个 heap_info 结构体的指针，用于链接所有的 heap_info 结构体。<br>next：指向后一个 heap_info 结构体的指针，用于链接所有的 heap_info 结构体。<br>size：表示该堆的大小，以字节为单位。<br>mprotect_size：表示该堆末尾未使用部分的大小，以字节为单位。<br>pad：填充字段，保证 heap_info 结构体大小为 32 字节。<br>free_list：指向该堆中空闲内存块链表的头指针。<br></code></pre></td></tr></table></figure><p>通过遍历 heap_info 结构体链表，程序可以获取当前进程所有的堆信息，并对其进行操作和监控。</p><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-keyword">typedef</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> _<span class="hljs-title">heap_info</span></span><br><span class="hljs-class">&#123;</span><br>    mstate ar_ptr;              <span class="hljs-comment">/* 指向该堆所属的 arena。*/</span><br>    <span class="hljs-class"><span class="hljs-keyword">struct</span> _<span class="hljs-title">heap_info</span> *<span class="hljs-title">prev</span>;</span>    <span class="hljs-comment">/* 前一个堆。*/</span><br>    <span class="hljs-type">size_t</span> size;                <span class="hljs-comment">/* 当前堆的大小（以字节为单位）。*/</span><br>    <span class="hljs-type">size_t</span> mprotect_size;       <span class="hljs-comment">/* 已经通过 mprotect 保护的大小（以字节为单位），具有 PROT_READ|PROT_WRITE 权限。*/</span><br>    <span class="hljs-comment">/* 确保以下数据正确对齐，特别是 sizeof(heap_info) + 2 * SIZE_SZ 是 MALLOC_ALIGNMENT 的倍数。 */</span><br>    <span class="hljs-type">char</span> pad[<span class="hljs-number">-6</span> * SIZE_SZ &amp; MALLOC_ALIGN_MASK]; <span class="hljs-comment">/* 填充字段，用于满足对齐要求。*/</span><br>&#125; heap_info;<br></code></pre></td></tr></table></figure><h4 id="malloc-state"><a href="#malloc-state" class="headerlink" title="malloc_state"></a><strong>malloc_state</strong></h4><p><code>malloc_state</code> 可以看作是堆管理中的 Arena Header，它维护了当前线程所属的堆内存的状态。每个线程只包含一个 <code>malloc_state</code> 结构体，用于管理该线程所使用的堆内存。在多线程环境下，不同线程的 <code>malloc_state</code> 结构体相互独立，互不干扰。</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs shell">mutex：互斥锁，用于保证多线程下对 malloc_state 结构体的访问是线程安全的。<br>fastbinsY[NFASTBINS]：fastbins 数组，用于快速分配大小在某个范围内的小块内存。<br>top：指向堆内存中最顶部的未分配内存的位置。<br>last_remainder：最近一次小块内存分配时剩余的空闲内存块。<br>bins[NBINS * 2 - 2]：按照固定大小的范围组织的普通内存块链表。<br>binmap[BINMAPSIZE]：内存块链表的位图，表示每个链表是否为空。<br>max_fast：fastbins 范围的上限，即最大可以使用 fastbins 的大小。<br>fastbins[NFASTBINS]：快速分配内存的 fastbins，用于存放刚刚释放的小块内存，以便下次快速分配时能够优先使用。<br>least_addr：堆中最小的地址。<br>unsorted_chunks：未排序的内存块链表。<br>system_mem：从系统中分配的内存总量。<br>max_system_mem：允许从系统中分配的最大内存量。<br></code></pre></td></tr></table></figure>]]></content>
+    
+    
+    <categories>
+      
+      <category>CTF_PWN</category>
+      
+      <category>blog_learning</category>
+      
+    </categories>
+    
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>二进制文件</title>
     <link href="/%E4%BA%8C%E8%BF%9B%E5%88%B6%E6%96%87%E4%BB%B6/"/>
     <url>/%E4%BA%8C%E8%BF%9B%E5%88%B6%E6%96%87%E4%BB%B6/</url>
@@ -63,27 +84,6 @@
   
   
   <entry>
-    <title>循环神经网络</title>
-    <link href="/%E5%BE%AA%E7%8E%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/"/>
-    <url>/%E5%BE%AA%E7%8E%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/</url>
-    
-    <content type="html"><![CDATA[<h1 id="循环神经网络"><a href="#循环神经网络" class="headerlink" title="循环神经网络"></a>循环神经网络</h1>]]></content>
-    
-    
-    <categories>
-      
-      <category>大模型</category>
-      
-      <category>深度学习</category>
-      
-    </categories>
-    
-    
-  </entry>
-  
-  
-  
-  <entry>
     <title>卷积神经网络</title>
     <link href="/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/"/>
     <url>/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/</url>
@@ -96,46 +96,6 @@
       <category>大模型</category>
       
       <category>深度学习</category>
-      
-    </categories>
-    
-    
-  </entry>
-  
-  
-  
-  <entry>
-    <title>机器学习_two</title>
-    <link href="/%E6%97%A0%E7%9B%91%E7%9D%A3%E5%AD%A6%E4%B9%A0/"/>
-    <url>/%E6%97%A0%E7%9B%91%E7%9D%A3%E5%AD%A6%E4%B9%A0/</url>
-    
-    <content type="html"><![CDATA[<h1 id="无监督学习"><a href="#无监督学习" class="headerlink" title="无监督学习"></a>无监督学习</h1>]]></content>
-    
-    
-    <categories>
-      
-      <category>大模型</category>
-      
-      <category>机器学习</category>
-      
-    </categories>
-    
-    
-  </entry>
-  
-  
-  
-  <entry>
-    <title>数据库</title>
-    <link href="/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
-    <url>/%E6%95%B0%E6%8D%AE%E5%BA%93/</url>
-    
-    <content type="html"><![CDATA[<h1 id="数据库-sql"><a href="#数据库-sql" class="headerlink" title="数据库 [ sql ]"></a>数据库 [ sql ]</h1>]]></content>
-    
-    
-    <categories>
-      
-      <category>大模型</category>
       
     </categories>
     
@@ -164,6 +124,46 @@
   
   
   <entry>
+    <title>循环神经网络</title>
+    <link href="/%E5%BE%AA%E7%8E%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/"/>
+    <url>/%E5%BE%AA%E7%8E%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/</url>
+    
+    <content type="html"><![CDATA[<h1 id="循环神经网络"><a href="#循环神经网络" class="headerlink" title="循环神经网络"></a>循环神经网络</h1>]]></content>
+    
+    
+    <categories>
+      
+      <category>大模型</category>
+      
+      <category>深度学习</category>
+      
+    </categories>
+    
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>数据库</title>
+    <link href="/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
+    <url>/%E6%95%B0%E6%8D%AE%E5%BA%93/</url>
+    
+    <content type="html"><![CDATA[<h1 id="数据库-sql"><a href="#数据库-sql" class="headerlink" title="数据库 [ sql ]"></a>数据库 [ sql ]</h1>]]></content>
+    
+    
+    <categories>
+      
+      <category>大模型</category>
+      
+    </categories>
+    
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>深度学习框架</title>
     <link href="/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E6%A1%86%E6%9E%B6/"/>
     <url>/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E6%A1%86%E6%9E%B6/</url>
@@ -176,6 +176,27 @@
       <category>大模型</category>
       
       <category>深度学习</category>
+      
+    </categories>
+    
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>机器学习_two</title>
+    <link href="/%E6%97%A0%E7%9B%91%E7%9D%A3%E5%AD%A6%E4%B9%A0/"/>
+    <url>/%E6%97%A0%E7%9B%91%E7%9D%A3%E5%AD%A6%E4%B9%A0/</url>
+    
+    <content type="html"><![CDATA[<h1 id="无监督学习"><a href="#无监督学习" class="headerlink" title="无监督学习"></a>无监督学习</h1>]]></content>
+    
+    
+    <categories>
+      
+      <category>大模型</category>
+      
+      <category>机器学习</category>
       
     </categories>
     
