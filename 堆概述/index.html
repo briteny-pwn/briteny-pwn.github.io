@@ -29,7 +29,7 @@
 <meta property="og:image" content="http://example.com/00000000/image-20250410153600020.png">
 <meta property="og:image" content="http://example.com/00000000/image-20250410153726089.png">
 <meta property="article:published_time" content="2025-04-10T05:22:00.000Z">
-<meta property="article:modified_time" content="2025-04-10T07:40:31.959Z">
+<meta property="article:modified_time" content="2025-04-11T09:01:30.065Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="http://example.com/00000000/image-20250410153600020.png">
@@ -298,7 +298,7 @@
 </ol>
 <p>Linux 中早期的堆分配与回收由 Doug Lea 实现，但它在并行处理多个线程时，会共享进程的堆内存空间。因此，为了安全性，一个线程使用堆时，会进行加锁。然而，与此同时，加锁会导致其它线程无法使用堆，降低了内存分配和回收的高效性。同时，如果在多线程使用时，没能正确控制，也可能影响内存分配和回收的正确性。Wolfram Gloger 在 Doug Lea 的基础上进行改进使其可以支持多线程，这个堆分配器就是<strong>ptmalloc</strong>，在glibc-2.3.x. 之后，<strong>glibc 中集成了 ptmalloc2</strong>。</p>
 <p><strong>ptmalloc2 主要是通过 malloc&#x2F;free 函数来分配和释放内存块。</strong></p>
-<p>需要注意的是，在内存分配与使用的过程中，Linux 有这样的一个基本内存管理思想，<strong>只有当真正访问一个地址的时候，系统才会建立虚拟页面与物理页面的映射关系</strong>。 所以虽然操作系统已经给程序分配了很大的一块内存，但是这块内存其实只是虚拟内存。只有当用户使用到相应的内存时，系统才会真正分配物理页面给用户使用。</p>
+<p>需要注意的是，在内存分配与使用的过程中，Linux 有这样的一个基本内存管理思想，<strong>只有当真正访问一个地址的时候，系统才会建立虚拟页面与物理页面的映射关系</strong>。 所以虽然操作系统已经给程序分配了很大的一块内存，但是这块内存其实只是虚拟内存。<strong>只有当用户使用到相应的内存时</strong>，系统才会真正分配物理页面给用户使用。</p>
 <h3 id="堆的基本操作"><a href="#堆的基本操作" class="headerlink" title="堆的基本操作"></a>堆的基本操作</h3><h5 id="malloc"><a href="#malloc" class="headerlink" title="malloc"></a>malloc</h5><p>在 glibc 的 <a target="_blank" rel="noopener" href="https://github.com/iromise/glibc/blob/master/malloc/malloc.c#L448">malloc.c</a> 中，malloc 的说明如下</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-comment">/*</span><br><span class="hljs-comment">  malloc(size_t n)</span><br><span class="hljs-comment">  Returns a pointer to a newly allocated chunk of at least n bytes, or null</span><br><span class="hljs-comment">  if no space is available. Additionally, on failure, errno is</span><br><span class="hljs-comment">  set to ENOMEM on ANSI C systems.</span><br><span class="hljs-comment">  If n is zero, malloc returns a minumum-sized chunk. (The minimum</span><br><span class="hljs-comment">  size is 16 bytes on most 32bit systems, and 24 or 32 bytes on 64bit</span><br><span class="hljs-comment">  systems.)  On most systems, size_t is an unsigned type, so calls</span><br><span class="hljs-comment">  with negative arguments are interpreted as requests for huge amounts</span><br><span class="hljs-comment">  of space, which will often fail. The maximum supported value of n</span><br><span class="hljs-comment">  differs across systems, but is in all cases less than the maximum</span><br><span class="hljs-comment">  representable value of a size_t.</span><br><span class="hljs-comment">*/</span><br></code></pre></td></tr></table></figure>
 
