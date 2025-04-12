@@ -29,7 +29,7 @@
 <meta property="og:image" content="http://example.com/00000000/image-20250410153600020.png">
 <meta property="og:image" content="http://example.com/00000000/image-20250410153726089.png">
 <meta property="article:published_time" content="2025-04-10T05:22:00.000Z">
-<meta property="article:modified_time" content="2025-04-11T09:01:30.065Z">
+<meta property="article:modified_time" content="2025-04-12T02:53:07.681Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="http://example.com/00000000/image-20250410153600020.png">
@@ -237,7 +237,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.5k 字
+          2.2k 字
         
       </span>
     
@@ -248,7 +248,7 @@
         
         
         
-          13 分钟
+          19 分钟
         
       </span>
     
@@ -325,14 +325,40 @@
 <h3 id="内存分配背后的系统调用"><a href="#内存分配背后的系统调用" class="headerlink" title="内存分配背后的系统调用"></a>内存分配背后的系统调用</h3><p>在前面提到的函数中，无论是 malloc 函数还是 free 函数，我们动态申请和释放内存时，都经常会使用，但是它们并不是真正与系统交互的函数。这些函数背后的系统调用主要是 <a target="_blank" rel="noopener" href="http://man7.org/linux/man-pages/man2/sbrk.2.html">(s)brk</a> 函数以及 <a target="_blank" rel="noopener" href="http://man7.org/linux/man-pages/man2/mmap.2.html">mmap, munmap</a> 函数。</p>
 <p>如下图所示，我们主要考虑对堆进行申请内存块的操作。</p>
 <p><img src="/./../00000000/image-20250410153600020.png" srcset="/img/loading.gif" lazyload alt="image-20250410153600020"></p>
-<h5 id="s-brk"><a href="#s-brk" class="headerlink" title="(s)brk"></a>(s)brk</h5><p>对于堆的操作，操作系统提供了 brk 函数，glibc 库提供了 sbrk 函数，我们可以通过增加 <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Sbrk">brk</a> 的大小来向操作系统申请内存。</p>
+<h4 id="s-brk"><a href="#s-brk" class="headerlink" title="(s)brk"></a>(s)brk</h4><p>对于堆的操作，操作系统提供了 brk 函数，glibc 库提供了 sbrk 函数，我们可以通过增加 <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Sbrk">brk</a> 的大小来向操作系统申请内存。</p>
 <p><strong>初始时</strong>，堆的起始地址 <a target="_blank" rel="noopener" href="http://elixir.free-electrons.com/linux/v3.8/source/include/linux/mm_types.h#L365">start_brk</a> 以及堆的当前末尾 <a target="_blank" rel="noopener" href="http://elixir.free-electrons.com/linux/v3.8/source/include/linux/mm_types.h#L365">brk</a> 指向同一地址。根据是否开启 ASLR，两者的具体位置会有所不同</p>
 <ul>
-<li>不开启 ASLR 保护时，start_brk 以及 brk 会指向 data&#x2F;bss 段的结尾。</li>
-<li>开启 ASLR 保护时，start_brk 以及 brk 也会指向同一位置，只是这个位置是在 data&#x2F;bss 段结尾后的随机偏移处。</li>
+<li>不开启 ASLR 保护时，<strong>start_brk 以及 brk 会指向 data&#x2F;bss 段的结尾</strong>。</li>
+<li>开启 ASLR 保护时，start_brk 以及 brk 也会指向同一位置，<strong>只是这个位置是在 data&#x2F;bss 段结尾后的随机偏移处</strong>。</li>
 </ul>
 <p>具体效果如下图（这个图片与网上流传的基本一致，这里是因为要画一张大图，所以自己单独画了下）所示</p>
 <p><img src="/./../00000000/image-20250410153726089.png" srcset="/img/loading.gif" lazyload alt="image-20250410153726089"></p>
+<h6 id="学习范例："><a href="#学习范例：" class="headerlink" title="学习范例："></a>学习范例：</h6><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-comment">/* sbrk and brk example */</span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;unistd.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;sys/types.h&gt;</span></span><br><br><span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">()</span><br>&#123;<br>        <span class="hljs-type">void</span> *curr_brk, *tmp_brk = <span class="hljs-literal">NULL</span>;<br>		<span class="hljs-comment">//定义了两个指针，分别存储当前堆空间的结束位置，和临时存储堆空间的结束位置</span><br>        <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;Welcome to sbrk example:%d\n&quot;</span>, getpid());<br>		<span class="hljs-comment">//打印进程</span><br>        <span class="hljs-comment">/* sbrk(0) gives current program break location */</span><br>        tmp_brk = curr_brk = sbrk(<span class="hljs-number">0</span>);<br>    	<span class="hljs-comment">//赋值为当前堆空间的结束地址</span><br>        <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;Program Break Location1:%p\n&quot;</span>, curr_brk);<br>        <span class="hljs-comment">//打印当前堆空间的结束地址</span><br>    	getchar();<br>		<span class="hljs-comment">//getchar函数等待输入字符，便于观察堆空间的变化</span><br>        <span class="hljs-comment">/* brk(addr) increments/decrements program break location */</span><br>        <br>    	brk(curr_brk+<span class="hljs-number">4096</span>);<br>		<span class="hljs-comment">//调用brk()为堆空间的结束位置增加4096字节(通常是一个页面的大小)</span><br>        <br>    	curr_brk = sbrk(<span class="hljs-number">0</span>);<br>        <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;Program break Location2:%p\n&quot;</span>, curr_brk);<br>        <span class="hljs-comment">//打印当前堆空间的结束地址</span><br>    	getchar();<br>		<br>        brk(tmp_brk);<br>		<span class="hljs-comment">//将堆空间的结束地址回复为初始值</span><br>        curr_brk = sbrk(<span class="hljs-number">0</span>);<br>    	<span class="hljs-comment">//将显式的指针值也修改为当前堆空间的结束地址</span><br>        <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;Program Break Location3:%p\n&quot;</span>, curr_brk);<br>        <span class="hljs-comment">//打印当前堆空间的结束地址</span><br>    	getchar();<br>		<br>        <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>需要注意的是，在每一次执行完操作后，都执行了 getchar() 函数，这是为了我们方便我们查看程序真正的映射。</p>
+<p><strong>用pwndbg调试</strong></p>
+<p><strong>第一次调用 brk 之前</strong></p>
+<p>并没有出现堆</p>
+<p><strong>第一次增加 brk 后</strong></p>
+<p>出现了堆</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-comment">//当然在调用一些函数时也会分配堆</span><br></code></pre></td></tr></table></figure>
+
+<p><strong>其中一些数据的理解</strong></p>
+<p>范例：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs shell">sploitfun@sploitfun-VirtualBox:~/ptmalloc.ppt/syscalls$ ./sbrk<br>Welcome to sbrk example:6141<br>Program Break Location1:0x804b000<br>Program Break Location2:0x804c000<br>...<br>sploitfun@sploitfun-VirtualBox:~/ptmalloc.ppt/syscalls$ cat /proc/6141/maps<br>...<br>0804a000-0804b000 rw-p 00001000 08:01 539624     /home/sploitfun/ptmalloc.ppt/syscalls/sbrk<br>0804b000-0804c000 rw-p 00000000 00:00 0          [heap]<br>b7e21000-b7e22000 rw-p 00000000 00:00 0<br>...<br>sploitfun@sploitfun-VirtualBox:~/ptmalloc.ppt/syscalls$<br></code></pre></td></tr></table></figure>
+
+<p>其中，关于堆的那一行</p>
+<ul>
+<li>0x0804b000 是相应堆的起始地址</li>
+<li>rw-p 表明堆具有可读可写权限，并且属于隐私数据。</li>
+<li>00000000 表明文件偏移，由于这部分内容并不是从文件中映射得到的，所以为 0。</li>
+<li>00:00 是主从 (Major&#x2F;mirror) 的设备号，这部分内容也不是从文件中映射得到的，所以也都为 0。</li>
+<li>0 表示着 Inode 号。由于这部分内容并不是从文件中映射得到的，所以为 0。</li>
+</ul>
+<h4 id="mmap"><a href="#mmap" class="headerlink" title="mmap"></a>mmap</h4><p>malloc 会使用 <a target="_blank" rel="noopener" href="http://lxr.free-electrons.com/source/mm/mmap.c?v=3.8#L1285">mmap</a> 来创建独立的匿名映射段。匿名映射的目的主要是可以申请以 0 填充的内存，并且这块内存仅被调用进程所使用。</p>
+<p>范例：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-comment">/* Private anonymous mapping example using mmap syscall */</span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;sys/mman.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;sys/types.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;sys/stat.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;fcntl.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;unistd.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdlib.h&gt;</span></span><br><br><span class="hljs-type">void</span> <span class="hljs-type">static</span> <span class="hljs-keyword">inline</span> <span class="hljs-title function_">errExit</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">char</span>* msg)</span><br>&#123;<br>        <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%s failed. Exiting the process\n&quot;</span>, msg);<br>        <span class="hljs-built_in">exit</span>(<span class="hljs-number">-1</span>);<br>&#125;<br><br><span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">()</span><br>&#123;<br>        <span class="hljs-type">int</span> ret = <span class="hljs-number">-1</span>;<br>        <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;Welcome to private anonymous mapping example::PID:%d\n&quot;</span>, getpid());<br>        <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;Before mmap\n&quot;</span>);<br>        getchar();<br>        <span class="hljs-type">char</span>* addr = <span class="hljs-literal">NULL</span>;<br>        addr = mmap(<span class="hljs-literal">NULL</span>, (<span class="hljs-type">size_t</span>)<span class="hljs-number">132</span>*<span class="hljs-number">1024</span>, PROT_READ|PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, <span class="hljs-number">-1</span>, <span class="hljs-number">0</span>);<br>        <span class="hljs-keyword">if</span> (addr == MAP_FAILED)<br>                errExit(<span class="hljs-string">&quot;mmap&quot;</span>);<br>        <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;After mmap\n&quot;</span>);<br>        getchar();<br><br>        <span class="hljs-comment">/* Unmap mapped region. */</span><br>        ret = munmap(addr, (<span class="hljs-type">size_t</span>)<span class="hljs-number">132</span>*<span class="hljs-number">1024</span>);<br>        <span class="hljs-keyword">if</span>(ret == <span class="hljs-number">-1</span>)<br>                errExit(<span class="hljs-string">&quot;munmap&quot;</span>);<br>        <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;After munmap\n&quot;</span>);<br>        getchar();<br>        <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
 
                 
               </div>
