@@ -8,7 +8,7 @@
     <link href="/tmux%E7%BB%88%E7%AB%AF%E5%A4%8D%E7%94%A8%E5%99%A8/"/>
     <url>/tmux%E7%BB%88%E7%AB%AF%E5%A4%8D%E7%94%A8%E5%99%A8/</url>
     
-    <content type="html"><![CDATA[<h1 id="tmux终端复用器"><a href="#tmux终端复用器" class="headerlink" title="tmux终端复用器"></a>tmux终端复用器</h1><h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_"># </span><span class="language-bash">Ubuntu or Debian</span><br>sudo apt-get install tmux<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">CentOS or Fedora</span><br>sudo yum install tmux<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">Mac</span><br>brew install tmux<br></code></pre></td></tr></table></figure><h3 id="Session操作"><a href="#Session操作" class="headerlink" title="Session操作"></a>Session操作</h3><h5 id="1-启动"><a href="#1-启动" class="headerlink" title="1.启动"></a>1.启动</h5><p>在terminal上输入tmux命令</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">tmux<br></code></pre></td></tr></table></figure><p>也可以在建立时，显式地说明tmux的名字，这个名字可以用于解绑后快速的重新进入该session:</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">tmux new -s your-session-name<br></code></pre></td></tr></table></figure><h5 id="2-分离"><a href="#2-分离" class="headerlink" title="2.分离"></a>2.分离</h5><p>在tmux窗口中，按下<code>ctrl+b d</code>或输入如下命令，就会讲当前的session和窗口分离，session转到后台运行:</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">tmux detach<br></code></pre></td></tr></table></figure><h5 id="3-退出"><a href="#3-退出" class="headerlink" title="3.退出"></a>3.退出</h5><p>如果你想退出该session，你可以杀死session:</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">tmux kill-session -t your-session-name<br></code></pre></td></tr></table></figure><h5 id="4-绑定，解绑，切换session"><a href="#4-绑定，解绑，切换session" class="headerlink" title="4.绑定，解绑，切换session"></a>4.绑定，解绑，切换session</h5><p>再次绑定某个session:</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">tmux attach -t your-session-name<br></code></pre></td></tr></table></figure><p>切换到某个指定的session</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">tmux switch -t your-session-name<br></code></pre></td></tr></table></figure><h5 id="5-重命名session"><a href="#5-重命名session" class="headerlink" title="5.重命名session"></a>5.重命名session</h5><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">tmux rename-session -t old-session new-session<br></code></pre></td></tr></table></figure><h3 id="pane操作"><a href="#pane操作" class="headerlink" title="pane操作"></a>pane操作</h3><h5 id="1-窗格划分："><a href="#1-窗格划分：" class="headerlink" title="1.窗格划分："></a>1.窗格划分：</h5><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_"># </span><span class="language-bash">划分为上下两个窗格</span><br>tmux split-window<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">划分左右两个窗格</span><br>tmux split-window -h<br></code></pre></td></tr></table></figure><p>划分窗格使用快捷键会更加方便 [如果当前pane正在运行程序就没办法输入命令了]</p><p><code>左右划分</code>：<code>ctrl+b %</code><br><code>上下划分</code>：<code>ctrl+b &quot;</code></p><h5 id="2-光标位置切换"><a href="#2-光标位置切换" class="headerlink" title="2.光标位置切换"></a>2.光标位置切换</h5><p>使用语句太复杂了，直接使用快捷键最好：ctrl+b arrow-key（方向键）</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_"># </span><span class="language-bash">当前窗格往上移</span><br>tmux swap-pane -U<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">当前窗格往下移</span><br>tmux swap-pane -D<br></code></pre></td></tr></table></figure><h5 id="3-关闭窗格"><a href="#3-关闭窗格" class="headerlink" title="3.关闭窗格"></a>3.关闭窗格</h5><p><code>ctrl+d</code>，如果只有一个窗格就是关闭</p><h3 id="tmux上下翻页"><a href="#tmux上下翻页" class="headerlink" title="tmux上下翻页"></a>tmux上下翻页</h3><p>使用快捷键<code>ctrl+b [ </code>，就可以通过方向键上下移动使用<code>PageUp</code>和<code>PageDown</code>可以实现上下翻页</p>]]></content>
+    <content type="html"><![CDATA[<h1 id="tmux终端复用器"><a href="#tmux终端复用器" class="headerlink" title="tmux终端复用器"></a>tmux终端复用器</h1><h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_"># </span><span class="language-bash">Ubuntu or Debian</span><br>sudo apt-get install tmux<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">CentOS or Fedora</span><br>sudo yum install tmux<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">Mac</span><br>brew install tmux<br></code></pre></td></tr></table></figure><h3 id="Session操作"><a href="#Session操作" class="headerlink" title="Session操作"></a>Session操作</h3><h5 id="1-启动"><a href="#1-启动" class="headerlink" title="1.启动"></a>1.启动</h5><p>在terminal上输入tmux命令</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">tmux<br></code></pre></td></tr></table></figure><p>也可以在建立时，显式地说明tmux的名字，这个名字可以用于解绑后快速的重新进入该session:</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">tmux new -s your-session-name<br></code></pre></td></tr></table></figure><h5 id="2-分离"><a href="#2-分离" class="headerlink" title="2.分离"></a>2.分离</h5><p>在tmux窗口中，按下<code>ctrl+b d</code>或输入如下命令，就会讲当前的session和窗口分离，session转到后台运行:</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">tmux detach<br></code></pre></td></tr></table></figure><h5 id="3-退出"><a href="#3-退出" class="headerlink" title="3.退出"></a>3.退出</h5><p>如果你想退出该session，你可以杀死session:</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">tmux kill-session -t your-session-name<br></code></pre></td></tr></table></figure><h5 id="4-绑定，解绑，切换session"><a href="#4-绑定，解绑，切换session" class="headerlink" title="4.绑定，解绑，切换session"></a>4.绑定，解绑，切换session</h5><p>再次绑定某个session:</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">tmux attach -t your-session-name<br></code></pre></td></tr></table></figure><p>切换到某个指定的session</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">tmux switch -t your-session-name<br></code></pre></td></tr></table></figure><h5 id="5-重命名session"><a href="#5-重命名session" class="headerlink" title="5.重命名session"></a>5.重命名session</h5><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">tmux rename-session -t old-session new-session<br></code></pre></td></tr></table></figure><h3 id="pane操作"><a href="#pane操作" class="headerlink" title="pane操作"></a>pane操作</h3><h5 id="1-窗格划分："><a href="#1-窗格划分：" class="headerlink" title="1.窗格划分："></a>1.窗格划分：</h5><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_"># </span><span class="language-bash">划分为上下两个窗格</span><br>tmux split-window<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">划分左右两个窗格</span><br>tmux split-window -h<br></code></pre></td></tr></table></figure><p>划分窗格使用快捷键会更加方便 [如果当前pane正在运行程序就没办法输入命令了]</p><p><code>左右划分</code>：<code>ctrl+b %</code><br><code>上下划分</code>：<code>ctrl+b &quot;</code></p><h5 id="2-光标位置切换"><a href="#2-光标位置切换" class="headerlink" title="2.光标位置切换"></a>2.光标位置切换</h5><p>使用语句太复杂了，直接使用快捷键最好：ctrl+b arrow-key（方向键）</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_"># </span><span class="language-bash">当前窗格往上移</span><br>tmux swap-pane -U<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">当前窗格往下移</span><br>tmux swap-pane -D<br></code></pre></td></tr></table></figure><h5 id="3-关闭窗格"><a href="#3-关闭窗格" class="headerlink" title="3.关闭窗格"></a>3.关闭窗格</h5><p><code>ctrl+d</code>，如果只有一个窗格就是关闭</p><h3 id="tmux上下翻页"><a href="#tmux上下翻页" class="headerlink" title="tmux上下翻页"></a>tmux上下翻页</h3><p>使用快捷键<code>ctrl+b [ </code>，就可以通过方向键上下移动使用<code>PageUp</code>和<code>PageDown</code>可以实现上下翻页</p><h3 id="一些快捷键"><a href="#一些快捷键" class="headerlink" title="一些快捷键"></a>一些快捷键</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs shell">Ctrl+b %：划分左右两个窗格。<br>Ctrl+b &quot;：划分上下两个窗格。<br>Ctrl+b &lt;arrow key&gt;：光标切换到其他窗格。&lt;arrow key&gt;是指向要切换到的窗格的方向键，比如切换到下方窗格，就按方向键↓。<br>Ctrl+b ;：光标切换到上一个窗格。<br>Ctrl+b o：光标切换到下一个窗格。<br>Ctrl+b &#123;：当前窗格与上一个窗格交换位置。<br>Ctrl+b &#125;：当前窗格与下一个窗格交换位置。<br>Ctrl+b Ctrl+o：所有窗格向前移动一个位置，第一个窗格变成最后一个窗格。<br>Ctrl+b Alt+o：所有窗格向后移动一个位置，最后一个窗格变成第一个窗格。<br>Ctrl+b x：关闭当前窗格。<br>Ctrl+b !：将当前窗格拆分为一个独立窗口。<br>Ctrl+b z：当前窗格全屏显示，再使用一次会变回原来大小。<br>Ctrl+b Ctrl+&lt;arrow key&gt;：按箭头方向调整窗格大小。<br>Ctrl+b q：显示窗格编号。`在这里插入代码片`<br></code></pre></td></tr></table></figure><h3 id="一些补充操作："><a href="#一些补充操作：" class="headerlink" title="一些补充操作："></a>一些补充操作：</h3><p>列出所有会话：</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">tmux ls<br></code></pre></td></tr></table></figure>]]></content>
     
     
     <categories>
@@ -324,6 +324,25 @@
   
   
   <entry>
+    <title>数据库</title>
+    <link href="/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
+    <url>/%E6%95%B0%E6%8D%AE%E5%BA%93/</url>
+    
+    <content type="html"><![CDATA[<h1 id="数据库-sql"><a href="#数据库-sql" class="headerlink" title="数据库 [ sql ]"></a>数据库 [ sql ]</h1>]]></content>
+    
+    
+    <categories>
+      
+      <category>大模型</category>
+      
+    </categories>
+    
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>循环神经网络</title>
     <link href="/%E5%BE%AA%E7%8E%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/"/>
     <url>/%E5%BE%AA%E7%8E%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/</url>
@@ -366,16 +385,18 @@
   
   
   <entry>
-    <title>数据库</title>
-    <link href="/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
-    <url>/%E6%95%B0%E6%8D%AE%E5%BA%93/</url>
+    <title>机器学习_one</title>
+    <link href="/%E7%9B%91%E7%9D%A3%E5%AD%A6%E4%B9%A0/"/>
+    <url>/%E7%9B%91%E7%9D%A3%E5%AD%A6%E4%B9%A0/</url>
     
-    <content type="html"><![CDATA[<h1 id="数据库-sql"><a href="#数据库-sql" class="headerlink" title="数据库 [ sql ]"></a>数据库 [ sql ]</h1>]]></content>
+    <content type="html"><![CDATA[<h1 id="机器学习"><a href="#机器学习" class="headerlink" title="机器学习"></a>机器学习</h1>]]></content>
     
     
     <categories>
       
       <category>大模型</category>
+      
+      <category>机器学习</category>
       
     </categories>
     
@@ -397,27 +418,6 @@
       <category>大模型</category>
       
       <category>深度学习</category>
-      
-    </categories>
-    
-    
-  </entry>
-  
-  
-  
-  <entry>
-    <title>机器学习_one</title>
-    <link href="/%E7%9B%91%E7%9D%A3%E5%AD%A6%E4%B9%A0/"/>
-    <url>/%E7%9B%91%E7%9D%A3%E5%AD%A6%E4%B9%A0/</url>
-    
-    <content type="html"><![CDATA[<h1 id="机器学习"><a href="#机器学习" class="headerlink" title="机器学习"></a>机器学习</h1>]]></content>
-    
-    
-    <categories>
-      
-      <category>大模型</category>
-      
-      <category>机器学习</category>
       
     </categories>
     
