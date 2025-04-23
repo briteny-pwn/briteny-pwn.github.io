@@ -448,27 +448,6 @@
   
   
   <entry>
-    <title>机器学习_two</title>
-    <link href="/%E6%97%A0%E7%9B%91%E7%9D%A3%E5%AD%A6%E4%B9%A0/"/>
-    <url>/%E6%97%A0%E7%9B%91%E7%9D%A3%E5%AD%A6%E4%B9%A0/</url>
-    
-    <content type="html"><![CDATA[<h1 id="无监督学习"><a href="#无监督学习" class="headerlink" title="无监督学习"></a>无监督学习</h1>]]></content>
-    
-    
-    <categories>
-      
-      <category>大模型</category>
-      
-      <category>机器学习</category>
-      
-    </categories>
-    
-    
-  </entry>
-  
-  
-  
-  <entry>
     <title>数据库</title>
     <link href="/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
     <url>/%E6%95%B0%E6%8D%AE%E5%BA%93/</url>
@@ -488,11 +467,11 @@
   
   
   <entry>
-    <title>机器学习_one</title>
-    <link href="/%E7%9B%91%E7%9D%A3%E5%AD%A6%E4%B9%A0/"/>
-    <url>/%E7%9B%91%E7%9D%A3%E5%AD%A6%E4%B9%A0/</url>
+    <title>机器学习_two</title>
+    <link href="/%E6%97%A0%E7%9B%91%E7%9D%A3%E5%AD%A6%E4%B9%A0/"/>
+    <url>/%E6%97%A0%E7%9B%91%E7%9D%A3%E5%AD%A6%E4%B9%A0/</url>
     
-    <content type="html"><![CDATA[<h1 id="机器学习"><a href="#机器学习" class="headerlink" title="机器学习"></a>机器学习</h1>]]></content>
+    <content type="html"><![CDATA[<h1 id="无监督学习"><a href="#无监督学习" class="headerlink" title="无监督学习"></a>无监督学习</h1>]]></content>
     
     
     <categories>
@@ -521,6 +500,27 @@
       <category>大模型</category>
       
       <category>深度学习</category>
+      
+    </categories>
+    
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>机器学习_one</title>
+    <link href="/%E7%9B%91%E7%9D%A3%E5%AD%A6%E4%B9%A0/"/>
+    <url>/%E7%9B%91%E7%9D%A3%E5%AD%A6%E4%B9%A0/</url>
+    
+    <content type="html"><![CDATA[<h1 id="机器学习"><a href="#机器学习" class="headerlink" title="机器学习"></a>机器学习</h1>]]></content>
+    
+    
+    <categories>
+      
+      <category>大模型</category>
+      
+      <category>机器学习</category>
       
     </categories>
     
