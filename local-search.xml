@@ -8,7 +8,7 @@
     <link href="/%E5%BE%AE%E7%A7%AF%E5%88%86%E4%B8%8B/"/>
     <url>/%E5%BE%AE%E7%A7%AF%E5%88%86%E4%B8%8B/</url>
     
-    <content type="html"><![CDATA[<h1 id="微积分下"><a href="#微积分下" class="headerlink" title="微积分下"></a>微积分下</h1><h2 id="期中考试复习-无穷级数，向量代数与空间解析几何，多元函数微分学及其应用"><a href="#期中考试复习-无穷级数，向量代数与空间解析几何，多元函数微分学及其应用" class="headerlink" title="期中考试复习 [ 无穷级数，向量代数与空间解析几何，多元函数微分学及其应用 ]"></a>期中考试复习 [ 无穷级数，向量代数与空间解析几何，多元函数微分学及其应用 ]</h2><h3 id="无穷级数"><a href="#无穷级数" class="headerlink" title="无穷级数"></a>无穷级数</h3><h4 id="5-1-常数项级数的概率与基本性质"><a href="#5-1-常数项级数的概率与基本性质" class="headerlink" title="5.1 常数项级数的概率与基本性质"></a>5.1 常数项级数的概率与基本性质</h4><h5 id="课后简单习题回顾练手"><a href="#课后简单习题回顾练手" class="headerlink" title="课后简单习题回顾练手"></a>课后简单习题回顾练手</h5><p><img src="/./../00000000/image-20250426105553950.png" alt="image-20250426105553950"></p><table><thead><tr><th>题号</th><th>提示</th></tr></thead><tbody><tr><td>1</td><td>求和</td></tr><tr><td>2</td><td>裂项求和</td></tr><tr><td>3</td><td>裂项求和</td></tr><tr><td>4</td><td>求和</td></tr></tbody></table><p><img src="/./../00000000/image-20250426105604524.png" alt="image-20250426105604524"></p><table><thead><tr><th>题号</th><th>提示</th></tr></thead><tbody><tr><td>1</td><td>两个收敛级数</td></tr><tr><td>2</td><td>取极限第n项不为0</td></tr><tr><td>3</td><td>取极限第n项不为0</td></tr><tr><td>4</td><td>两个收敛级数</td></tr></tbody></table><p><strong>一个收敛级数与一个发散级数逐项相加所得级数一定发散，两个发散级数逐项相加所得的级数可能收敛</strong></p><p><img src="/./../00000000/image-20250426110356322.png" alt="image-20250426110356322"></p><p><strong>拆分为奇偶项再作化简</strong></p><h5 id="课堂习题"><a href="#课堂习题" class="headerlink" title="课堂习题"></a>课堂习题</h5><h6 id="1"><a href="#1" class="headerlink" title="1."></a>1.</h6><p><img src="/./../00000000/image-20250426143912288.png" alt="image-20250426143912288"></p><p><strong>answer</strong></p><p><img src="/./../00000000/image-20250426143942487.png" alt="image-20250426143942487"></p><h6 id="2"><a href="#2" class="headerlink" title="2."></a>2.</h6><p><img src="/./../00000000/image-20250426143951422.png" alt="image-20250426143951422"></p><p><strong>answer</strong></p><p><img src="/./../00000000/image-20250426144019737.png" alt="image-20250426144019737"></p><h6 id="3"><a href="#3" class="headerlink" title="3."></a>3.</h6><p><img src="/./../00000000/image-20250426144136277.png" alt="image-20250426144136277"></p><p><strong>answer</strong></p><p><img src="/./../00000000/image-20250426144209286.png" alt="image-20250426144209286"></p><h6 id="4"><a href="#4" class="headerlink" title="4."></a>4.</h6><p><img src="/./../00000000/image-20250426144235739.png" alt="image-20250426144235739"></p><p><strong>answer</strong></p><p><img src="/./../00000000/image-20250426144244703.png" alt="image-20250426144244703"></p><h6 id="5"><a href="#5" class="headerlink" title="5."></a>5.</h6><p><img src="/./../00000000/image-20250426144310441.png" alt="image-20250426144310441"></p><p><strong>answer</strong></p><p><img src="/./../00000000/image-20250426144418799.png" alt="image-20250426144418799"></p><h6 id="6"><a href="#6" class="headerlink" title="6."></a>6.</h6><p><img src="/./../00000000/image-20250426144443542.png" alt="image-20250426144443542"></p><p><strong>answer</strong></p><p><img src="/./../00000000/image-20250426144504338.png" alt="image-20250426144504338"></p><h6 id="7"><a href="#7" class="headerlink" title="7."></a>7.</h6><p><img src="/./../00000000/image-20250426144524838.png" alt="image-20250426144524838"></p><p><strong>answer</strong></p><p><img src="/./../00000000/image-20250426144545872.png" alt="image-20250426144545872"></p><h6 id="8"><a href="#8" class="headerlink" title="8."></a>8.</h6><p><img src="/./../00000000/image-20250426144747201.png"></p><p><strong>answer</strong></p><p><img src="/./../00000000/image-20250426144817610.png" alt="image-20250426144817610"></p><h6 id="9"><a href="#9" class="headerlink" title="9."></a>9.</h6><p><img src="/./../00000000/image-20250426144830086.png" alt="image-20250426144830086"></p><p><strong>answer</strong></p><p><img src="/./../00000000/image-20250426144848658.png" alt="image-20250426144848658"></p><h4 id="5-2-正项级数敛散性的判别法"><a href="#5-2-正项级数敛散性的判别法" class="headerlink" title="5.2 正项级数敛散性的判别法"></a>5.2 正项级数敛散性的判别法</h4><h5 id="课后简单习题回顾练手-1"><a href="#课后简单习题回顾练手-1" class="headerlink" title="课后简单习题回顾练手"></a>课后简单习题回顾练手</h5><p><img src="/./../00000000/image-20250426110540830.png" alt="image-20250426110540830"></p><p><strong>比值判别法</strong></p><p><img src="/./../00000000/image-20250426110611267.png" alt="image-20250426110611267"></p><p><img src="/./../00000000/image-20250426110641462.png" alt="image-20250426110641462"></p><p><img src="/./../00000000/image-20250426110649146.png" alt="image-20250426110649146"></p><p><strong>基本不等式 + 比较判别法</strong></p><p><img src="/./../00000000/image-20250426110749748.png" alt="image-20250426110749748"></p><p><img src="/./../00000000/image-20250426110948983.png" alt="image-20250426110948983"></p><table><thead><tr><th>题号</th><th>提示</th></tr></thead><tbody><tr><td>1</td><td>举一个P级数的例子</td></tr><tr><td>2</td><td></td></tr><tr><td>3</td><td>前对，后错 [ 0  ，1交错的级数 ]</td></tr></tbody></table><h4 id="5-3-任意项级数敛散性判别法"><a href="#5-3-任意项级数敛散性判别法" class="headerlink" title="5.3  任意项级数敛散性判别法"></a>5.3  任意项级数敛散性判别法</h4><h5 id="课后简单习题回顾练手-2"><a href="#课后简单习题回顾练手-2" class="headerlink" title="课后简单习题回顾练手"></a>课后简单习题回顾练手</h5><p><img src="/./../00000000/image-20250426113924696.png" alt="image-20250426113924696"></p><h4 id="5-4-幂级数"><a href="#5-4-幂级数" class="headerlink" title="5.4 幂级数"></a>5.4 幂级数</h4><p><strong>课后简单习题回顾练手</strong></p>]]></content>
+    <content type="html"><![CDATA[<h1 id="微积分下"><a href="#微积分下" class="headerlink" title="微积分下"></a>微积分下</h1><h2 id="期中考试复习-无穷级数，向量代数与空间解析几何，多元函数微分学及其应用"><a href="#期中考试复习-无穷级数，向量代数与空间解析几何，多元函数微分学及其应用" class="headerlink" title="期中考试复习 [ 无穷级数，向量代数与空间解析几何，多元函数微分学及其应用 ]"></a>期中考试复习 [ 无穷级数，向量代数与空间解析几何，多元函数微分学及其应用 ]</h2><h3 id="无穷级数"><a href="#无穷级数" class="headerlink" title="无穷级数"></a>无穷级数</h3><h4 id="5-1-常数项级数的概率与基本性质"><a href="#5-1-常数项级数的概率与基本性质" class="headerlink" title="5.1 常数项级数的概率与基本性质"></a>5.1 常数项级数的概率与基本性质</h4><h5 id="课后简单习题回顾练手"><a href="#课后简单习题回顾练手" class="headerlink" title="课后简单习题回顾练手"></a>课后简单习题回顾练手</h5><p><img src="/./../00000000/image-20250426105553950.png" alt="image-20250426105553950"></p><table><thead><tr><th>题号</th><th>提示</th></tr></thead><tbody><tr><td>1</td><td>求和</td></tr><tr><td>2</td><td>裂项求和</td></tr><tr><td>3</td><td>裂项求和</td></tr><tr><td>4</td><td>求和</td></tr></tbody></table><p><img src="/./../00000000/image-20250426105604524.png" alt="image-20250426105604524"></p><table><thead><tr><th>题号</th><th>提示</th></tr></thead><tbody><tr><td>1</td><td>两个收敛级数</td></tr><tr><td>2</td><td>取极限第n项不为0</td></tr><tr><td>3</td><td>取极限第n项不为0</td></tr><tr><td>4</td><td>两个收敛级数</td></tr></tbody></table><p><strong>一个收敛级数与一个发散级数逐项相加所得级数一定发散，两个发散级数逐项相加所得的级数可能收敛</strong></p><p><img src="/./../00000000/image-20250426110356322.png" alt="image-20250426110356322"></p><p><strong>拆分为奇偶项再作化简</strong></p><h5 id="课堂习题"><a href="#课堂习题" class="headerlink" title="课堂习题"></a>课堂习题</h5><h6 id="1"><a href="#1" class="headerlink" title="1."></a>1.</h6><p><img src="/./../00000000/image-20250426143912288.png" alt="image-20250426143912288"></p><p><strong>answer</strong></p><p><img src="/./../00000000/image-20250426143942487.png" alt="image-20250426143942487"></p><h6 id="2"><a href="#2" class="headerlink" title="2."></a>2.</h6><p><img src="/./../00000000/image-20250426143951422.png" alt="image-20250426143951422"></p><p><strong>answer</strong></p><p><img src="/./../00000000/image-20250426144019737.png" alt="image-20250426144019737"></p><h6 id="3"><a href="#3" class="headerlink" title="3."></a>3.</h6><p><img src="/./../00000000/image-20250426144136277.png" alt="image-20250426144136277"></p><p><strong>answer</strong></p><p><img src="/./../00000000/image-20250426144209286.png" alt="image-20250426144209286"></p><h6 id="4"><a href="#4" class="headerlink" title="4."></a>4.</h6><p><img src="/./../00000000/image-20250426144235739.png" alt="image-20250426144235739"></p><p><strong>answer</strong></p><p><img src="/./../00000000/image-20250426144244703.png" alt="image-20250426144244703"></p><h6 id="5"><a href="#5" class="headerlink" title="5."></a>5.</h6><p><img src="/./../00000000/image-20250426144310441.png" alt="image-20250426144310441"></p><p><strong>answer</strong></p><p><img src="/./../00000000/image-20250426144418799.png" alt="image-20250426144418799"></p><h6 id="6"><a href="#6" class="headerlink" title="6."></a>6.</h6><p><img src="/./../00000000/image-20250426144443542.png" alt="image-20250426144443542"></p><p><strong>answer</strong></p><p><img src="/./../00000000/image-20250426144504338.png" alt="image-20250426144504338"></p><h6 id="7"><a href="#7" class="headerlink" title="7."></a>7.</h6><p><img src="/./../00000000/image-20250426144524838.png" alt="image-20250426144524838"></p><p><strong>answer</strong></p><p><img src="/./../00000000/image-20250426144545872.png" alt="image-20250426144545872"></p><h6 id="8"><a href="#8" class="headerlink" title="8."></a>8.</h6><p><img src="/./../00000000/image-20250426144747201.png"></p><p><strong>answer</strong></p><p><img src="/./../00000000/image-20250426144817610.png" alt="image-20250426144817610"></p><h6 id="9"><a href="#9" class="headerlink" title="9."></a>9.</h6><p><img src="/./../00000000/image-20250426144830086.png" alt="image-20250426144830086"></p><p><strong>answer</strong></p><p><img src="/./../00000000/image-20250426144848658.png" alt="image-20250426144848658"></p><h4 id="5-2-正项级数敛散性的判别法"><a href="#5-2-正项级数敛散性的判别法" class="headerlink" title="5.2 正项级数敛散性的判别法"></a>5.2 正项级数敛散性的判别法</h4><h5 id="课后简单习题回顾练手-1"><a href="#课后简单习题回顾练手-1" class="headerlink" title="课后简单习题回顾练手"></a>课后简单习题回顾练手</h5><p><img src="/./../00000000/image-20250426110540830.png" alt="image-20250426110540830"></p><p><strong>比值判别法</strong></p><p><img src="/./../00000000/image-20250426110611267.png" alt="image-20250426110611267"></p><p><img src="/./../00000000/image-20250426110641462.png" alt="image-20250426110641462"></p><p><img src="/./../00000000/image-20250426110649146.png" alt="image-20250426110649146"></p><p><strong>基本不等式 + 比较判别法</strong></p><p><img src="/./../00000000/image-20250426110749748.png" alt="image-20250426110749748"></p><p><img src="/./../00000000/image-20250426110948983.png" alt="image-20250426110948983"></p><table><thead><tr><th>题号</th><th>提示</th></tr></thead><tbody><tr><td>1</td><td>举一个P级数的例子</td></tr><tr><td>2</td><td>正确，证明在5.1的课堂习题末尾</td></tr><tr><td>3</td><td>前对，后错 [ 0  ，1交错的级数 ]</td></tr></tbody></table><h4 id="5-3-任意项级数敛散性判别法"><a href="#5-3-任意项级数敛散性判别法" class="headerlink" title="5.3  任意项级数敛散性判别法"></a>5.3  任意项级数敛散性判别法</h4><h5 id="课后简单习题回顾练手-2"><a href="#课后简单习题回顾练手-2" class="headerlink" title="课后简单习题回顾练手"></a>课后简单习题回顾练手</h5><p><img src="/./../00000000/image-20250426113924696.png" alt="image-20250426113924696"></p><p><img src="/./../00000000/image-20250426150007774.png" alt="image-20250426150007774"></p><p><strong>基本不等式</strong></p><p><img src="/./../00000000/image-20250426150139281.png" alt="image-20250426150139281"></p><p><strong>方法一</strong></p><p><img src="/./../00000000/image-20250426150526512.png" alt="image-20250426150526512"></p><p><strong>方法二</strong></p><p><img src="/./../00000000/image-20250426165418638.png" alt="image-20250426165418638"></p><p><img src="/./../00000000/image-20250426150557490.png" alt="image-20250426150557490"></p><p><img src="/./../00000000/image-20250426165536872.png" alt="image-20250426165536872"></p><p><img src="/./../00000000/image-20250426170156925.png" alt="image-20250426170156925"></p><table><thead><tr><th align="center">题号</th><th align="center">提示</th><th align="center">答案</th></tr></thead><tbody><tr><td align="center">1</td><td align="center"></td><td align="center">绝对收敛</td></tr><tr><td align="center">2</td><td align="center">等价无穷小【 比较判别法 】</td><td align="center">条件收敛</td></tr><tr><td align="center">3</td><td align="center"></td><td align="center">绝对收敛</td></tr><tr><td align="center">4</td><td align="center"></td><td align="center">发散</td></tr><tr><td align="center">5</td><td align="center"></td><td align="center">绝对收敛</td></tr></tbody></table><h5 id="课堂习题-1"><a href="#课堂习题-1" class="headerlink" title="课堂习题"></a>课堂习题</h5><h6 id="1-1"><a href="#1-1" class="headerlink" title="1."></a>1.</h6><p><img src="/./../00000000/image-20250426172347896.png" alt="image-20250426172347896"></p><p><strong>answer：D</strong></p><p><img src="/./../00000000/image-20250426172415415.png" alt="image-20250426172415415"></p><h6 id="2-1"><a href="#2-1" class="headerlink" title="2."></a>2.</h6><p><img src="/./../00000000/image-20250426172516674.png" alt="image-20250426172516674"></p><p><strong>answer</strong></p><p><img src="/./../00000000/image-20250426172532294.png" alt="image-20250426172532294"></p><h6 id="3-1"><a href="#3-1" class="headerlink" title="3."></a>3.</h6><p><img src="/./../00000000/image-20250426172554175.png" alt="image-20250426172554175"></p><p><strong>answer</strong></p><p><img src="/./../00000000/image-20250426172654106.png" alt="image-20250426172654106"></p><h6 id="4-1"><a href="#4-1" class="headerlink" title="4."></a>4.</h6><p><img src="/./../00000000/image-20250426172711102.png" alt="image-20250426172711102"></p><p><strong>answer</strong></p><p><img src="/./../00000000/image-20250426172937841.png" alt="image-20250426172937841"></p><h6 id="5-1"><a href="#5-1" class="headerlink" title="5."></a>5.</h6><p><img src="/./../00000000/image-20250426173030758.png" alt="image-20250426173030758"></p><p><strong>answer</strong></p><p><img src="/./../00000000/image-20250426173053080.png" alt="image-20250426173053080"></p><p><img src="/./../00000000/image-20250426173112641.png" alt="image-20250426173112641"></p><h6 id="6-1"><a href="#6-1" class="headerlink" title="6."></a>6.</h6><p><img src="/./../00000000/image-20250426173138988.png" alt="image-20250426173138988"></p><p><strong>answer</strong></p><p><img src="/./../00000000/image-20250426173157578.png" alt="image-20250426173157578"></p><h6 id="7-1"><a href="#7-1" class="headerlink" title="7."></a>7.</h6><p><img src="/./../00000000/image-20250426173215124.png" alt="image-20250426173215124"></p><p><strong>answer</strong></p><p><img src="/./../00000000/image-20250426173232509.png" alt="image-20250426173232509"></p><h6 id="8-1"><a href="#8-1" class="headerlink" title="8."></a>8.</h6><p><img src="/./../00000000/image-20250426173255405.png" alt="image-20250426173255405"></p><p><strong>answer</strong></p><p><img src="/./../00000000/image-20250426173335611.png" alt="image-20250426173335611"></p><h6 id="9-1"><a href="#9-1" class="headerlink" title="9."></a>9.</h6><p><img src="/./../00000000/image-20250426173410524.png" alt="image-20250426173410524"></p><p><strong>answer</strong></p><p><img src="/./../00000000/image-20250426173451115.png" alt="image-20250426173451115"></p><p><img src="/./../00000000/image-20250426173506969.png" alt="image-20250426173506969"></p><h6 id="10"><a href="#10" class="headerlink" title="10."></a>10.</h6><p><img src="/./../00000000/image-20250426173534838.png" alt="image-20250426173534838"></p><p><strong>answer</strong></p><p><img src="/./../00000000/image-20250426173605662.png" alt="image-20250426173605662"></p><h6 id="11"><a href="#11" class="headerlink" title="11."></a>11.</h6><p><img src="/./../00000000/image-20250426173630094.png" alt="image-20250426173630094"></p><p><strong>answer</strong></p><p><img src="/./../00000000/image-20250426173652353.png" alt="image-20250426173652353"></p><h6 id="12"><a href="#12" class="headerlink" title="12."></a>12.</h6><p><img src="/./../00000000/image-20250426173717297.png" alt="image-20250426173717297"></p><p><img src="/./../00000000/image-20250426173726008.png" alt="image-20250426173726008"></p><p><strong>answer</strong></p><p><img src="/./../00000000/image-20250426173740540.png" alt="image-20250426173740540"></p><h6 id="13"><a href="#13" class="headerlink" title="13."></a>13.</h6><p><img src="/./../00000000/image-20250426173809453.png" alt="image-20250426173809453"></p><p><strong>answer</strong></p><p><img src="/./../00000000/image-20250426173839186.png" alt="image-20250426173839186"></p><h6 id="14"><a href="#14" class="headerlink" title="14."></a>14.</h6><p><img src="/./../00000000/image-20250426173901922.png" alt="image-20250426173901922"></p><p><strong>answer</strong></p><p><img src="/./../00000000/image-20250426173923556.png" alt="image-20250426173923556"></p><p><img src="/./../00000000/image-20250426173934108.png" alt="image-20250426173934108"></p><h6 id="15"><a href="#15" class="headerlink" title="15."></a>15.</h6><p><img src="/./../00000000/image-20250426173948670.png" alt="image-20250426173948670"></p><p><strong>answer</strong></p><p><img src="/./../00000000/image-20250426174007413.png" alt="image-20250426174007413"></p><h4 id="5-4-幂级数"><a href="#5-4-幂级数" class="headerlink" title="5.4 幂级数"></a>5.4 幂级数</h4><p><strong>课后简单习题回顾练手</strong></p>]]></content>
     
     
     <categories>
@@ -374,16 +374,16 @@
   
   
   <entry>
-    <title>大模型学习的数学基础</title>
-    <link href="/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/"/>
-    <url>/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/</url>
+    <title>Vue</title>
+    <link href="/Vue%E5%AD%A6%E4%B9%A0/"/>
+    <url>/Vue%E5%AD%A6%E4%B9%A0/</url>
     
-    <content type="html"><![CDATA[<h1 id="大模型数学基础"><a href="#大模型数学基础" class="headerlink" title="大模型数学基础"></a>大模型数学基础</h1><p><strong>1.线性代数</strong></p><p><strong>2.高等数学</strong></p><p><strong>3.概率论与数理统计</strong></p><h2 id="1-线性代数"><a href="#1-线性代数" class="headerlink" title="1.线性代数"></a>1.线性代数</h2><h2 id="2-高等数学【微积分】"><a href="#2-高等数学【微积分】" class="headerlink" title="2.高等数学【微积分】"></a>2.高等数学【微积分】</h2><h2 id="3-概率论与数理统计"><a href="#3-概率论与数理统计" class="headerlink" title="3.概率论与数理统计"></a>3.概率论与数理统计</h2><h3 id="第四章-随机变量的数字特征"><a href="#第四章-随机变量的数字特征" class="headerlink" title="第四章   随机变量的数字特征"></a>第四章   随机变量的数字特征</h3><p><strong>数学期望</strong><br>$$<br>设随机变量X的分布律为P{x_k} &#x3D; p_k, k&#x3D;1,2,3,4…,<br>$$</p><p>$$<br>若级数\sum_{k&#x3D;1}^{\infty} x_kp_k绝对收敛，则称EX &#x3D; \sum_{k&#x3D;1}^{\infty} x_k*p_k为随机变量的数学期望<br>$$</p><p>$$<br>如果级数\sum_{k&#x3D;1}^{\infty} |x_k|p_k不收敛，则称X的数学期望不存在，数学期望也称平均值，均值<br>$$</p><p><strong>连续型随机变量的数学期望</strong></p>]]></content>
+    <content type="html"><![CDATA[<h1 id="Vue学习"><a href="#Vue学习" class="headerlink" title="Vue学习"></a>Vue学习</h1><p><strong>学习链接[官方文档]：</strong><a href="https://cn.vuejs.org/guide/introduction">简介 | Vue.js</a></p>]]></content>
     
     
     <categories>
       
-      <category>大模型</category>
+      <category>项目开发实践</category>
       
     </categories>
     
@@ -414,16 +414,35 @@
   
   
   <entry>
-    <title>Vue</title>
-    <link href="/Vue%E5%AD%A6%E4%B9%A0/"/>
-    <url>/Vue%E5%AD%A6%E4%B9%A0/</url>
+    <title>大模型学习的数学基础</title>
+    <link href="/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/"/>
+    <url>/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/</url>
     
-    <content type="html"><![CDATA[<h1 id="Vue学习"><a href="#Vue学习" class="headerlink" title="Vue学习"></a>Vue学习</h1><p><strong>学习链接[官方文档]：</strong><a href="https://cn.vuejs.org/guide/introduction">简介 | Vue.js</a></p>]]></content>
+    <content type="html"><![CDATA[<h1 id="大模型数学基础"><a href="#大模型数学基础" class="headerlink" title="大模型数学基础"></a>大模型数学基础</h1><p><strong>1.线性代数</strong></p><p><strong>2.高等数学</strong></p><p><strong>3.概率论与数理统计</strong></p><h2 id="1-线性代数"><a href="#1-线性代数" class="headerlink" title="1.线性代数"></a>1.线性代数</h2><h2 id="2-高等数学【微积分】"><a href="#2-高等数学【微积分】" class="headerlink" title="2.高等数学【微积分】"></a>2.高等数学【微积分】</h2><h2 id="3-概率论与数理统计"><a href="#3-概率论与数理统计" class="headerlink" title="3.概率论与数理统计"></a>3.概率论与数理统计</h2><h3 id="第四章-随机变量的数字特征"><a href="#第四章-随机变量的数字特征" class="headerlink" title="第四章   随机变量的数字特征"></a>第四章   随机变量的数字特征</h3><p><strong>数学期望</strong><br>$$<br>设随机变量X的分布律为P{x_k} &#x3D; p_k, k&#x3D;1,2,3,4…,<br>$$</p><p>$$<br>若级数\sum_{k&#x3D;1}^{\infty} x_kp_k绝对收敛，则称EX &#x3D; \sum_{k&#x3D;1}^{\infty} x_k*p_k为随机变量的数学期望<br>$$</p><p>$$<br>如果级数\sum_{k&#x3D;1}^{\infty} |x_k|p_k不收敛，则称X的数学期望不存在，数学期望也称平均值，均值<br>$$</p><p><strong>连续型随机变量的数学期望</strong></p>]]></content>
     
     
     <categories>
       
-      <category>项目开发实践</category>
+      <category>大模型</category>
+      
+    </categories>
+    
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>数据库</title>
+    <link href="/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
+    <url>/%E6%95%B0%E6%8D%AE%E5%BA%93/</url>
+    
+    <content type="html"><![CDATA[<h1 id="数据库-sql"><a href="#数据库-sql" class="headerlink" title="数据库 [ sql ]"></a>数据库 [ sql ]</h1>]]></content>
+    
+    
+    <categories>
+      
+      <category>大模型</category>
       
     </categories>
     
@@ -454,16 +473,39 @@
   
   
   <entry>
-    <title>数据库</title>
-    <link href="/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
-    <url>/%E6%95%B0%E6%8D%AE%E5%BA%93/</url>
+    <title>深度学习框架</title>
+    <link href="/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E6%A1%86%E6%9E%B6/"/>
+    <url>/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E6%A1%86%E6%9E%B6/</url>
     
-    <content type="html"><![CDATA[<h1 id="数据库-sql"><a href="#数据库-sql" class="headerlink" title="数据库 [ sql ]"></a>数据库 [ sql ]</h1>]]></content>
+    <content type="html"><![CDATA[<h1 id="深度学习框架"><a href="#深度学习框架" class="headerlink" title="深度学习框架"></a>深度学习框架</h1>]]></content>
     
     
     <categories>
       
       <category>大模型</category>
+      
+      <category>深度学习</category>
+      
+    </categories>
+    
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>机器学习_two</title>
+    <link href="/%E6%97%A0%E7%9B%91%E7%9D%A3%E5%AD%A6%E4%B9%A0/"/>
+    <url>/%E6%97%A0%E7%9B%91%E7%9D%A3%E5%AD%A6%E4%B9%A0/</url>
+    
+    <content type="html"><![CDATA[<h1 id="无监督学习"><a href="#无监督学习" class="headerlink" title="无监督学习"></a>无监督学习</h1>]]></content>
+    
+    
+    <categories>
+      
+      <category>大模型</category>
+      
+      <category>机器学习</category>
       
     </categories>
     
@@ -494,27 +536,6 @@
   
   
   <entry>
-    <title>深度学习框架</title>
-    <link href="/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E6%A1%86%E6%9E%B6/"/>
-    <url>/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E6%A1%86%E6%9E%B6/</url>
-    
-    <content type="html"><![CDATA[<h1 id="深度学习框架"><a href="#深度学习框架" class="headerlink" title="深度学习框架"></a>深度学习框架</h1>]]></content>
-    
-    
-    <categories>
-      
-      <category>大模型</category>
-      
-      <category>深度学习</category>
-      
-    </categories>
-    
-    
-  </entry>
-  
-  
-  
-  <entry>
     <title>自然语言处理基础</title>
     <link href="/%E8%87%AA%E7%84%B6%E8%AF%AD%E8%A8%80%E5%A4%84%E7%90%86%E5%9F%BA%E7%A1%80/"/>
     <url>/%E8%87%AA%E7%84%B6%E8%AF%AD%E8%A8%80%E5%A4%84%E7%90%86%E5%9F%BA%E7%A1%80/</url>
@@ -527,27 +548,6 @@
       <category>大模型</category>
       
       <category>深度学习</category>
-      
-    </categories>
-    
-    
-  </entry>
-  
-  
-  
-  <entry>
-    <title>机器学习_two</title>
-    <link href="/%E6%97%A0%E7%9B%91%E7%9D%A3%E5%AD%A6%E4%B9%A0/"/>
-    <url>/%E6%97%A0%E7%9B%91%E7%9D%A3%E5%AD%A6%E4%B9%A0/</url>
-    
-    <content type="html"><![CDATA[<h1 id="无监督学习"><a href="#无监督学习" class="headerlink" title="无监督学习"></a>无监督学习</h1>]]></content>
-    
-    
-    <categories>
-      
-      <category>大模型</category>
-      
-      <category>机器学习</category>
       
     </categories>
     
