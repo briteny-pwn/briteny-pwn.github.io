@@ -27,7 +27,7 @@
 <meta property="og:description" content="解题WP">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-04-28T03:49:00.000Z">
-<meta property="article:modified_time" content="2025-04-28T04:26:33.577Z">
+<meta property="article:modified_time" content="2025-04-28T04:47:32.427Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary_large_image">
   
@@ -234,7 +234,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          901 字
+          1k 字
         
       </span>
     
@@ -245,7 +245,7 @@
         
         
         
-          8 分钟
+          9 分钟
         
       </span>
     
@@ -333,7 +333,15 @@
 
 <p><strong>可以明显地看到，func2中存在明显的格式化字符串漏洞</strong></p>
 <p><strong>然后这个还是我们可以输入的东西，然后我们就测试一下发现确实就是输出和我们一样的东西，所以漏洞存在，围绕其开始</strong></p>
-<p><strong>想尝试一下，现在的基本思路就是，想通过格式化字符串漏洞来控制程序重新回到puts并修改puts的got表的位置为libc中的system，只要能控制程序重启，就同样可以泄露出libc然后再进行相关操作或者也可以找找libc中是否有one_gadget</strong></p>
+<p><strong>现在就是想要尝试通过先实现控制程序流程重启，再泄露libc，再修改返回地址为one_gadget</strong></p>
+<h4 id="one-gadget"><a href="#one-gadget" class="headerlink" title="one_gadget:"></a>one_gadget:</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><code class="hljs shell">briteny@localhost:/mnt/d/copy/cmp_2$ one_gadget ./libc.so.6<br>0xebc81 execve(&quot;/bin/sh&quot;, r10, [rbp-0x70])<br>constraints:<br>  address rbp-0x78 is writable<br>  [r10] == NULL || r10 == NULL || r10 is a valid argv<br>  [[rbp-0x70]] == NULL || [rbp-0x70] == NULL || [rbp-0x70] is a valid envp<br><br>0xebc85 execve(&quot;/bin/sh&quot;, r10, rdx)<br>constraints:<br>  address rbp-0x78 is writable<br>  [r10] == NULL || r10 == NULL || r10 is a valid argv<br>  [rdx] == NULL || rdx == NULL || rdx is a valid envp<br><br>0xebc88 execve(&quot;/bin/sh&quot;, rsi, rdx)<br>constraints:<br>  address rbp-0x78 is writable<br>  [rsi] == NULL || rsi == NULL || rsi is a valid argv<br>  [rdx] == NULL || rdx == NULL || rdx is a valid envp<br><br>0xebce2 execve(&quot;/bin/sh&quot;, rbp-0x50, r12)<br>constraints:<br>  address rbp-0x48 is writable<br>  r13 == NULL || &#123;&quot;/bin/sh&quot;, r13, NULL&#125; is a valid argv<br>  [r12] == NULL || r12 == NULL || r12 is a valid envp<br><br>0xebd38 execve(&quot;/bin/sh&quot;, rbp-0x50, [rbp-0x70])<br>constraints:<br>  address rbp-0x48 is writable<br>  r12 == NULL || &#123;&quot;/bin/sh&quot;, r12, NULL&#125; is a valid argv<br>  [[rbp-0x70]] == NULL || [rbp-0x70] == NULL || [rbp-0x70] is a valid envp<br><br>0xebd3f execve(&quot;/bin/sh&quot;, rbp-0x50, [rbp-0x70])<br>constraints:<br>  address rbp-0x48 is writable<br>  rax == NULL || &#123;rax, r12, NULL&#125; is a valid argv<br>  [[rbp-0x70]] == NULL || [rbp-0x70] == NULL || [rbp-0x70] is a valid envp<br><br>0xebd43 execve(&quot;/bin/sh&quot;, rbp-0x50, [rbp-0x70])<br>constraints:<br>  address rbp-0x50 is writable<br>  rax == NULL || &#123;rax, [rbp-0x48], NULL&#125; is a valid argv<br>  [[rbp-0x70]] == NULL || [rbp-0x70] == NULL || [rbp-0x70] is a valid envp<br></code></pre></td></tr></table></figure>
+
+
+
+
+
+
+
 <h2 id="Crypto"><a href="#Crypto" class="headerlink" title="Crypto"></a>Crypto</h2><h2 id="Misc"><a href="#Misc" class="headerlink" title="Misc"></a>Misc</h2>
                 
               </div>
