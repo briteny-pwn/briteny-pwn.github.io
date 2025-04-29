@@ -1,0 +1,1411 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/cat.jpg">
+  <link rel="icon" href="/img/cat.jpg">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="briteny-pwn">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="汇编语言">
+<meta property="og:type" content="article">
+<meta property="og:title" content="汇编语言">
+<meta property="og:url" content="http://example.com/%E6%B1%87%E7%BC%96%E8%AF%AD%E8%A8%80(%E7%8E%8B%E7%88%BD)%E7%9F%A5%E8%AF%86%E7%82%B9%E6%80%BB%E7%BB%93/index.html">
+<meta property="og:site_name" content="Briteny&#39;s Blog">
+<meta property="og:description" content="汇编语言">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/00000000/1.jpg">
+<meta property="og:image" content="http://example.com/00000000/2.jpg">
+<meta property="og:image" content="http://example.com/00000000/3.jpg">
+<meta property="og:image" content="http://example.com/00000000/4.jpg">
+<meta property="og:image" content="http://example.com/00000000/5.jpg">
+<meta property="og:image" content="http://example.com/00000000/6.jpg">
+<meta property="og:image" content="http://example.com/00000000/7.jpg">
+<meta property="og:image" content="http://example.com/00000000/8.jpg">
+<meta property="og:image" content="http://example.com/00000000/9.jpg">
+<meta property="og:image" content="http://example.com/00000000/10.jpg">
+<meta property="og:image" content="http://example.com/00000000/11.jpg">
+<meta property="og:image" content="http://example.com/00000000/12.jpg">
+<meta property="og:image" content="http://example.com/00000000/13.jpg">
+<meta property="og:image" content="http://example.com/00000000/14.jpg">
+<meta property="og:image" content="http://example.com/00000000/15.jpg">
+<meta property="og:image" content="http://example.com/00000000/16.jpg">
+<meta property="article:published_time" content="2025-03-31T13:44:00.000Z">
+<meta property="article:modified_time" content="2025-04-29T06:30:53.554Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/00000000/1.jpg">
+  
+  
+  
+  <title>汇编语言 - Briteny&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":100,"cursorChar":".","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>briteny-pwn&#39;s blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/" target="_self">
+                <i class="iconfont icon-link-fill"></i>
+                <span>友链</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="汇编语言"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-03-31 21:44" pubdate>
+          2025年3月31日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          9.3k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          78 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">汇编语言</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>​	本文档为大连理工大学软件学院24级Briteny所总结编写，内容基于汇编语言（王爽）的第四版，加入个人理解和总结，如有问题，欢迎及时指正。</p>
+<p>​	由于书的缘故，本文档内容可能和现在的设备相差较大，但对于入门学者，可以初步奠定对计算机的汇编语言以及相关的基本结构逻辑的认识，这个速通版还是可以读一读，毕竟虽然有点过时，但是毕竟计算机系统结构没有大改，所以基础的逻辑没变，所以我认为本书还是值得看一看。</p>
+<p>​	另外本书介绍了debug的使用，但本菜鸡只是略看一下，没有太多认识，且该debug对于二进制网络安全方向学习并不是很便利，所以不建议学习，其实我在电脑上系统更新把这个程序优化掉了。如果想要学习，请安装DOS并在CSDN上查询教程安装，在此我便不误人子弟了。</p>
+<p><strong>阅读建议</strong>：</p>
+<p>全篇读完后可以尝试看看书上的思考题，来确保自己正真掌握了这些相关的知识</p>
+<p>[TOC]</p>
+<h1 id="基础知识"><a href="#基础知识" class="headerlink" title="基础知识"></a>基础知识</h1><p>汇编语言的指令组成：</p>
+<p>1.汇编指令：机器码的助记符，有对应的机械码。</p>
+<p>2.伪指令：没有对应的机械码，由编译器执行，计算机并不运行。</p>
+<p>3.其他符号：如+，-，*，&#x2F;等，由编译器识别，没有对应的机械码。</p>
+<p>存储器（内存）：指令和数据在存储器中存放。</p>
+<p>指令和数据：在内存或磁盘上，数据和命令没有区别，都是二进制信息。</p>
+<p>存储单元：</p>
+<p>电子计算机的最小信息单位是bit，也就是一个二进制位。</p>
+<p>微型机存储器的存储单元可以存储一个byte，即八个bit。</p>
+<p>一个存储器有128个存储单元，也就是128字节。</p>
+<p>CPU对存储器的读写：</p>
+<p>CPU进行读写的要求：1.存储单元的地址（地址信息），2.器件的选择，读或写得命令（控制信息），3.读或写的数据（数据信息）。</p>
+<p>示例如下：[CPU从三号单元读取数据]</p>
+<p><img src="/../00000000/1.jpg" srcset="/img/loading.gif" lazyload></p>
+<p>过程：先地址线过程，再控制线过程，随后数据线过程。</p>
+<p>总线：地址总线，控制总线，数据总线。</p>
+<p>地址总线：导线可以传输的稳定状态只有两种，高电平或低电平。用二进制表示就是1和0.</p>
+<p>CPU的寻址能力就是2的N次方（N是地址线个数）。</p>
+<p>数据总线：8088CPU的数据总线宽度为8，一次只能传输一个字节；8086CPU的数据总线宽度为16，一次可以传输两个字节.</p>
+<p>示例：两种CPU传输89D8H</p>
+<p><img src="/../00000000/2.jpg" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/./00000000/3.jpg" srcset="/img/loading.gif" lazyload></p>
+<p>控制总线：有多少根控制总线，就意味着CPU对外界有多少中控制。</p>
+<p>主板：主板上有核心器件和一些主要器具，他们通过总线相连。</p>
+<p>接卡口：CPU对外部设备是无法直接控制的，直接控制这些外部设备的是接卡口，CPU通过直接控制接卡口来间接控制外部设备。</p>
+<p>各类存储芯片：随机存储器（RAM）和只读存储器（ROM）。</p>
+<p>RAM：可读可写，但必须带电存储。</p>
+<p>ROM：只可读取不可写入，关机后不丢失。</p>
+<p>根据功能和连接方式又可分为：</p>
+<p>随机存储器：存放CPU的绝大部分数据，主存储器一般由两个位置上的RAM组成——装在主板上的RAM和装在接卡口的RAM。</p>
+<p>装有BIOS(基本输入输出系统)的ROM</p>
+<p>接卡口上的RAM：对大批量的输入输出数据暂时存储</p>
+<p>内存地址空间:</p>
+<p>CPU将系统内的各类存储器看作逻辑存储器：</p>
+<p><img src="/../00000000/4.jpg" srcset="/img/loading.gif" lazyload></p>
+<h1 id="寄存器"><a href="#寄存器" class="headerlink" title="寄存器"></a>寄存器</h1><p>寄存器是CPU的主要部件，进行数据的存储。</p>
+<p>通用寄存器：AX,BX,CX,DX这四个用来存放一般性的数据，称为通用寄存器。</p>
+<p>[8086CPU上一代寄存器都是8位的，8086CPU寄存器16位，可分为两个八位可独立的八位寄存器使用分为H，L]</p>
+<p>两个字节成为一个字。</p>
+<p>几条简单的汇编指令：[在写汇编指令时不需要区分大小写]</p>
+<p>mov ax,18  将18传入ax寄存器中</p>
+<p>add ax,bx 等效于ax&#x3D;ax+bx</p>
+<p>物理地址：存储空间本质上是一个一维的线性空间，每一个内存地址在这个空间中都有唯一的地址，这个地址就是物理地址。</p>
+<p>16位的CPU：一次性可以处理16位的数据，寄存器的宽度为16位；寄存器和运算器的通路为16位。</p>
+<p>8086CPU给出物理地址的方法：采取两个16位地址合成一个20位地址，通过地址加法器得到物理地址。</p>
+<p>地址加法器运算：物理地址&#x3D;段地址*16+偏移地址。</p>
+<p>段：内存并没有分段，只是CPU分段了（段的最大长度为64KB由偏移地址的最大值决定）</p>
+<p>例如：地址10000H~100FFH的内存地址组成一个段，这个段的起始基址为10000H，段地址为1000H，大小为100H；</p>
+<p>[段地址*16是一定是16的倍数，所以一个段的起始地址必然是16的倍数，这就是段地址如上表示的原因]</p>
+<p>段寄存器：8086CPU中有四个段寄存器CS,DS,SS,ES。CPU要访问内存时由这四个段寄存器提供内存单元段地址。</p>
+<p>CS,IP指示了当前要读取<strong>命令</strong>的地址</p>
+<p>CS：代码段寄存器，(段地址)</p>
+<p>IP：指令指针寄存器，(偏移地址)</p>
+<p>CS,IP指令的修改：简单的mov指令并不能修改CS,IP。此时需要用到jmp</p>
+<p>jmp的用法：jmp  段地址：偏移地址   意为修改CS,IP为相应的段地址；</p>
+<p>​		      jmp  ax  (ax代指合法寄存器) 意思为修改IP为ax中的值。</p>
+<p>代码段：可以在内存单元中定义一个段，用于存放代码。</p>
+<h1 id="寄存器（内存访问）"><a href="#寄存器（内存访问）" class="headerlink" title="寄存器（内存访问）"></a>寄存器（内存访问）</h1><p>字单元：即存放一个字型数据（16位）的内存单元，由两个地址连续的内存单元组成。</p>
+<p>用16位来寄存一个字。高八位放高位字节，低八位放低位字节。</p>
+<p>DS和[address]:</p>
+<p>DS:8086CPU中有一个DS寄存器，<strong>通常用于存放要访问的数据的段地址</strong>。[注意看向ds中放入数据的方式]</p>
+<p>示例：</p>
+<p>mov bx 1000H</p>
+<p>mov ds bx </p>
+<p>mov al [0]</p>
+<p>此时的[0]中的0就是内存单元的偏移地址，执行命令时，8086CPU会<strong>自动读取</strong>段地址。</p>
+<p>字的传送：</p>
+<p>由于8086CPU的16位结构，所以只需要在mov指令中给出16位寄存器就可以进行16位数据的传送了</p>
+<p>mov,add ,sub指令：</p>
+<p>mov    寄存器，数据</p>
+<p>mov    寄存器，寄存器</p>
+<p>mov    寄存器，内存单元</p>
+<p>mov    段寄存器，寄存器</p>
+<p>sub,add指令用法基本相同，一个代表加，一个代表减。</p>
+<p>数据段：编程时根据需要，将一组内存单元定义为一个段专门存储数据。</p>
+<p>栈：栈是一种具有独特访问方式的存储空间，特殊性就在于最后进入这个空间的数据最先出去（LIFO）</p>
+<p>由于这种独特的存储方式，与正常的其他存储不同，在栈中，先放入栈的数据地址是高地址，而读取时则是读取低地址。</p>
+<p>CPU提供的栈机制：</p>
+<p>8086CPU提供基础的出栈(pop),入栈(push)指令。</p>
+<p>SS,SP：任何时刻，SS:SP指向栈顶地址</p>
+<p>push 指令按图示完成</p>
+<p><img src="/../00000000/5.jpg" srcset="/img/loading.gif" lazyload></p>
+<p><strong>pop指令则刚好相反：</strong></p>
+<p><img src="/../00000000/6.jpg" srcset="/img/loading.gif" lazyload></p>
+<p>栈顶超界问题：</p>
+<p>栈满或栈空状态下执行pop,push指令很容易导致栈顶超界。</p>
+<p>8086CPU不保证我们对栈的操作不会超界，也就是说，8086CPU只知道栈顶在哪，而不知道我们安排的栈空间有多大。</p>
+<p>栈段：将一组内存单元定义为一个段，将其作为栈来使用，从而定义了一个栈段。</p>
+<h1 id="第一个程序"><a href="#第一个程序" class="headerlink" title="第一个程序"></a>第一个程序</h1><p>源程序从写出到执行的过程：</p>
+<p>1.用汇编语言编写源程序。</p>
+<p>2.对源程序进行编译连接。</p>
+<p>3.执行可执行文件中的程序。</p>
+<p><img src="/../00000000/7.jpg" srcset="/img/loading.gif" lazyload></p>
+<p>1.伪指令：</p>
+<p> segment 段开始</p>
+<p>ends  段结束</p>
+<p>成对使用，功能是定义一个段。</p>
+<p>end  一个汇编程序结束的标志。(注意区分end和ends)</p>
+<p>assume  不一定要深入了解，其作用就是将有特定相关用途的段和相关的段寄存器关联起来。</p>
+<p>2.汇编语言编写的源程序，包括伪指令和汇编指令。</p>
+<p>源文件中的所有内容称为源程序，将源程序中最终由计算机执行，处理的指令或者数据，称为程序。</p>
+<p>3.标号：例如codesg这种不是汇编指令，不是伪指令。一个标号代表了一个地址。</p>
+<p>例如：codesg 在segment前面作为一个段的名称，这个段的名称最后编译，连接程序处理为一个段的地址。</p>
+<p>此处我们不用理会int 21H 的指令含义   只需要知道在程序的末尾加上这两条指令就可以实现程序的返回。</p>
+<p>程序过程：</p>
+<p>1.编辑源程序——利用任意文本编辑器编辑源程序，最终存储为纯文本文件即可(后缀.asm)</p>
+<p>2.进入DOS方式用汇编编译器编译源程序，生成(后缀.obj)的目标文件[在此过程中编译程序可能会提示你输入交叉引用文件的名称，按enter键跳过即可]</p>
+<p>目标文件是含有机械代码的目标文件。</p>
+<p>3.连接：运行连接器[一个程序]然后输入需要链接的程序的名称和编译相同可能会出现映像文件的生成，同样跳过即可。</p>
+<p>另外如果程序中调用了某个库的子程序，也需要将这个库和函数连接起来[写过C语言的都清楚，就类似于#include&lt;stdio.h&gt;]</p>
+<p><em><strong>问题：谁将可执行文件中的程序载入内存并使它运行？</strong></em></p>
+<p>对DOS有了解就知道，DOS程序中有个程序叫command.com</p>
+<p><img src="/../00000000/8.jpg" srcset="/img/loading.gif" lazyload></p>
+<h1 id="BX和loop指令"><a href="#BX和loop指令" class="headerlink" title="BX和loop指令"></a>BX和loop指令</h1><p>[BX]是一个内存单元，它的偏移地址在bx中。</p>
+<p>示例:    mov  al  [bx]  </p>
+<p>示例含义：将一个内存单元送入al中，这个内存单元长度为一个字节（字节单元），这个内存的段地址在ds中，偏移地址在[bx]中。</p>
+<p>由此可见[bx]的效果和[0]类似。</p>
+<p>为简洁表述，我们用(ax)表示ax寄存器中的内容。</p>
+<p>()中的元素一般有三种类型：1.寄存器名，2.段寄存器名，3.内存单元的物理地址</p>
+<p>()所表示的数据类型一般为：1.字节，2.字</p>
+<p>约定idata 用于表示常量    […]中的…其实就是一个常量。</p>
+<p>示例：</p>
+<p>mov ax,[bx]</p>
+<p>功能：将当前ds:bx中存储的数据放入ax中。用表达式表示就是（ax）&#x3D;((ds)*16+(bx))</p>
+<p>inc bx 的含义是bx中的内容+1 </p>
+<p>尝试分析下面汇编语言的代码：{书本p97-p99有详细解读，如若不懂可以借阅查看}</p>
+<p><img src="/../00000000/9.jpg" srcset="/img/loading.gif" lazyload></p>
+<p>loop指令：</p>
+<p>格式：loop  标号</p>
+<p>CPU对loop指令的处理方式为1.(cx)&#x3D;(cx)-1    2.判断cx中的值，不为零则转移到标号处进行执行程序，为零则向下执行</p>
+<p>我们通常用loop实现循环，cx中存放着循环的次数</p>
+<p>示例代码：目标实现123*236的计算</p>
+<p>assume cs:code</p>
+<p>code segment</p>
+<p>​	mov ax,0</p>
+<p>​	mov cx,236</p>
+<p>​    s: add  ax,123</p>
+<p>​	loop s</p>
+<p>​	mov ax 4c00h</p>
+<p>​	int 21h</p>
+<p>code ends </p>
+<p>end</p>
+<p>小问题：你能尝试改进算法吗？</p>
+<p>loop与[bx]的联合使用：此部分较简单理解，仅给出示例，自己分析</p>
+<p>程序目的：实现ffff:0~ffff:b中的8位数据累加到的dx寄存器中</p>
+<p><img src="/../00000000/10.jpg" srcset="/img/loading.gif" lazyload></p>
+<p>段前缀：在先前的代码中可以见到明显的标识，如上面示例中的s 。在汇编语言中，用于显式地明显内存单元的段地址的符号[“ds:  ,cs:  ,ss:  ,es:  “]在汇编语言中称为段前缀。</p>
+<p>在8086模式中，我们随意向内存中写入一段代码是非常危险的，因为这段内存可能原来存放着重要的系统数据或代码。所以我们写入的部位最好是空白的，或者没有程序的数据或者代码的。在DOS模式下，一般 0：200~2ff   空间中没有系统或其他程序的代码和数据，所以可以用这段空间写入代码（书本原话，但不建议练习，毕竟8086模式不一定与你的设备相同匹配）</p>
+<h1 id="包含多个段的程序"><a href="#包含多个段的程序" class="headerlink" title="包含多个段的程序"></a>包含多个段的程序</h1><p>程序获得合法空间的方式有两种：1.在加载程序是为程序分配；2.再程序执行过程中向系统申请</p>
+<p>书中只讨论了第一种方法：在源程序中申请内存空间</p>
+<p>范例：</p>
+<p><img src="/../00000000/11.jpg" srcset="/img/loading.gif" lazyload></p>
+<p>dw的含义是“define word”定义字符型数据</p>
+<p>示例中定义了八个字型数据，由于dw放在最前面，所以最初的偏移地址为零。而后每个数据的偏移量增加一个字型长度。</p>
+<p>书上还给了一个示例[在上面代码的end的后面加上了一个start,在dw下面一行mov前也加了start]</p>
+<p>由此引出end的另一个作用，就是通知编译器程序的入口在什么地方。</p>
+<p>由前面也可以知道，在单任务程序系统中，可执行程序的执行过程如下：</p>
+<p>1.通过一些工具将可执行程序载入内存；</p>
+<p>2.设置CS:IP指向程序的第一条要执行的命令（即程序的入口）；</p>
+<p>3.结束运行，返回加载者。</p>
+<p>end start 解读：指明程序的入口，转化为一个入口地址，存储在可执行文件的描述信息中。</p>
+<p>简单构造程序的框架为</p>
+<p>assume cs:code</p>
+<p>code segment</p>
+<p>​	数据</p>
+<p>start:</p>
+<p>​	代码</p>
+<p>code ends</p>
+<p>end start</p>
+<p>在代码段中使用栈：</p>
+<p><img src="/../00000000/12.jpg" srcset="/img/loading.gif" lazyload></p>
+<p>这也说明，栈的定义并非在我们的源代码中有相应的编写方式，而是根据CPU的某些读取特性来使用的，示例中创造栈的内存空间就是一个很好的说明</p>
+<p>数据，代码，栈，放入不同的段</p>
+<p>定义多个段分别存不同的类型的二进制信息</p>
+<p>定义多个段的方法与定义栈的方法基本相同，只是段需要设置段名</p>
+<p><img src="/../00000000/13.jpg" srcset="/img/loading.gif" lazyload></p>
+<p>注意比较下面哪个代码是错误的，错误在哪：</p>
+<p>（1）</p>
+<p>mov ax,data</p>
+<p>mov ds,ax</p>
+<p>mov bx,ds:[6]</p>
+<p>（2）</p>
+<p>mov ds,data</p>
+<p>mov bx,ds:[6]</p>
+<p>错误原因先前内容中有，可自行复习</p>
+<h1 id="更灵活的定位内存地址的方法"><a href="#更灵活的定位内存地址的方法" class="headerlink" title="更灵活的定位内存地址的方法"></a>更灵活的定位内存地址的方法</h1><p>and 和 or 指令</p>
+<p><strong>and</strong> 将相应的操作对象设为0，其他位不变<br>例：</p>
+<p>mov al 01100011B</p>
+<p>and  al 00111011B</p>
+<p>执行结果为</p>
+<p>al  00100011B</p>
+<p>说明：将第六位设置为0的指令是 and al 10111111</p>
+<p>​	   将第七位设置为0的指令是 and al 01111111</p>
+<p>​	   将第零位设置位0的指令是 and al 11111110</p>
+<p><strong>or</strong>将相应的操作对象设置为1，其他位不变</p>
+<p>ASCII码[一种常见的编码方式]</p>
+<p>如果我们要在屏幕上看到a字母，我们就要通过显存给显卡提供a字母的ASCII码</p>
+<p>以字符的形式给出的数据</p>
+<p><code>db</code> 是汇编语言中的一个伪指令，用于定义字节（byte）类型的数据。</p>
+<p>大小写转化问题：</p>
+<p>用and和or指令转变大小写{判断大写小写决定是否转化}</p>
+<p>[比较字母大小写之间ASCII码的二进制结果之间的差别]</p>
+<p>范例</p>
+<p>assume cs: codesg,ds,datasg</p>
+<p>datasg segment </p>
+<p>​	db ‘BaSiC’</p>
+<p>​	db ‘iNfOrMaTiOn’</p>
+<p>datasg ends </p>
+<p>codesg segment </p>
+<p>start : mov ax,datasg </p>
+<p>​	   mov bx,ax</p>
+<p>​	   mov bx,0</p>
+<p>​	   mov cx,5</p>
+<p>​	s:mov al,[bx]</p>
+<p>​	   and al,11011111B</p>
+<p>​	   mov [bx] al</p>
+<p>​	   inc bx</p>
+<p>​	   loop s</p>
+<p>​	   mov bx,5</p>
+<p>​	   mov cx,11</p>
+<p>​     s0: mov al,[bx]</p>
+<p>​	   or al 00100000B</p>
+<p>​	   mov [bx],al </p>
+<p>​	   inc bx</p>
+<p>​	   loop s0</p>
+<p>​	   mov ax,4c00h</p>
+<p>​	   int 21h</p>
+<p>codesg ends</p>
+<p>end start</p>
+<h1 id="bx-idata"><a href="#bx-idata" class="headerlink" title="[bx+idata]"></a>[bx+idata]</h1><p>[bx+idata]表示一个内存单元，它的地址偏移地址是(bx)+idata</p>
+<p>可以用以下几种形式表示：</p>
+<p>mov ax,[200+bx]</p>
+<p>mov ax,200[bx]</p>
+<p>mov ax,[bx].200</p>
+<p>用[bx+idata]表示数组</p>
+<p><img src="/../00000000/14.jpg" srcset="/img/loading.gif" lazyload></p>
+<h1 id="SI和DI"><a href="#SI和DI" class="headerlink" title="SI和DI"></a>SI和DI</h1><p>si和di是8086CPU中功能与bx功能相近的寄存器，si和di并不能被分成两个独立的八位寄存器来使用</p>
+<h1 id="bx-si-和-bx-di"><a href="#bx-si-和-bx-di" class="headerlink" title="[bx+si]和[bx+di]"></a>[bx+si]和[bx+di]</h1><p>mov  ax,[bx+di]的含义：将一个内存单元中的内容送入ax中，这个内存单元的长度为两个字节,存放一个字，偏移地址为bx中的数值加上si中的数值，短地址在ds内。</p>
+<p>也可表述为(ax) &#x3D;&#x3D; ((ds)*16+(bx)+(si))</p>
+<p>也可以以这种格式使用：mov ax,[bx] [si]</p>
+<h1 id="bx-si-idata-和-bx-di-idata"><a href="#bx-si-idata-和-bx-di-idata" class="headerlink" title="[bx+si+idata]和[bx+di+idata]"></a>[bx+si+idata]和[bx+di+idata]</h1><p>mov ax,[bx+si+idata] </p>
+<p>将一个内存单元的内容送入ax中，这个内存单元的长度为2字节，存放一个字，偏移地址为bx中的数值加上si中的数值和idata中的数值，段地址在ds中。</p>
+<p>该指令也可写成如下格式：</p>
+<p>mov ax,[bx+200+si]</p>
+<p>mov ax,[200+bx+si]</p>
+<p>mov ax,200[bx] [si]</p>
+<p>mov ax,200.[bx] [si]</p>
+<p>mov ax,[bx] [si].200</p>
+<h1 id="不同寻址方式的灵活运用"><a href="#不同寻址方式的灵活运用" class="headerlink" title="不同寻址方式的灵活运用"></a>不同寻址方式的灵活运用</h1><p>1.[idata] 用一个常量来表示地址，可用于直接定位内存单元</p>
+<p>2.[bx]用一个变量来表示内存地址，可用于间接定位一个内存单元</p>
+<p>3.[bx+idata]用一个变量和一个常量的和表示内存地址，可以在起始地址的基础上用变量间接定位内存单元</p>
+<p>4.[bx+si]用两个变量来表示地址</p>
+<p>5.[bx+si+idata]用两个变量和一个常量表示地址</p>
+<p>一般而言我们要短暂存储数据时，我们都应该使用栈</p>
+<p>具体的汇编代码修改示例，参考原书</p>
+<h1 id="数据处理的两个基本问题"><a href="#数据处理的两个基本问题" class="headerlink" title="数据处理的两个基本问题"></a>数据处理的两个基本问题</h1><p>1.处理的数据在什么位置</p>
+<p>2.处理的数据有多长</p>
+<p>reg 表示一个寄存器，包括：ax,bx,cx,dx,ah,al,bh,bl,ch,cl,dh,dl,sp,bp,si,di</p>
+<p>sreg表示段寄存器，包括：ds,ss,cs,es</p>
+<h1 id="bx-si-di-bp"><a href="#bx-si-di-bp" class="headerlink" title="bx,si,di,bp"></a>bx,si,di,bp</h1><p>1.在8086CPU中，只有这四个寄存器可以用来寻址</p>
+<p>2.在[…]中，这四个寄存器可以单独出现，或者只能以四种组合出现：bx和si,bx和di,bp和si,bp和di</p>
+<p>3.只要[…]中出现了bp，而指令中没有显性地给出段地址，段地址就默认在ss中   例：mov ax,[bp+si]</p>
+<h1 id="汇编语言中的数据位置表达"><a href="#汇编语言中的数据位置表达" class="headerlink" title="汇编语言中的数据位置表达"></a>汇编语言中的数据位置表达</h1><p>1.立即数——idata </p>
+<p>2.寄存器</p>
+<p>3.段地址(SA)和偏移地址(EA)</p>
+<p>存放段地址的寄存器可以是默认的如，DS,SS</p>
+<p>也可以显性给出的 如：mov ax,ss:[si]     mov ax,es:[idata]</p>
+<p>寻址方式总结：</p>
+<p><img src="/../00000000/15.jpg" srcset="/img/loading.gif" lazyload></p>
+<h1 id="指令要处理的数据有多长"><a href="#指令要处理的数据有多长" class="headerlink" title="指令要处理的数据有多长"></a>指令要处理的数据有多长</h1><p>8086CPU的指令，处理尺寸的数据，byte和word</p>
+<p>#其实就是根据寄存器的大小决定了处理数据的长度</p>
+<p>1.通过寄存器指明要处理数据的尺寸</p>
+<p>1&gt;指明字操作</p>
+<p>mov ax,1</p>
+<p>mov bx,ds:[0]</p>
+<p>mov ds,ax</p>
+<p>mov ds:[0],ax</p>
+<p>inc ax </p>
+<p>add ax 1000</p>
+<p>2&gt;指明字节操作</p>
+<p>mov al,1</p>
+<p>mov al,bl</p>
+<p>mov al,ds:[0]</p>
+<p>mov ds:[0],al</p>
+<p>inc al</p>
+<p>add al,100</p>
+<p>2.没有寄存器名存在的情况下，可以使用操作符 X ptr指明内存单元的长度，X在汇编语言中可以为word或者byte</p>
+<p>1&gt;指明字操作</p>
+<p>mov word ptr ds:[0],1</p>
+<p>inc word  ptr [bx]</p>
+<p>inc word ptr ds:[0]</p>
+<p>add word ptr [bx],2</p>
+<p>2&gt;指明字节操作</p>
+<p>mov byte ptr ds:[0],1</p>
+<p>inc byte  ptr [bx]</p>
+<p>inc byte ptr ds:[0]</p>
+<p>add byte ptr [bx],2</p>
+<p>范例对比：</p>
+<p>假定debug查看2000：1000的内存结果为：FF FF FF FF FF FF FF FF FF FF ……</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs assembly">mov ax,2000<br>mov ds,ax <br>mov byte ptr [1000H],1<br>#在汇编语言中，ptr 是一个关键字，用来指明紧跟其后的数值是一个指针或者地址。这个关键字通常用于指定操作数的大小和类型，尤其是在操作内存时。<br></code></pre></td></tr></table></figure>
+
+<p>这样得到的结果是：2000：1000 01 FF FF FF FF FF ……</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs assembly">mov ax,2000<br>mov ds,ax<br>mov word ptr [1000H],1<br></code></pre></td></tr></table></figure>
+
+<p>这样得到的结果是 2000：1000    01 00 FF FF FF FF FF FF ……</p>
+<p>对于这个结果再作深入解析一下：</p>
+<p>在 x86 架构的汇编语言中，数据在内存中的存储方式通常是小端字节序（Little-Endian）。这意味着较低的地址存放的是数值的低位字节，而较高的地址存放的是数值的高位字节。</p>
+<ol>
+<li><code>mov ax, 2000</code>：将数值 2000 移动到 <code>ax</code> 寄存器中。在十六进制中，2000 表示为 <code>0x2000</code>。</li>
+<li><code>mov ds, ax</code>：将 <code>ax</code> 寄存器的值（2000 或 <code>0x2000</code>）移动到数据段寄存器 <code>ds</code> 中。</li>
+<li><code>mov word ptr [1000H], 1</code>：将数值 1 移动到地址 <code>1000H</code> 指向的内存位置，并且指定这是一个字（word）操作，即 16 位。</li>
+</ol>
+<p>由于您指定了 <code>word ptr</code>，这意味着您正在操作一个 16 位的值。在小端字节序中，这条指令将数值 1（<code>0x0001</code>）的字节表示放入内存地址 <code>1000H</code> 和 <code>1001H</code>：</p>
+<ul>
+<li>地址 <code>1000H</code>（较低的地址）将存放数值 1 的低位字节，即 <code>0x01</code>。</li>
+<li>地址 <code>1001H</code>（较高的地址）将存放数值 1 的高位字节，即 <code>0x00</code>。</li>
+</ul>
+<p>因此，对于 <code>mov word ptr [1000H], 1</code> 这条指令，放入的是低位字节在较低的地址，高位字节在较高的地址。</p>
+<p>小端字节序（Little-Endian）是一种计算机存储多字节数据类型（如整数、浮点数等）的方式。在小端字节序中，一个多字节值的最低有效字节（LSB，即数值最低的字节）存储在最低的内存地址处，而最高有效字节（MSB，即数值最高的字节）存储在最高的内存地址处。</p>
+<p>3.其他方法：有些指令默认了访问的是字单元还是字节单元，比如push [1000H]就不用指明访问的是字单元还是字节单元，因为push指令只对字操作</p>
+<h2 id="div指令（除法指令）"><a href="#div指令（除法指令）" class="headerlink" title="div指令（除法指令）"></a>div指令（除法指令）</h2><p>注意事项：</p>
+<p>1.除数：有8位和16位两种，在一个reg或者内存单元中</p>
+<p>2.被除数：默认放在AX或者AX和DX中，如果除数是八位，被除数则为16位，默认再AX中存放；如果除数为16位，被除数则为32位，在AX和DX中存放，DX存放高16位AX存放低16位。</p>
+<p>3.结果：如果除数为8位，则AL存储计算的商，AH存储计算的余数，如果除数为16位，则AX存储除法操作的商，DX存储除法操作的余数。</p>
+<p>使用格式如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs assembly">div reg<br>div 内存单元<br>#不用指明除数，因为默认<br></code></pre></td></tr></table></figure>
+
+
+
+<h3 id="伪指令dd"><a href="#伪指令dd" class="headerlink" title="伪指令dd"></a>伪指令dd</h3><p>dd是用来定义double word(双字)型数据的</p>
+<p>范例:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs assembly">data segment<br> db 1<br> dw 1<br> dd 1<br>data ends<br></code></pre></td></tr></table></figure>
+
+<p>上述汇编在data段中定义了三个数据，</p>
+<p>第一个数据为01H，在data：0处，占一个字节</p>
+<p>第二个数据为0001H，在data：1处，占一个字节</p>
+<p>第三个数据为00000001H，在data：2处，占两个字节</p>
+<h3 id="dup指令"><a href="#dup指令" class="headerlink" title="dup指令"></a>dup指令</h3><p>dup指令和定db,dw,dd一样，也是由编译器识别处理的符号，它是和db,dd,dw等伪指令配合使用的，用于进行数据的重复.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs assembly">db 3 dup (0)<br>#定义了三个字节，他们的值都是0，等效于db 0,0,0<br>db 3 dup (0,1,2)<br>#定义了9个字节，他们是0,1,2,0,1,2,0,1,2，等效于db 0,1,2,0,1,2,0,1,2<br>db 3 dup (&#x27;abc&#x27;,&#x27;ABC&#x27;)<br>#定义了18个字节<br></code></pre></td></tr></table></figure>
+
+
+
+<p>dup的使用格式：</p>
+<p>db 重复的次数 dup （重复的字节型数据）</p>
+<p>dw 重复的次数 dup  (重复的字型数据)</p>
+<p>dd 重复的次数 dup (重复的双字型数据)</p>
+<h1 id="转移指令的原理"><a href="#转移指令的原理" class="headerlink" title="转移指令的原理"></a>转移指令的原理</h1><p>可以修改IP，或同时修改CS和IP的指令统称为转移指令。概括而言，转移指令就是能控制CPU执行内存内某处代码的指令。</p>
+<p>8086CPU的转移行为有以下几类：</p>
+<p>1.只能修改IP时，称为段内转移，比如jmp ax</p>
+<p>2.同时修改CS和IP时，称为段间转移，比如jmp 1000：0</p>
+<p>由于转移指令对IP修改的范围不同，段内转移又分为短转移和近转移</p>
+<p>短转移的IP修改范围为-128~127</p>
+<p>近转移IP的修改范围为-32768~32767</p>
+<p>8086CPU的转移指令又分为以下几类：</p>
+<p>1.无条件转移指令（如jmp）</p>
+<p>2.条件转移指令</p>
+<p>3.循环指令(loop)</p>
+<p>4,过程</p>
+<p>5.中断</p>
+<p><strong>操作符offset</strong></p>
+<p>操作符offset在汇编语言中是由编译器处理的符号，它的功能是取得标号的偏移地址</p>
+<p>范例：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs assembly">assume cs:codesg<br>codesg sement<br>  start:mov ax,offset start ; 相当于mov ax，0<br>      s:mov ax,offset s;相当于mov ax，3，第一条指令长度为3个字节，所以s的偏移地址为3<br>codesg ends<br>end start<br></code></pre></td></tr></table></figure>
+
+
+
+<p><strong>jmp指令</strong></p>
+<p>jmp为条件跳转指令可以只修改IP，也可以同时修改IP和CS</p>
+<p>jmp指令要给出两种信息：</p>
+<p>1.转移的目的地址</p>
+<p>2.转移的距离（段间转移，段内短转移，段内近转移）</p>
+<p><strong>根据位移进行转移的jmp指令</strong></p>
+<p>jmp short 标号(转到标号处执行指令)</p>
+<p>这种格式的jmp指令是实现段内短转移，他们对IP的修改范围是-128~127，格式中的short符号说明指令是进行段内短转移，标号是代码段中的标号，指明了指令要转移到的目的地，转移指令结束后,CS和IP应该指向该标号处的指令</p>
+<p>范例：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs assembly">assume cs:codesg<br>codesg segment<br> start:mov ax,0<br>       jmp short s<br> 	   add ax,1<br> 	 s:inc ax<br>codesg ends<br>end start<br></code></pre></td></tr></table></figure>
+
+
+
+<p>机械指令对比</p>
+<p>正常机械指令：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs assembly">mov ax,0123h        #B8 23 01<br>mov ax,ds:[0123h]   #A1 23 01<br>push ds:[0123h]     #FF 36 23 01<br></code></pre></td></tr></table></figure>
+
+<p>上述范例可以看到，idata无论是一个数据还是地址，都会在对应的机械语言中出现，因为CPU执行命令他必须知道这些数据或地址</p>
+<p>范例中的代码段和对应机械码比较：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs assembly">#B8 00 00  #0000  #mov ax,0000<br>#EB 03     #0003  #jmp 0008<br>#05 01 00  #0005  #add ax,0001<br>#40        #0008  #inc ax<br>#上述机械码的结果看似毫无问题，但仔细看就会发现，jmp short s中的s(0008)并没有出现在机械码中，<br></code></pre></td></tr></table></figure>
+
+<p>书本上另给的一个范例作比较;</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs assembly">assume cs:codesg<br><br>codesg segment <br> start:mov ax,0<br>       mov bx,0<br>       jmp short s<br>       add ax,1<br>     s:inc ax<br>codesg ends<br>end starts<br></code></pre></td></tr></table></figure>
+
+
+
+<p>对应成机械码就是：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs assembly">#B8 00 00  #0000  #mov ax,0000<br>#BB 00 00  #0003  #mov bx,0000<br>#EB 03     #0006  #jmp 000B<br>#05 01 00  #0008  #add ax,0001<br>#40        #000B  #inc ax<br></code></pre></td></tr></table></figure>
+
+
+
+<p>两个功能差别不大的汇编代码，得到同样的结果，说明CPU在执行jmp指令时不需要转移的目标地址，也就是不需要这个地址就能实现对IP的修改</p>
+<p>CPU执行指令的过程回顾：</p>
+<p>1.从CS:IP指向的内存单元读取指令，读取的指令进入指令缓冲器；</p>
+<p>2.IP&#x3D;IP+(所读命令的长度)，从而指向下一条指令</p>
+<p>3.执行指令，转到1，重复该过程</p>
+<p>比较两段代码后发现，跳转距离相同，都是3，这也就是03的含义</p>
+<p>所以jmp short (标号)的功能为:(IP)&#x3D;(IP)+八位位移</p>
+<p>1.八位位移&#x3D;标号处的地址 - jmp指令后第一个字节的地址；</p>
+<p>2.short 指明此处位移为八位位移</p>
+<p>3.八位位移的参数范围时-128~127，用补码表示</p>
+<p>4.八位位移由程序编译时由编译器算出</p>
+<p>还有一种和jmp short 标号功能相近的指令格式，jmp near ptr 标号，它实现的时段内近转移</p>
+<p>jmp near ptr 标号 的功能为(IP) &#x3D; (IP) + 十六位位移</p>
+<p>1.16位位移 &#x3D; 标号处的地址 - jmp 指令后的第一个字节的地址</p>
+<p>2.near ptr 指明此处位移为16位位移，进行的是段内近转移</p>
+<p>3.段内近转移的范围为-32768~32767，用补码表示</p>
+<p>4.16位位移由编译程序在编译时算出</p>
+<h1 id="转移的目的地址在指令中的jmp指令"><a href="#转移的目的地址在指令中的jmp指令" class="headerlink" title="转移的目的地址在指令中的jmp指令"></a>转移的目的地址在指令中的jmp指令</h1><p>jmp far ptr 标号 实现的是段间转移，又称为远转移</p>
+<p>(CS)&#x3D;标号所在段的段地址   (IP)&#x3D;标号所在段中的偏移地址</p>
+<p>far ptr 指明了指令用标号的段地址和偏移地址修啊给CS和IP</p>
+<p>范例：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs assembly">assume cs:codesg<br>codesg segment<br> start:mov ax,0<br>       mov bx,0<br>       jmp far ptr s<br>       db 256 dup (0)<br>     s:add ax,1<br>       inc ax<br>codesg ends<br>end start<br><br></code></pre></td></tr></table></figure>
+
+
+
+<p>对应的机械码如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs assembly">#B8 00 00         #0000   #mov ax,0000<br>#BB 00 00         #0003   #mov bx,0000<br>#EA 0B 01 BD 0B   #0006   #jmp 0BBD:010B<br>#00 00            #000B   #add [BX+SI],al<br>#00 00            #000D   #add [BX+SI],al<br>#00 00            #000F   #add [BX+SI],al<br>#00 00            #0011   #add [BX+SI],al<br></code></pre></td></tr></table></figure>
+
+
+
+<p>我们需要注意一下jmp对应的机械码：EA 0B 01 BD 0B 其中包含转移的目的地址”0B 01 BD 0B“是目的地址在指令中的顺序，高地址是’BD 0B’是转移的段地址；</p>
+<p>0BBDH；低地址是”0B 01“是偏移地址：010BH</p>
+<h1 id="转移地址在寄存器中的jmp指令"><a href="#转移地址在寄存器中的jmp指令" class="headerlink" title="转移地址在寄存器中的jmp指令"></a>转移地址在寄存器中的jmp指令</h1><p>命令格式：jmp 16位 reg </p>
+<p>功能;（IP）&#x3D;(16位的reg)</p>
+<h1 id="转移地址在内存中的jmp指令"><a href="#转移地址在内存中的jmp指令" class="headerlink" title="转移地址在内存中的jmp指令"></a>转移地址在内存中的jmp指令</h1><p>两种形式：</p>
+<p>1.jmp word ptr 内存单元地址(段内转移)</p>
+<p>功能：从内存单元地址处存放一个着一个字，这是转移的目的偏移地址</p>
+<p>内存单元可以用寻址方式的任意格式给出</p>
+<p>范例：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs assembly">mov ax,0123H<br>mov ds:[0],ax<br>jmp word ptr ds<br>#执行后IP为0123H<br></code></pre></td></tr></table></figure>
+
+<p>范例2：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs assembly">mov ax,0123H<br>mov [bx],ax<br>jmp word ptr [bx]<br>#执行后IP为123H<br></code></pre></td></tr></table></figure>
+
+
+
+<p>2.jmp dword ptr 内存单元地址(段间转移)</p>
+<p>功能：从内存单元处开始存放着两个字，高地址的字是转移的目标地址的段地址，低地址是转移目的的偏移地址</p>
+<p>(CS) &#x3D; (内存单元地址+2)</p>
+<p>(IP) &#x3D; (内存单元地址)</p>
+<p>内存单元地址可以任意形式给出</p>
+<p>范例：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs assembly">mov ax,0123H<br>mov ds:[0],ax<br>mov word ptr ds:[2],0<br>jmp dword ptr ds:[0]<br></code></pre></td></tr></table></figure>
+
+<p>执行后，(CS)&#x3D;0; (IP)&#x3D;0123H,CS:IP指向0000：0123</p>
+<p>范例2：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs assembly">mov ax,0123H<br>mov [bx],ax<br>mov word ptr [bx+2],0<br>jmp dword ptr [bx]<br></code></pre></td></tr></table></figure>
+
+<p>执行后,(CS) &#x3D; 0，(IP) &#x3D; 0123H,CS:IP 指向0000:0123</p>
+<h1 id="jcxz指令-Jump-if-CX-equals-Zero"><a href="#jcxz指令-Jump-if-CX-equals-Zero" class="headerlink" title="jcxz指令(Jump if CX equals Zero)"></a>jcxz指令(Jump if CX equals Zero)</h1><p>jcxz指令为有效转移指令，所有的有条件转移的指令都是短转移，在对应的机器码中包含转移的位移，而不是目的地址。对IP的修改范围都为-128~127</p>
+<p>指令格式：</p>
+<p>jcxz   标号     (如果(cx) &#x3D; 0，转到标号处执行)</p>
+<p>操作：当(cx) &#x3D; 0 时，(IP) &#x3D; (IP) + 8位位移</p>
+<p>8位位移 &#x3D; 标号处的地址 - jcxz指令后的第一个字节的地址；</p>
+<p>8位位移的范围为-128~127，用补码表示；</p>
+<p>8位位移由编译程序在编译时算出。</p>
+<p>用C语言的形式理解就等效于：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs C"><span class="hljs-keyword">if</span>((cx) == <span class="hljs-number">0</span>)jmp <span class="hljs-type">short</span> 标号<br></code></pre></td></tr></table></figure>
+
+
+
+<h1 id="loop指令"><a href="#loop指令" class="headerlink" title="loop指令"></a>loop指令</h1><p>loop指令是循环指令，所有循环指令都是短转移，在对应的机械码中都包含转移的位移，而不是目的地址，IP修改范围是-128~127</p>
+<p>根据位进行转移的意义：便于灵活处理，如果机械码中是s的具体内存地址，则对代码段在内存中的偏移地址有着严格的限制(例如：之后想修改代码，而代码段的被修改语句机械码长度与原来不同，这时若机械码还是表示固定的s的原来地址，则会发生报错)</p>
+<h1 id="编译器对转移位移超界的检测"><a href="#编译器对转移位移超界的检测" class="headerlink" title="编译器对转移位移超界的检测"></a>编译器对转移位移超界的检测</h1><p>书上也没具体介绍原理，只是说明会检测</p>
+<h2 id="程序分析："><a href="#程序分析：" class="headerlink" title="程序分析："></a>程序分析：</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs assembly">assume cs:codesg<br>codesg segment<br>	   mov ax,4c00h<br>	   int 21h<br>start: mov ax,0<br>	 s:nop<br>	   nop<br>	   <br>	   mov di,offset s<br>	   mov si,offset s2<br>	   mov ax,cs:[si]<br>	   mov cs:[di],ax<br>	   <br>	s0:jmp short s<br>	s1:mov ax,0<br>	   int 21h<br>	   mov ax,0<br>	s2:jmp short s1<br>	   nop<br>	   <br>codesg ends<br>end start<br></code></pre></td></tr></table></figure>
+
+
+
+<h1 id="CALL指令和RET指令"><a href="#CALL指令和RET指令" class="headerlink" title="CALL指令和RET指令"></a>CALL指令和RET指令</h1><p>call和ret指令都是转移指令，修改IP的内容，从而实现近转移；</p>
+<p>retf调用栈中的数据，修改CS和IP的内容，从而实现远转移；</p>
+<p>CPU执行ret指令时，进行下面两步操作</p>
+<p>1.IP &#x3D; (ss*16) + (sp)</p>
+<p>2.(sp) &#x3D; (sp) + 2</p>
+<p>CPU执行retf指令时，进行一下面四步操作</p>
+<p>1.(IP) &#x3D; (ss)*16 + (sp)</p>
+<p>2.(sp) &#x3D; (sp) + 2</p>
+<p>3.(cs) &#x3D; (ss*16) + (sp)</p>
+<p>4.(sp) &#x3D; (sp) + 2</p>
+<p>从汇编的角度解释这两个命令就是:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs assembly">#ret<br>pop IP<br>#retf<br>pop IP<br>pop CS<br></code></pre></td></tr></table></figure>
+
+
+
+<p>范例：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs assembly">assume cs:code<br><br>stack segment <br>   db 16 dup (0)<br>stack ends<br><br>code segment <br>	   mov ax,4c00h<br>	   int 21h<br>start: mov ax,stack<br>	   mov ss,ax<br>	   mov sp,16<br>	   mov ax,0<br>	   push ax<br>	   mov bx,0<br>	   ret<br>code ends<br><br>end start<br></code></pre></td></tr></table></figure>
+
+<p>ret执行后IP &#x3D; 0，CS:IP指向代码段的第一条指令</p>
+<h2 id="call指令："><a href="#call指令：" class="headerlink" title="call指令："></a>call指令：</h2><p>CPU执行call指令时，会进行两步操作:</p>
+<p>1.将当前(其实是call这句话的下一句)的IP或CS和IP压入栈中；</p>
+<p>2.转移</p>
+<p>call指令不能实现短转移，除此之外，call指令实现转移的方法和jmp指令的原理相同</p>
+<p>根据位移进行转移的call指令</p>
+<p>格式：call 标号</p>
+<p>1.(sp) &#x3D; (sp) - 2</p>
+<p>   ((ss)*16+(sp)) &#x3D; (IP)</p>
+<p>2.IP &#x3D; IP +16位位移</p>
+<p>CPU执行call指令相当于</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs assembly">push IP<br>jmp near ptr 标号<br></code></pre></td></tr></table></figure>
+
+
+
+<p>转移的目的地址在指令中的call指令：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs assembly">call far ptr 标号<br></code></pre></td></tr></table></figure>
+
+<p>CPU在执行此格式的call指令时会进行一下操作：</p>
+<p>1.（sp） &#x3D;  (sp) - 2</p>
+<p>​     (ss)*16+(sp)  &#x3D;  (cs)</p>
+<p>​     (sp) &#x3D; (sp) +2</p>
+<p>​     (ss)*16+(sp) &#x3D; (IP)</p>
+<p>2.(CS) &#x3D; 标号所在的段地址</p>
+<p>   (IP) &#x3D; 标号所在的偏移地址</p>
+<p>从汇编的角度看就是</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs assembly">push CS<br>push IP<br>jmp far ptr 标号<br></code></pre></td></tr></table></figure>
+
+
+
+<p>转移地址在寄存器里的call指令：</p>
+<p>指令格式：call 16reg</p>
+<p>功能：</p>
+<p>(sp) &#x3D; (sp) - 2</p>
+<p>(ss)*16+(sp) &#x3D; （IP）</p>
+<p>IP &#x3D; (16位reg)</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs assembly">push IP<br>jmp 16位reg<br></code></pre></td></tr></table></figure>
+
+
+
+<p>转移地址在内存中的call指令：</p>
+<p>1.call word ptr 内存单元地址</p>
+<p>等效汇编指令：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs assembly">push IP<br>jmp word ptr 内存单元地址<br></code></pre></td></tr></table></figure>
+
+<p>2.call dword ptr 内存单元地址</p>
+<p>等效汇编指令：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs assembly">push CS<br>push IP<br>jmp dword ptr 内存单元地址<br></code></pre></td></tr></table></figure>
+
+
+
+
+
+<h2 id="call和ret的结合使用"><a href="#call和ret的结合使用" class="headerlink" title="call和ret的结合使用"></a>call和ret的结合使用</h2><p>范例一：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs assembly">assume cs:code<br>code segment <br> start: mov ax,1<br>        mov cx,3<br>        call s<br>        mov bx,ax<br>        mov ax,4c00h<br>        int 21h<br>     s: add ax,ax<br>        loop s<br>        ret<br>code ends<br>end start<br></code></pre></td></tr></table></figure>
+
+<p>范例二：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs assembly">assume cs:code<br><br>stack segment <br>  db 8 dup (0)<br>  db 8 dup (0)<br>stack ends<br><br>code segment<br>  start:mov ax,stack<br>        mov ss,ax<br>        mov sp,16<br>        mov ax,1000<br>        call s<br>        mov ax.4c00h<br>        int 21h<br>      s:add ax,ax<br>        ret<br>code ends<br><br>end start<br></code></pre></td></tr></table></figure>
+
+
+
+<h1 id="mul指令"><a href="#mul指令" class="headerlink" title="mul指令"></a>mul指令</h1><p>乘法指令：</p>
+<p>注意事项：</p>
+<p>1.相乘的两个数，要么是八位，要么是十六位。若为八位，一个默认放在AL中另一个放在八位reg中或内存字节单元中。</p>
+<p>   如果是16位，一个默认放在AX中，另一个放在一个16位的寄存器中或内存字单元中</p>
+<p>2.结果：8位乘法默认放在AX中；16位乘法高位默认在DX中存放，低位默认在AX中存放</p>
+<p>格式：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs assembly">mul reg<br>mul 内存单元#内存单元可由不同的寻址方式给出<br></code></pre></td></tr></table></figure>
+
+
+
+<h1 id="参数和结果传递问题"><a href="#参数和结果传递问题" class="headerlink" title="参数和结果传递问题"></a>参数和结果传递问题</h1><p>范例：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs assembly">code segemnt<br>  start:mov ax,data<br>        mov ds,ax<br>        mov si,0<br>        mov di,16               ;ds:si指向第一组word单元<br>                                ;ds:si指向第二组dword单元<br>        mov cx,8                <br>      s:mov bx,[si]<br>        call cube<br>        mov [di],ax<br>        mov [di].2,ax<br>        add si,2                ;ds:si指向下个word单元<br>        add di,2                ;ds:si指向下个dword单元<br>        loop s<br>        <br>        mov ax,4c00h<br>        int 21h<br>        <br>   cubu:mov ax,bx<br>        mul bx<br>        mul bx<br>        ret <br>        <br>code ends<br>end start<br></code></pre></td></tr></table></figure>
+
+
+
+<h1 id="批量数据的传递"><a href="#批量数据的传递" class="headerlink" title="批量数据的传递"></a>批量数据的传递</h1><p>因为寄存器数量有限，对于参数调用和返回值存储的功能十分有限</p>
+<p>这种时候我们选择将批量数据放到内存中，然后将他们所在的内存空间的首地址放在寄存器中，传递给需要的子程序，对于批量的数据返回结果，也可用同样的方法</p>
+<p>对于所调用的子程序，需要知道：字符串的内容和长度</p>
+<p>考虑到程序需要用到循环，且循环次数次数恰好就是字符串长度，出于方便考虑，可以将字符串的长度放到cx中</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs assembly">capital: cs:code<br>  db &#x27;conversation&#x27;<br>data segment<br>  start:mov ax,data<br>        mov ds,ax<br>        mov si,0<br>        mov cx,12<br>        call capital<br>        mov ax,4c00h<br>        int 21h<br>        <br>capital:and byte ptr [si],11011111b<br>        inc si<br>        loop capital<br>        ret<br>code ends<br>end start<br></code></pre></td></tr></table></figure>
+
+
+
+
+
+<h1 id="寄存器冲突问题"><a href="#寄存器冲突问题" class="headerlink" title="寄存器冲突问题"></a>寄存器冲突问题</h1><p>范例:</p>
+<p>##程序目的：将一个全是字母以0结尾的字符串全部转化成大写</p>
+<p>程序说明：</p>
+<p>#将一个全是字母，以0为结尾的字符串，转化为大写</p>
+<p>#参数：ds：si指向字符串的首地址</p>
+<p>#结果：没有返回值</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs assembly">##完整程序<br>code segment <br><br>  start: mov ax,data<br>         mov ds,ax<br>         mov bx,0<br>         <br>         mov cx,4<br>      s: mov si,bx<br>         call capital<br>         add bx,5<br>         loop s<br>         <br>         mov ax,4c00h<br>         int 21h<br>         <br>capital: mov cl,[si]<br>         mov ch,0<br>         jcxz ok<br>         and byte ptr [si],11011111b<br>         inc si<br>         jmp short capital<br>     ok: ret<br>code ends<br>end start<br></code></pre></td></tr></table></figure>
+
+<p>范例程序思想上完全正确，但细节上存在错误——子程序和主程序均使用cx进行循环控制</p>
+<p>对于这种常见错误我们提出两种解决方式：</p>
+<p>1.在编写调用子程序时，注意看看子程序有没有会用到产生冲突的寄存器，如果有，调用者使用别的寄存器；</p>
+<p>2.在编写子程序时，不会使用产生冲突的寄存器。</p>
+<p>但实际上上面两种方法均不太可能实现</p>
+<h4 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h4><p>在子程序的开始将子程序中所有用到的寄存器中的内容都保存起来，在子程序返回前恢复。可以用栈来保存寄存器内容。</p>
+<p>编写程序的标准框架：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs assembly">子程序开始: 子程序中使用的寄存器入栈<br>          <br>          子程序内容<br>          <br>          子程序中使用的寄存器内容出栈<br>          <br>          返回(ret,retf)<br>          <br></code></pre></td></tr></table></figure>
+
+
+
+<p>改进程序：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs assembly">capital:  push cx<br>          push si<br> change:  mov cl,[si]<br>          mov ch,0<br>          jcxz ok<br>          and byte ptr [si],11011111b<br>          inc si<br>          jmp short change<br>          <br>     ok:  pop si<br>          pop cx<br>          ret<br></code></pre></td></tr></table></figure>
+
+
+
+<h1 id="标志寄存器"><a href="#标志寄存器" class="headerlink" title="标志寄存器"></a>标志寄存器</h1><p>CPU内部存在一种特殊的寄存器，具有以下三种作用：</p>
+<p>1.用来存储相关命令的执行结果，</p>
+<p>2.为CPU某些行为提供依据,</p>
+<p>3.用来控制CPU的相关工作方式.</p>
+<p>这种特殊的CPU叫做标志寄存器，8086CPU的标志寄存器有16位，简称flag寄存器。</p>
+<p><img src="/../00000000/16.jpg" srcset="/img/loading.gif" lazyload></p>
+<h2 id="ZF标志："><a href="#ZF标志：" class="headerlink" title="ZF标志："></a>ZF标志：</h2><h6 id="flag的第六位是ZF，零标志位，执行相关命令后，检查结果是否为0。如果结果为0-那么zf-1-如果不为0，则zf-0"><a href="#flag的第六位是ZF，零标志位，执行相关命令后，检查结果是否为0。如果结果为0-那么zf-1-如果不为0，则zf-0" class="headerlink" title="flag的第六位是ZF，零标志位，执行相关命令后，检查结果是否为0。如果结果为0,那么zf&#x3D;1;如果不为0，则zf&#x3D;0"></a>flag的第六位是ZF，零标志位，执行相关命令后，检查结果是否为0。如果结果为0,那么zf&#x3D;1;如果不为0，则zf&#x3D;0</h6><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs assembly">mov ax,1<br>sub ax,1<br>#zf = 1<br></code></pre></td></tr></table></figure>
+
+
+
+
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs assembly">mov ax,2<br>sub ax,1<br>#zf = 0<br></code></pre></td></tr></table></figure>
+
+
+
+<p>并不是所有运算都会影响到flag寄存器，影响到flag寄存器的大多数是运算指令，按照逻辑或算数运算；大多数对flag寄存器没有影响的指令都是传送指令</p>
+<p>使用指令时要注意这个指令的全部功能，其中包括对flag寄存器的影响</p>
+<h2 id="PF标志："><a href="#PF标志：" class="headerlink" title="PF标志："></a>PF标志：</h2><p>flag的第二位时PF，奇偶标志位，它记录相关指令后，其结果中所有bit位中1的个数是否为偶数。如果一的个数为偶数，pf&#x3D;1，如果为奇数，那么pf&#x3D;0。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs assembly">mov al,1<br>add al,10<br>#ax的结果是00001011B，其中有三个1，pf = 0<br></code></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs assembly">mov al,1<br>or al,2<br>#ax的结果是00000011B，其中有两个1，pf = 1<br></code></pre></td></tr></table></figure>
+
+
+
+<h2 id="SF标志"><a href="#SF标志" class="headerlink" title="SF标志"></a>SF标志</h2><p>flag的第七位是SF，符号标志位。它记录相关指令后结果是否为负。若结果为负，sf  &#x3D; 1，反之结果则为0</p>
+<p>计算机中经常用补码表示一个有符号数据，计算机可以将一个数据看成有符号数，也可以将一个数据看成无符号数</p>
+<p>例：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs assembly">#00000001B  可以看作无符号数1，也可看做有符号数+1<br>#10000001B  可以看作无符号数129，也可看作有符号数-127<br></code></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/CTF-PWN/" class="category-chain-item">CTF_PWN</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/CTF-PWN/blog-learning/" class="category-chain-item">blog_learning</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>汇编语言</div>
+      <div>http://example.com/汇编语言(王爽)知识点总结/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>briteny-pwn</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2025年3月31日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/%E4%BA%8C%E8%BF%9B%E5%88%B6%E6%96%87%E4%BB%B6/" title="二进制文件">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">二进制文件</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/HTML/" title="HTML">
+                        <span class="hidden-mobile">HTML</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  
+      <script>
+        if (!window.MathJax) {
+          window.MathJax = {
+            tex    : {
+              inlineMath: { '[+]': [['$', '$']] }
+            },
+            loader : {
+              load: ['ui/lazy']
+            },
+            options: {
+              renderActions: {
+                insertedScript: [200, () => {
+                  document.querySelectorAll('mjx-container').forEach(node => {
+                    let target = node.parentNode;
+                    if (target.nodeName.toLowerCase() === 'li') {
+                      target.parentNode.classList.add('has-jax');
+                    }
+                  });
+                }, '', false]
+              }
+            }
+          };
+        } else {
+          MathJax.startup.document.state(0);
+          MathJax.texReset();
+          MathJax.typeset();
+          MathJax.typesetPromise();
+        }
+
+        Fluid.events.registerRefreshCallback(function() {
+          if ('MathJax' in window && MathJax.startup.document && typeof MathJax.startup.document.state === 'function') {
+            MathJax.startup.document.state(0);
+            MathJax.texReset();
+            MathJax.typeset();
+            MathJax.typesetPromise();
+          }
+        });
+      </script>
+    
+
+  <script  src="https://lib.baomitu.com/mathjax/3.2.2/es5/tex-mml-chtml.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
