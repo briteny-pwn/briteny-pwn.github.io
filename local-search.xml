@@ -141,6 +141,27 @@
   
   
   <entry>
+    <title>ret2scu</title>
+    <link href="/ret2scu/"/>
+    <url>/ret2scu/</url>
+    
+    <content type="html"><![CDATA[<h1 id="ret2scu"><a href="#ret2scu" class="headerlink" title="ret2scu"></a>ret2scu</h1>]]></content>
+    
+    
+    <categories>
+      
+      <category>CTF_PWN</category>
+      
+      <category>PWN_skill</category>
+      
+    </categories>
+    
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>科技文化节</title>
     <link href="/%E7%A7%91%E6%8A%80%E6%96%87%E5%8C%96%E8%8A%82/"/>
     <url>/%E7%A7%91%E6%8A%80%E6%96%87%E5%8C%96%E8%8A%82/</url>
@@ -692,27 +713,6 @@
   
   
   <entry>
-    <title>机器学习_two</title>
-    <link href="/%E6%97%A0%E7%9B%91%E7%9D%A3%E5%AD%A6%E4%B9%A0/"/>
-    <url>/%E6%97%A0%E7%9B%91%E7%9D%A3%E5%AD%A6%E4%B9%A0/</url>
-    
-    <content type="html"><![CDATA[<h1 id="无监督学习"><a href="#无监督学习" class="headerlink" title="无监督学习"></a>无监督学习</h1>]]></content>
-    
-    
-    <categories>
-      
-      <category>大模型</category>
-      
-      <category>机器学习</category>
-      
-    </categories>
-    
-    
-  </entry>
-  
-  
-  
-  <entry>
     <title>深度学习框架</title>
     <link href="/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E6%A1%86%E6%9E%B6/"/>
     <url>/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E6%A1%86%E6%9E%B6/</url>
@@ -734,18 +734,18 @@
   
   
   <entry>
-    <title>神经网络基础</title>
-    <link href="/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80/"/>
-    <url>/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80/</url>
+    <title>机器学习_two</title>
+    <link href="/%E6%97%A0%E7%9B%91%E7%9D%A3%E5%AD%A6%E4%B9%A0/"/>
+    <url>/%E6%97%A0%E7%9B%91%E7%9D%A3%E5%AD%A6%E4%B9%A0/</url>
     
-    <content type="html"><![CDATA[<h1 id="神经网络基础"><a href="#神经网络基础" class="headerlink" title="神经网络基础"></a>神经网络基础</h1>]]></content>
+    <content type="html"><![CDATA[<h1 id="无监督学习"><a href="#无监督学习" class="headerlink" title="无监督学习"></a>无监督学习</h1>]]></content>
     
     
     <categories>
       
       <category>大模型</category>
       
-      <category>深度学习</category>
+      <category>机器学习</category>
       
     </categories>
     
@@ -767,6 +767,27 @@
       <category>大模型</category>
       
       <category>机器学习</category>
+      
+    </categories>
+    
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>神经网络基础</title>
+    <link href="/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80/"/>
+    <url>/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80/</url>
+    
+    <content type="html"><![CDATA[<h1 id="神经网络基础"><a href="#神经网络基础" class="headerlink" title="神经网络基础"></a>神经网络基础</h1>]]></content>
+    
+    
+    <categories>
+      
+      <category>大模型</category>
+      
+      <category>深度学习</category>
       
     </categories>
     
