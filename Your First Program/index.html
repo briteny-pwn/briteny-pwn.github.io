@@ -1,0 +1,869 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/cat.jpg">
+  <link rel="icon" href="/img/cat.jpg">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="briteny-pwn">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="pwn.college学习笔记">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Your First Program">
+<meta property="og:url" content="http://example.com/Your%20First%20Program/index.html">
+<meta property="og:site_name" content="Briteny&#39;s Blog">
+<meta property="og:description" content="pwn.college学习笔记">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-03-06T07:46:00.000Z">
+<meta property="article:modified_time" content="2025-10-20T15:40:08.959Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>Your First Program - Briteny&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":100,"cursorChar":".","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="Briteny's Blog" type="application/atom+xml">
+</head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>briteny-pwn&#39;s blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/" target="_self">
+                <i class="iconfont icon-link-fill"></i>
+                <span>友链</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/atom.xml" target="_self">
+                <i class="iconfont icon-rss-fill"></i>
+                <span>rss</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Your First Program"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-03-06 15:46" pubdate>
+          2025年3月6日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          3k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          26 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">Your First Program</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="Your-First-Program"><a href="#Your-First-Program" class="headerlink" title="Your First Program"></a>Your First Program</h1><h3 id="Your-First-Register"><a href="#Your-First-Register" class="headerlink" title="Your First Register"></a>Your First Register</h3><p>The CPU thinks in very simple terms. It moves data around, changes data, makes decisions based on data, and takes action based on data. Most of the time, this data is stored in <em>registers</em>.</p>
+<p>Simply put, registers are containers for data. The CPU can put data into registers, move data between registers, and so on. These registers, at a hardware level, are implemented using very expensive chips, crammed into shockingly microscopic spaces, and accessed at a frequency where even physical concepts such as the speed of light impact their performance. Hence, the number of registers that a CPU can have is <em>extremely</em> constrained. Different CPU architectures have different amounts of registers, different names for these registers, and so on, but typically, there are between 10 and 20 “general purpose” registers that program code can use for any reason, and up to a few dozen other ones that are used for special purposes.</p>
+<p>In x86’s modern incarnation, x86_64, programs have access to 16 general purpose registers. In this challenge, we will learn about our first one: <code>rax</code>. Hi, Rax!</p>
+<p><code>rax</code>, a single x86 register, is a tiny piece of the massively complex design of the x86 CPU, but this is where we’ll start. Like the other registers, <code>rax</code> is a container for a small amount of data. You <em>move</em> data into <code>rax</code> with the <code>mov</code> instruction. Instructions are specified as an <em>operator</em> (in this case, <code>mov</code>), and <em>operands</em>, which represent additional data (in this case, it will be the specification of <code>rax</code> as a destination, and the value we will want to store there).</p>
+<p>For example, if you wanted to store the value <code>1337</code> into <code>rax</code>, the x86 Assembly would look like:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs assembly">mov rax, 1337<br></code></pre></td></tr></table></figure>
+
+<p>You can see a few things:</p>
+<ol>
+<li>The destination (<code>rax</code>) is specified <em>before</em> the source (the value <code>1337</code>).</li>
+<li>The operands are separated by a comma.</li>
+<li>It is <em>really</em> simple!</li>
+</ol>
+<p>In this challenge, you will write your first assembly. You must move the value <code>60</code> into <code>rax</code>. Write your program in a file with a <code>.s</code> extension, such as <code>rax-challenge.s</code> (while not mandatory, <code>.s</code> is the typical extension for assembly files), and pass it as an argument to the <code>/challenge/check</code> file (e.g., <code>/challenge/check rax-challenge.s</code>). You can use either your favorite text editor or the text editor in pwn.college’s VSCode Workspace to implement your <code>.s</code> file!</p>
+<hr>
+<p><strong>ERRATA:</strong> If you’ve seen x86 assembly before, there is a chance that you’ve seen a slightly different dialect of it. The dialect used in pwn.college is “Intel Syntax”, which is the correct way to write x86 assembly (as a reminder, Intel created x86). Some courses incorrectly teach the use of “AT&amp;T Syntax”, causing enormous amounts of confusion. We’ll touch on this slightly in the next module and then, hopefully, never have to think about AT&amp;T Syntax again.</p>
+<h4 id="翻译"><a href="#翻译" class="headerlink" title="翻译"></a>翻译</h4><p>CPU的思维方式非常简单。它负责移动数据、修改数据、根据数据做出决策，并基于数据采取行动。大多数时候，这些数据存储在寄存器中。</p>
+<p>简而言之，寄存器就是存放数据的容器。CPU可以将数据存入寄存器，在寄存器之间移动数据等等。在硬件层面，这些寄存器通过极其昂贵的芯片实现，被压缩在惊人微观的空间中，并以连光速这样的物理概念都会影响其性能的频率进行访问。因此，CPU所能拥有的寄存器数量受到极大限制。不同的CPU架构拥有不同数量的寄存器，对这些寄存器的命名也各不相同，但通常会有10到20个“通用”寄存器，程序代码可以出于任何原因使用它们，此外还有最多几十个用于特殊用途的寄存器。</p>
+<p>在现代x86的版本，即x86_64中，程序可以访问16个通用寄存器。在本挑战中，我们将学习第一个寄存器：rax。你好，Rax！</p>
+<p>rax，作为单个x86寄存器，是x86 CPU庞大复杂设计中的一小部分，但我们将从这里开始。与其他寄存器一样，rax是一个用于存放少量数据的容器。您可以通过mov指令将数据移入rax。指令由操作符（本例中为mov）和操作数（代表附加数据，本例中是指定rax作为目标位置，以及我们想要存储的值）组成。</p>
+<p>例如，如果您想将值1337存入rax，x86汇编代码将如下所示：</p>
+<p>mov rax, 1337<br>您可以注意到以下几点：</p>
+<ul>
+<li>目标（rax）在源（值1337）之前指定。</li>
+<li>操作数之间用逗号分隔。</li>
+<li>这真的非常简单！</li>
+</ul>
+<p>在本挑战中，您将编写您的第一段汇编代码。您必须将值60移入rax。请将您的程序写入扩展名为.s的文件中，例如rax-challenge.s（虽然这不是强制要求，但.s是汇编文件的典型扩展名），并将其作为参数传递给&#x2F;challenge&#x2F;check文件（例如：&#x2F;challenge&#x2F;check rax-challenge.s）。您可以使用您喜欢的文本编辑器或pwn.college的VSCode工作区中的文本编辑器来实现您的.s文件！</p>
+<p>勘误：如果您之前接触过x86汇编，可能会见过稍有不同的语法风格。pwn.college中使用的风格是“Intel语法”，这是编写x86汇编的正确方式（提醒一下，Intel创造了x86）。有些课程错误地教授“AT&amp;T语法”的使用，造成了巨大的混淆。我们将在下一个模块中略微提及这一点，然后希望再也不必考虑AT&amp;T语法了。</p>
+<h4 id="SOLVE"><a href="#SOLVE" class="headerlink" title="SOLVE"></a>SOLVE</h4><p>编写一个文件challenge-rax.s</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs assembly">mov rax, 60<br></code></pre></td></tr></table></figure>
+
+<p>然后将文件作为&#x2F;challenge&#x2F;check的参数</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs shell">hacker@your-first-program~your-first-register:~$ /challenge/check challenge-rax.s<br><br>Checking the assembly code...<br>... YES! Great job!<br><br><br>Congratulations, you have written your first program!<br>Now let&#x27;s see what happens when you run it:<br><br>hacker@your-first-program~your-first-register:/home/hacker$ /tmp/your-program<br>Segmentation fault (core dumped)<br>hacker@your-first-program~your-first-register:/home/hacker$ <br><br>... uh oh. The program crashed! We&#x27;ll go into more details about<br>what a Segmentation Fault is later, but in this case, the program<br>crashed because, after the CPU moved the value 60 into rax, it was<br>never instructed to stop execution. With no further instructions<br>to execute, and no directive to stop, it crashed.<br><br>In the next level, we&#x27;ll learn about how to stop program execution.<br>For now, here is your flag for your first (crashing) program!<br><br><br>Here is your flag!<br>pwn.college&#123;cUtbn87tpKT_U5T8TwasdaBJCLG.dNDN4UDLxYDNzgzW&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="Your-first-syscall"><a href="#Your-first-syscall" class="headerlink" title="Your first syscall"></a>Your first syscall</h3><p>So, your first program crashed… Don’t worry, it happens! In this challenge, you’ll learn how to make your program cleanly exit instead of crashing.</p>
+<p>Starting your program and cleanly stopping it are actions handled by your computer’s Operating System. The operating system manages the existence of programs and interactions between the programs, your hardware, the network environment, and so on.</p>
+<p>Your programs “interact” with the CPU using assembly instructions such as the mov instruction you wrote earlier. Similarly, your programs interact with the operating system (via the CPU, of course) using the syscall, or System Call instruction.</p>
+<p>Like how you might use a phone call to interact with a local restaurant to order food, programs use system calls to request the operating system to carry out actions on the program’s behalf. As a bit of an overgeneralization, anything your program does that doesn’t involve performing computation on data is done with a system call.</p>
+<p>There are a lot of different system calls your program can invoke. For example, Linux has around 330 different ones, though this number changes over time as syscalls are added and deprecated. Each system call is indicated by a syscall number, counting upwards from 0, and your program invokes a specific syscall by moving its syscall number into the rax register and invoking the syscall instruction. For example, if we wanted to invoke syscall 42 (a syscall that you’ll learn about sometime later!), we would write two instructions:</p>
+<p>mov rax, 42<br>syscall<br>Very cool, and super easy!</p>
+<p>In this challenge, we’ll learn our first syscall: exit. The exit syscall causes a program to exit. By explicitly exiting, we can avoid the crash we ran into with our previous program!</p>
+<p>Now, the syscall number of exit is 60. Go and write your first program: it should move 60 into rax, then invoke syscall to cleanly exit!</p>
+<h4 id="翻译-1"><a href="#翻译-1" class="headerlink" title="翻译"></a>翻译</h4><p>看来你的第一个程序崩溃了……别担心，这很正常！在这个挑战中，你将学习如何让程序正常退出而不是崩溃。</p>
+<p>程序的启动和正常终止都是由计算机的操作系统处理的。操作系统管理着程序的存在，以及程序与硬件、网络环境等之间的交互。</p>
+<p>你的程序通过汇编指令（比如之前写的mov指令）与CPU进行”交互”。同样地，程序也通过系统调用（syscall）指令与操作系统进行交互（当然是通过CPU）。</p>
+<p>就像你可能会打电话给当地餐厅订餐一样，程序使用系统调用来请求操作系统代表程序执行某些操作。稍微概括地说，程序中所有不涉及数据计算的操作都是通过系统调用完成的。</p>
+<p>程序可以调用许多不同的系统调用。例如，Linux有大约330种不同的系统调用，不过这个数字会随着系统调用的新增和废弃而不断变化。每个系统调用都有一个从0开始编号的系统调用号，程序通过将系统调用号存入rax寄存器并执行syscall指令来调用特定的系统调用。例如，如果我们想调用42号系统调用（这个系统调用你以后会学到！），我们会写两条指令：</p>
+<p>mov rax, 42<br>syscall<br>非常酷，而且超级简单！</p>
+<p>在这个挑战中，我们将学习第一个系统调用：exit。exit系统调用会让程序退出。通过显式地调用退出，我们就可以避免上一个程序遇到的崩溃问题！</p>
+<p>现在，exit的系统调用号是60。去编写你的第一个程序吧：它应该将60移入rax，然后调用syscall来正常退出！</p>
+<h4 id="SOLVE-1"><a href="#SOLVE-1" class="headerlink" title="SOLVE"></a>SOLVE</h4><p>编写一个文件syscall.s</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs assembly">mov rax, 60 <br>syscall<br></code></pre></td></tr></table></figure>
+
+<p>然后将这个文件作为&#x2F;challenge&#x2F;check的参数</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs shell">hacker@your-first-program~your-first-syscall:~$ /challenge/check syscall.s<br><br>Checking the assembly code...<br>... YES! Great job!<br><br>Okay, now you have written your first COMPLETE program!<br>All it&#x27;ll do is exit, but it&#x27;ll do so cleanly, and we can<br>build from there!<br><br>Let&#x27;s see what happens when you run it:<br><br>hacker@your-first-program~your-first-syscall:/home/hacker$ /tmp/your-program<br>hacker@your-first-program~your-first-syscall:/home/hacker$ <br><br>Neat! Your program exited cleanly! Let&#x27;s push on to make things<br>more interesting! Take this with you:<br><br><br>Here is your flag!<br>pwn.college&#123;Mqj-rsiBNsMv6T0GBYsXWPhP62P.dhjN4UDLxYDNzgzW&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="Exit-Codes"><a href="#Exit-Codes" class="headerlink" title="Exit Codes"></a>Exit Codes</h3><p>As you might know, every program exits with an <em>exit code</em> as it terminates. This is done by passing a parameter to the <code>exit</code> system call.</p>
+<p>Similarly to how a system call number (e.g., <code>60</code> for <code>exit</code>) is specified in the <code>rax</code> variable, parameters are also passed to the syscall through registers. System calls can take multiple parameters, though <code>exit</code> takes only one: the exit code. The first parameter to a system call is passed via another register: <code>rdi</code>. <code>rdi</code> is what we will focus on in this challenge.</p>
+<p>In this challenge, you must make your program exit with the exit code of <code>42</code>. Thus, your program will need three instructions:</p>
+<ol>
+<li>Set your program’s exit code (move it into <code>rdi</code>).</li>
+<li>Set the system call number of the <code>exit</code> syscall (<code>mov rax, 60</code>).</li>
+<li><code>syscall</code>!</li>
+</ol>
+<p>Now, go and do it!</p>
+<h4 id="翻译-2"><a href="#翻译-2" class="headerlink" title="翻译"></a>翻译</h4><p>如您所知，每个程序在终止时都会返回一个退出码。这是通过向exit系统调用传递参数来实现的。</p>
+<p>就像系统调用号（例如exit是60）是通过rax寄存器指定一样，参数也是通过寄存器传递给系统调用的。系统调用可以接受多个参数，不过exit只需要一个参数：退出码。系统调用的第一个参数是通过另一个寄存器rdi传递的。这个挑战中我们将重点关注rdi寄存器。</p>
+<p>在此挑战中，您需要让程序以退出码42结束运行。因此，您的程序需要包含三条指令：</p>
+<ol>
+<li>设置程序的退出码（将其移入rdi）</li>
+<li>设置exit系统调用的系统调用号（mov rax, 60）</li>
+<li>执行syscall！</li>
+</ol>
+<p>现在，请开始实现吧！</p>
+<h4 id="SOLVE-2"><a href="#SOLVE-2" class="headerlink" title="SOLVE"></a>SOLVE</h4><p>编写一个文件exit.s</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs assembly">mov rdi, 42<br>mov rax, 60 <br>syscall<br></code></pre></td></tr></table></figure>
+
+<p>然后将这个文件作为&#x2F;challenge&#x2F;check的参数</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs shell">hacker@your-first-program~exit-codes:~$ /challenge/check exit.s<br><br>Checking the assembly code...<br>... YES! Great job!<br><br>Let&#x27;s check what your exit code is! It should be 42 to succeed!<br><br>Go go go!<br><br>hacker@your-first-program~exit-codes:/home/hacker$ /tmp/your-program<br>hacker@your-first-program~exit-codes:/home/hacker$ echo $?<br>42<br>hacker@your-first-program~exit-codes:/home/hacker$ <br><br>Neat! Your program exited with the correct error code! But in this level,<br>we built the executable for you. Next, you&#x27;ll learn how to build the executable<br>yourself, and then you&#x27;ll be ready to walk the path of Assembly!<br><br>For now, take this with you:<br><br><br><br>Here is your flag!<br>pwn.college&#123;YdHeQunaY_uuE437HUd5XSJaXX8.dBzN4UDLxYDNzgzW&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="Building-Executables"><a href="#Building-Executables" class="headerlink" title="Building Executables"></a>Building Executables</h3><p>So you’ve written your first program? But until now, we’ve handled the actual building of it into an executable that your CPU can actually run. In this challenge, <em>you</em> will build it!</p>
+<p>To build an executable binary, you need to:</p>
+<ol>
+<li>Write your assembly in a file (often with a <code>.S</code> or <code>.s</code> syntax. We’ll use <code>program.s</code> in this example).</li>
+<li>Assemble your assembly file into an <em>object file</em> (using the <code>as</code> command).</li>
+<li>Link one or more executable object files into a final executable binary (using the <code>ld</code> command)!</li>
+</ol>
+<p>Let’s take this step by step:</p>
+<p><strong>Writing assembly.</strong><br>The assembly file contains, well, your assembly code. For the previous level, this might be:</p>
+<figure class="highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs console">hacker@dojo:~$ cat program.s<br>mov rdi, 42<br>mov rax, 60<br>syscall<br>hacker@dojo:~$<br></code></pre></td></tr></table></figure>
+
+<p>But it needs to contain <em>just a tad more info</em>. We mentioned that we’re using the <em>Intel</em> assembly syntax in this course, and we’ll need to let the assembler know that. You do this by prepending a directive to the beginning of your assembly code, as such:</p>
+<figure class="highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs console">hacker@dojo:~$ cat program.s<br>.intel_syntax noprefix<br>mov rdi, 42<br>mov rax, 60<br>syscall<br>hacker@dojo:~$<br></code></pre></td></tr></table></figure>
+
+<p><code>.intel_syntax noprefix</code> tells the assembler that you will be using Intel assembly syntax, and specifically the variant of it where you don’t have to add extra prefixes to every instruction. It isn’t actually an x86 instruction (like <code>mov</code> and <code>syscall</code>), and so it doesn’t end up in our final executable binary or runs on the CPU. We’ll talk about other directives later, but for now, we’ll let the assembler figure it out!</p>
+<p><strong>Assembling Assembly Code into Object Files.</strong><br>Next, we’ll assemble the code. This is done using the <strong>as</strong>sembler, <code>as</code>, as so:</p>
+<figure class="highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs console">hacker@dojo:~$ ls<br>program.s<br>hacker@dojo:~$ cat program.s<br>.intel_syntax noprefix<br>mov rdi, 42<br>mov rax, 60<br>syscall<br>hacker@dojo:~$ as -o program.o program.s<br>hacker@dojo:~$ ls<br>program.o   program.s<br>hacker@dojo:~$<br></code></pre></td></tr></table></figure>
+
+<p>Here, the <code>as</code> tool reads in <code>program.s</code>, assembles it into binary code, and outputs an <em>object file</em> called <code>program.o</code>. This object file has actual assembled binary code, but it is not yet ready to be run. First, we need to <em>link</em> it.</p>
+<p><strong>Linking Object Files into an Executable.</strong><br>In a typical development workflow, source code is compiled and assembly is assembled to object files, and there are typically many of these (generally, each source code file in a program compiles into its own object file). These are then <em>linked</em> together into a single executable. Even if there is only one file, we still need to link it, to prepare the final executable. This is done with the <code>ld</code> (stemming from the term “<strong>l</strong>ink e<strong>d</strong>itor”) command, as so:</p>
+<figure class="highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs console">hacker@dojo:~$ ls<br>program.o   program.s<br>hacker@dojo:~$ ld -o program program.o<br>ld: warning: cannot find entry symbol _start; defaulting to 0000000000401000<br>hacker@dojo:~$ ls<br>program.o   program.s   program<br>hacker@dojo:~$<br></code></pre></td></tr></table></figure>
+
+<p>This creates an <code>program</code> file that we can then run! Here it is:</p>
+<figure class="highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs console">hacker@dojo:~$ ./program<br>hacker@dojo:~$ echo $?<br>42<br>hacker@dojo:~$<br></code></pre></td></tr></table></figure>
+
+<p>In the shell, <code>$?</code> holds the exit code of the last executed command.</p>
+<p>Neat! Now you can build programs. In this challenge, go ahead and run through these steps yourself. Build your executable, and pass it to <code>/challenge/check</code> for the flag!</p>
+<hr>
+<p><strong>_start?</strong><br>The attentive learner might have noticed that <code>ld</code> prints a warning about <code>entry symbol _start</code>. The <code>_start</code> symbol is, essentially, a note to <code>ld</code> about where in your program execution should begin when the ELF is executed. The warning states that, absent a specified <code>_start</code>, execution will start right at the beginning of the code. This is just fine for us!</p>
+<p>If you want to silence the error, you can specify the <code>_start</code> symbol, in your code, as so:</p>
+<figure class="highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs console">hacker@dojo:~$ cat program.s<br>.intel_syntax noprefix<br>.global _start<br>_start:<br>mov rdi, 42<br>mov rax, 60<br>syscall<br>hacker@dojo:~$ as -o program.o program.s<br>hacker@dojo:~$ ld -o program program.o<br>hacker@dojo:~$ ./program<br>hacker@dojo:~$ echo $?<br>42<br>hacker@dojo:~$<br></code></pre></td></tr></table></figure>
+
+<p>There are two extra lines here. The second, <code>_start:</code>, adds a <em>label</em> called start, pointing to the beginning of your code. The first, <code>.global _start</code>, directs <code>as</code> to make the <code>_start</code> label <em>globally visible</em> at the linker level, instead of just locally visible at the object file level. As <code>ld</code> is the linker, this directive is necessary for the <code>_start</code> label to be seen.</p>
+<p>For all the challenges in this dojo, starting execution at the beginning of the file is just fine, but if you don’t want to see those warnings pop up, now you know how to prevent them!</p>
+<h4 id="翻译-3"><a href="#翻译-3" class="headerlink" title="翻译"></a>翻译</h4><p>你已经写了第一个程序？但到目前为止，我们还没有处理如何将其构建成CPU实际可执行的文件。在这个挑战中，你将完成构建过程！</p>
+<p>要构建可执行二进制文件，你需要：</p>
+<ol>
+<li>将汇编代码写入文件（通常使用.S或.s扩展名。本例中使用program.s）</li>
+<li>将汇编文件汇编成目标文件（使用as命令）</li>
+<li>将一个或多个目标文件链接成最终的可执行二进制文件（使用ld命令）！</li>
+</ol>
+<p>让我们逐步进行：</p>
+<p><strong>编写汇编代码</strong><br>汇编文件包含你的汇编代码。对于上一个关卡，代码可能是：</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs elixir">hacker<span class="hljs-variable">@dojo</span><span class="hljs-symbol">:~</span><span class="hljs-variable">$ </span>cat program.s<br>mov rdi, <span class="hljs-number">42</span><br>mov rax, <span class="hljs-number">60</span><br>syscall<br>hacker<span class="hljs-variable">@dojo</span><span class="hljs-symbol">:~</span>$<br></code></pre></td></tr></table></figure>
+<p>但实际上还需要包含一点额外信息。我们提到过本课程使用Intel汇编语法，需要让汇编器知道这一点。你可以在汇编代码开头添加指令来实现：</p>
+<figure class="highlight x86asm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs x86asm"><span class="hljs-symbol">hacker@dojo:</span>~$ cat program<span class="hljs-number">.</span>s<br><span class="hljs-meta">.intel_syntax</span> noprefix<br><span class="hljs-keyword">mov</span> <span class="hljs-built_in">rdi</span>, <span class="hljs-number">42</span><br><span class="hljs-keyword">mov</span> <span class="hljs-built_in">rax</span>, <span class="hljs-number">60</span><br><span class="hljs-keyword">syscall</span><br><span class="hljs-symbol">hacker@dojo:</span>~$<br></code></pre></td></tr></table></figure>
+<p><code>.intel_syntax noprefix</code>告诉汇编器你将使用Intel汇编语法，特别是那种不需要为每条指令添加额外前缀的变体。它实际上不是x86指令（如mov和syscall），因此不会出现在最终的可执行文件中或在CPU上运行。</p>
+<p><strong>将汇编代码汇编成目标文件</strong><br>接下来我们进行汇编。使用汇编器as来完成：</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs elixir">hacker<span class="hljs-variable">@dojo</span><span class="hljs-symbol">:~</span><span class="hljs-variable">$ </span>ls<br>program.s<br>hacker<span class="hljs-variable">@dojo</span><span class="hljs-symbol">:~</span><span class="hljs-variable">$ </span>cat program.s<br>.intel_syntax noprefix<br>mov rdi, <span class="hljs-number">42</span><br>mov rax, <span class="hljs-number">60</span><br>syscall<br>hacker<span class="hljs-variable">@dojo</span><span class="hljs-symbol">:~</span><span class="hljs-variable">$ </span>as -o program.o program.s<br>hacker<span class="hljs-variable">@dojo</span><span class="hljs-symbol">:~</span><span class="hljs-variable">$ </span>ls<br>program.o   program.s<br>hacker<span class="hljs-variable">@dojo</span><span class="hljs-symbol">:~</span>$<br></code></pre></td></tr></table></figure>
+<p>as工具读取program.s，将其汇编成二进制代码，并输出名为program.o的目标文件。这个目标文件包含实际的汇编二进制代码，但还不能直接运行。我们需要先进行链接。</p>
+<p><strong>将目标文件链接成可执行文件</strong><br>在典型的开发工作流中，源代码被编译、汇编成目标文件，通常会有多个这样的文件（一般来说，程序中的每个源代码文件都会编译成自己的目标文件）。然后将它们链接在一起形成单个可执行文件。即使只有一个文件，我们仍然需要链接它以准备最终的可执行文件。使用ld命令完成：</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs elixir">hacker<span class="hljs-variable">@dojo</span><span class="hljs-symbol">:~</span><span class="hljs-variable">$ </span>ls<br>program.o   program.s<br>hacker<span class="hljs-variable">@dojo</span><span class="hljs-symbol">:~</span><span class="hljs-variable">$ </span>ld -o program program.o<br><span class="hljs-symbol">ld:</span> <span class="hljs-symbol">warning:</span> cannot find entry symbol _start; defaulting to <span class="hljs-number">0000000000401000</span><br>hacker<span class="hljs-variable">@dojo</span><span class="hljs-symbol">:~</span><span class="hljs-variable">$ </span>ls<br>program.o   program.s   program<br>hacker<span class="hljs-variable">@dojo</span><span class="hljs-symbol">:~</span>$<br></code></pre></td></tr></table></figure>
+<p>这样就创建了一个可以运行的program文件！运行结果：</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs elixir">hacker<span class="hljs-variable">@dojo</span><span class="hljs-symbol">:~</span><span class="hljs-variable">$ </span>./program<br>hacker<span class="hljs-variable">@dojo</span><span class="hljs-symbol">:~</span><span class="hljs-variable">$ </span>echo <span class="hljs-variable">$?</span><br><span class="hljs-number">42</span><br>hacker<span class="hljs-variable">@dojo</span><span class="hljs-symbol">:~</span>$<br></code></pre></td></tr></table></figure>
+<p>在shell中，<code>$?</code>保存了上一个执行命令的退出码。</p>
+<p>很好！现在你可以构建程序了。在这个挑战中，请亲自完成这些步骤。构建你的可执行文件，并将其传递给&#x2F;challenge&#x2F;check来获取flag！</p>
+<p><strong>_start？</strong><br>细心的学习者可能注意到ld输出了关于入口符号_start的警告。_start符号本质上是告诉ld当ELF文件执行时应该从程序的哪个位置开始执行。警告说明，在没有指定_start的情况下，执行将从代码开头开始。这对我们来说完全没问题！</p>
+<p>如果你想消除这个错误，可以在代码中指定_start符号：</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs elixir">hacker<span class="hljs-variable">@dojo</span><span class="hljs-symbol">:~</span><span class="hljs-variable">$ </span>cat program.s<br>.intel_syntax noprefix<br>.global _start<br><span class="hljs-symbol">_start:</span><br>mov rdi, <span class="hljs-number">42</span><br>mov rax, <span class="hljs-number">60</span><br>syscall<br>hacker<span class="hljs-variable">@dojo</span><span class="hljs-symbol">:~</span><span class="hljs-variable">$ </span>as -o program.o program.s<br>hacker<span class="hljs-variable">@dojo</span><span class="hljs-symbol">:~</span><span class="hljs-variable">$ </span>ld -o program program.o<br>hacker<span class="hljs-variable">@dojo</span><span class="hljs-symbol">:~</span><span class="hljs-variable">$ </span>./program<br>hacker<span class="hljs-variable">@dojo</span><span class="hljs-symbol">:~</span><span class="hljs-variable">$ </span>echo <span class="hljs-variable">$?</span><br><span class="hljs-number">42</span><br>hacker<span class="hljs-variable">@dojo</span><span class="hljs-symbol">:~</span>$<br></code></pre></td></tr></table></figure>
+<p>这里多了两行代码。第二行<code>_start:</code>添加了一个指向代码开头的start标签。第一行<code>.global _start</code>指示as使 _start 标签在链接器级别全局可见，而不仅仅在目标文件级别局部可见。由于ld是链接器，这个指令对于 _start 标签能被看到是必要的。</p>
+<p>对于本道场中的所有挑战，从文件开头开始执行完全没问题，但如果你不想看到这些警告，现在你知道如何避免它们了！</p>
+<h4 id="SOLVE-3"><a href="#SOLVE-3" class="headerlink" title="SOLVE"></a>SOLVE</h4>
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/CTF-PWN/" class="category-chain-item">CTF_PWN</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/CTF-PWN/pwn-college/" class="category-chain-item">pwn.college</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/CTF-PWN/pwn-college/Computer-101/" class="category-chain-item">Computer 101</a>
+  
+  
+
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Your First Program</div>
+      <div>http://example.com/Your First Program/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>briteny-pwn</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2025年3月6日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/Linux%20Luminarium/" title="Linux Luminarium">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Linux Luminarium</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/ROP/" title="ROP">
+                        <span class="hidden-mobile">ROP</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  
+      <script>
+        if (!window.MathJax) {
+          window.MathJax = {
+            tex    : {
+              inlineMath: { '[+]': [['$', '$']] }
+            },
+            loader : {
+              load: ['ui/lazy']
+            },
+            options: {
+              renderActions: {
+                insertedScript: [200, () => {
+                  document.querySelectorAll('mjx-container').forEach(node => {
+                    let target = node.parentNode;
+                    if (target.nodeName.toLowerCase() === 'li') {
+                      target.parentNode.classList.add('has-jax');
+                    }
+                  });
+                }, '', false]
+              }
+            }
+          };
+        } else {
+          MathJax.startup.document.state(0);
+          MathJax.texReset();
+          MathJax.typeset();
+          MathJax.typesetPromise();
+        }
+
+        Fluid.events.registerRefreshCallback(function() {
+          if ('MathJax' in window && MathJax.startup.document && typeof MathJax.startup.document.state === 'function') {
+            MathJax.startup.document.state(0);
+            MathJax.texReset();
+            MathJax.typeset();
+            MathJax.typesetPromise();
+          }
+        });
+      </script>
+    
+
+  <script  src="https://lib.baomitu.com/mathjax/3.2.2/es5/tex-mml-chtml.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
