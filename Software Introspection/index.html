@@ -21,19 +21,19 @@
   
     <meta name="description" content="pwn.college学习笔记">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Linux Luminarium">
-<meta property="og:url" content="http://example.com/Linux%20Luminarium/index.html">
+<meta property="og:title" content="Software Introspection">
+<meta property="og:url" content="http://example.com/Software%20Introspection/index.html">
 <meta property="og:site_name" content="Briteny&#39;s Blog">
 <meta property="og:description" content="pwn.college学习笔记">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-03-06T07:46:00.000Z">
-<meta property="article:modified_time" content="2025-05-27T06:59:29.724Z">
+<meta property="article:modified_time" content="2025-10-21T04:41:27.534Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary_large_image">
   
   
   
-  <title>Linux Luminarium - Briteny&#39;s Blog</title>
+  <title>Software Introspection - Briteny&#39;s Blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -224,7 +224,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="Linux Luminarium"></span>
+            <span id="subtitle" data-typed-text="Software Introspection"></span>
           
         </div>
 
@@ -247,7 +247,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.3k 字
+          1.4k 字
         
       </span>
     
@@ -258,7 +258,7 @@
         
         
         
-          11 分钟
+          12 分钟
         
       </span>
     
@@ -295,116 +295,57 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">Linux Luminarium</h1>
+            <h1 id="seo-header">Software Introspection</h1>
             
             
               <div class="markdown-body">
                 
-                <h1 id="Linux-Luminarium"><a href="#Linux-Luminarium" class="headerlink" title="Linux Luminarium"></a>Linux Luminarium</h1><h3 id="Hello-Hackers"><a href="#Hello-Hackers" class="headerlink" title="Hello Hackers"></a>Hello Hackers</h3><p>1.介绍了whoami命令，输出当前用户名称</p>
-<p>2.然后通过简单的示例介绍了如何使用命令的arguements</p>
-<h3 id="Pondering-Paths"><a href="#Pondering-Paths" class="headerlink" title="Pondering Paths"></a>Pondering Paths</h3><p>1.了解&#x2F;代表root，也就是根目录</p>
-<p>2.了解什么是绝对路径</p>
-<p>3.了解cd命令，change directory</p>
-<p>4.同上</p>
-<p>5.同上</p>
-<p>6.相对路径以及..的含义，也就是上级目录</p>
-<p>7.‘.’ 代表当前目录</p>
-<p>8.用.&#x2F;来表示运行程序</p>
-<p>9.~代表用户目录</p>
-<h3 id="Comprehending-Commands"><a href="#Comprehending-Commands" class="headerlink" title="Comprehending Commands"></a>Comprehending Commands</h3><p>1.cat命令</p>
-<p>4.grep命令</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">hacker@dojo:~$ grep SEARCH_STRING /path/to/file<br></code></pre></td></tr></table></figure>
+                <h1 id="Software-Introspection"><a href="#Software-Introspection" class="headerlink" title="Software Introspection"></a>Software Introspection</h1><h3 id="Tracing-Syscalls"><a href="#Tracing-Syscalls" class="headerlink" title="Tracing Syscalls"></a>Tracing Syscalls</h3><p>The first one is pretty simple: the <strong>s</strong>yscall <strong>trace</strong>r, <code>strace</code>.</p>
+<p>Given a program to run, <code>strace</code> will use functionality of the Linux operating system to introspect and record every system call that the program invokes, and its result. For example, let’s look at our program from the previous challenge:</p>
+<figure class="highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs console">hacker@dojo:~$ strace /tmp/your-program<br>execve(&quot;/tmp/your-program&quot;, [&quot;/tmp/your-program&quot;], 0x7ffd48ae28b0 /* 53 vars */) = 0<br>exit(42)                                 = ?<br>+++ exited with 42 +++<br>hacker@dojo:~$<br></code></pre></td></tr></table></figure>
 
-<p>5.ls命令，就是列出文件和文件夹</p>
-<p>6.touch创建文件</p>
-<p>7.rm删除文件</p>
-<p>8.ls -a 显示隐藏文件</p>
-<p>9.组合使用</p>
-<p>10.mkdir创建文件夹</p>
-<p>11.find命令</p>
-<p>12.创建软链接[符号链接]和硬链接</p>
-<p>硬链接是一个代替地址，它指向这些数据，通过硬链接访问与直接访问无异</p>
-<p>而软链接在Linux执行时会意识到这是一个软链接,读取文件**名称,**然后通常自动访问该文件,大多数情况下，两种情况都能访问原始数据，但是方式不同</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">hacker@dojo:~$ ln -s /tmp/myfile /home/hacker/ourfile <br></code></pre></td></tr></table></figure>
+<p>As you can see, <code>strace</code> reports what system calls are triggered, what parameters were passed to them, and what data they returned. The syntax used here for output is <code>system_call(parameter, parameter, parameter, ...)</code>. This syntax is borrowed from a programming language called C, but we don’t have to worry about that yet. Just keep in mind how to read this specific syntax.</p>
+<p>In this example, <code>strace</code> reports two system calls: the second is the <code>exit</code> system call that your program uses to request its own termination, and you can see the parameter you passed to it (42). The first is an <code>execve</code> system call. We’ll learn about this system call later, but it’s somewhat of a yin to <code>exit</code>‘s yang: it starts a new program (in this case, <code>your-program</code>). It’s not actually invoked by <code>your-program</code> in this case: its detection by <code>strace</code> is a weird artifact of how <code>strace</code> works, that we’ll investigate later.</p>
+<p>In the final line, you can see the result of <code>exit(42)</code>, which is that the program exits with an exit code of <code>42</code>!</p>
+<p>Now, the <code>exit</code> syscall is easy to introspect without using <code>strace</code> — after all, part of the point of <code>exit</code> is to give you an exit code that you can access. But other system calls are less visible. For example, the <code>alarm</code> system call (syscall number 37!) will set a timer in the operating system, and when that many seconds pass, Linux will terminate the program. The point of <code>alarm</code> is to, e.g., kill the program when it’s frozen, but in this case, we’ll use <code>alarm</code> to practice our <code>strace</code> snooping!</p>
+<p>In this challenge, you must <code>strace</code> the <code>/challenge/trace-me</code> program to figure out what value it passes as a parameter to the <code>alarm</code> system call, then call <code>/challenge/submit-number</code> with the number you’ve retrieved as the argument. Good luck!</p>
+<h4 id="翻译"><a href="#翻译" class="headerlink" title="翻译"></a>翻译</h4><p>第一个例子相当简单：就是系统调用追踪工具——strace。</p>
+<p>给定一个需要运行的程序，strace会利用Linux操作系统的功能来监控并记录该程序触发的每一个系统调用及其返回结果。例如，我们来看之前挑战中的程序：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs shell">hacker@dojo:~$ strace /tmp/your-program<br>execve(&quot;/tmp/your-program&quot;, [&quot;/tmp/your-program&quot;], 0x7ffd48ae28b0 /* 53 vars */) = 0<br>exit(42)                                 = ?<br>+++ exited with 42 +++<br>hacker@dojo:~$<br></code></pre></td></tr></table></figure>
 
-<p>上述过程创造ourfile指向 myfile</p>
-<p>file命令可以监测软连接</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell">hacker@dojo:~$ file ~/ourfile  <br>/home/hacker/ourfile: symbolic link to /tmp/myfile<br></code></pre></td></tr></table></figure>
+<p>如你所见，strace会报告触发了哪些系统调用、传递了什么参数以及返回了哪些数据。这里输出的语法借鉴了C编程语言，但我们暂时无需深究。只需记住如何阅读这种特定语法即可。</p>
+<p>在这个例子中，strace报告了两次系统调用：第二次是你的程序用于请求自我终止的exit系统调用，你可以看到传递给它的参数（42）。第一次是execve系统调用。我们后续会学习这个系统调用，但它与exit形成了某种阴阳互补的关系：它会启动一个新程序（本例中是你的程序）。这里实际上并不是由你的程序触发的：strace能检测到它是由于其工作机制的特殊性，这一点我们稍后会探讨。</p>
+<p>最后一行显示了exit(42)的结果——程序以退出码42终止！</p>
+<p>虽然无需strace也能轻松监控exit系统调用（毕竟exit的部分意义就在于提供可获取的退出码），但其他系统调用的可见度就低得多。例如，alarm系统调用（系统调用号37！）会在操作系统中设置一个定时器，当指定秒数过去后，Linux将终止该程序。alarm的本意是在程序卡死时将其终止，但这里我们将通过它来练习strace监控技巧！</p>
+<p>在此挑战中，你需要使用strace监控&#x2F;challenge&#x2F;trace-me程序，找出它传递给alarm系统调用的参数值，然后以获取的数字作为参数调用&#x2F;challenge&#x2F;submit-number。祝你好运！</p>
+<h4 id="SOLVE"><a href="#SOLVE" class="headerlink" title="SOLVE"></a>SOLVE</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs shell">hacker@introspecting~tracing-syscalls:~$ strace /challenge/trace-me <br>execve(&quot;/challenge/trace-me&quot;, [&quot;/challenge/trace-me&quot;], 0x7ffe7c9743e0 /* 18 vars */) = 0<br>alarm(20171)                            = 0<br>exit(0)                                 = ?<br>+++ exited with 0 +++<br>hacker@introspecting~tracing-syscalls:~$ /challenge/submit-number 20171<br>CORRECT! Here is your flag:<br>pwn.college&#123;4G5Cq57NoudbJUkxzQO4WP31vjY.dFzN4UDLxYDNzgzW&#125;<br>hacker@introspecting~tracing-syscalls:~$ <br></code></pre></td></tr></table></figure>
 
-<p>原文的题目含义如下：</p>
-<p>好的，现在轮到你来尝试了！在这个关卡中，标志（flag）一如既往地位于 <code>/flag</code>，但 <code>/challenge/catflag</code> 会输出 <code>/home/hacker/not-the-flag</code> 的内容。使用符号链接，欺骗它，让它给你标志！</p>
-<p>这个时候我们可以把not-the-flag删除，然后创建相同名字的软连接指向&#x2F;flag</p>
-<p>然后就可以通过有读权限的软链接读取内容</p>
-<p>大致思路如下：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell">hacker@dojo:~$ rm /home/hacker/not-the-flag<br>hacker@dojo:~$ ln -s /flag /home/hacker/not-the-flag<br></code></pre></td></tr></table></figure>
+<h3 id="Starting-GDB"><a href="#Starting-GDB" class="headerlink" title="Starting GDB"></a>Starting GDB</h3><p>Next, let’s move on to GDB. GDB stands for the <strong>G</strong>NU <strong>D</strong>e<strong>b</strong>ugger, and it is typically used to hunt down and understand bugs. More specifically, a debugger is a tool that enables the close monitoring and introspection of another process. There are many famous debuggers, and in the Linux space, gdb is by far the most common.</p>
+<p>We’ll learn gdb step by step through a series of challenges. In this one, we’ll focus on simply launching it. That’s done as so:</p>
+<figure class="highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs console">hacker@dojo:~$ gdb /path/to/binary/file<br></code></pre></td></tr></table></figure>
 
+<p>In this challenge, the binary that holds the secret is <code>/challenge/debug-me</code>. Once you load it in gdb, the rest will happen magically: we’ll handle the analysis and give you the secret number. In later levels, you’ll learn how to get that number on your own!</p>
+<p>Again, once you have the number, exchange it for the flag with <code>/challenge/submit-number</code>.</p>
+<h4 id="翻译-1"><a href="#翻译-1" class="headerlink" title="翻译"></a>翻译</h4><p>接下来我们继续学习GDB。GDB是GNU调试器的缩写，通常用于排查和理解程序错误。更具体地说，调试器是一种能够对其他进程进行密切监控和内省分析的工具。市面上有许多著名的调试器，而在Linux领域，gdb无疑是最常用的工具。</p>
+<p>我们将通过一系列挑战逐步学习gdb的使用。在本次挑战中，我们将重点掌握其启动方法。具体操作如下：</p>
+<p>hacker@dojo:~$ gdb &#x2F;路径&#x2F;到&#x2F;二进制文件<br>本次挑战中，存储密钥的二进制文件是 &#x2F;challenge&#x2F;debug-me。当你将其加载到gdb后，后续操作将会自动完成：我们将代为进行分析并向你提供密钥数字。在后续关卡中，你将学会如何独立获取该数字！</p>
+<p>重申一遍，获得数字后，请通过 &#x2F;challenge&#x2F;submit-number 兑换验证标识。</p>
+<h4 id="SOLVE-1"><a href="#SOLVE-1" class="headerlink" title="SOLVE"></a>SOLVE</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><code class="hljs shell">hacker@introspecting~starting-gdb:~$ gdb /challenge/debug-me<br>GNU gdb (Ubuntu 9.2-0ubuntu1~20.04.2) 9.2<br>Copyright (C) 2020 Free Software Foundation, Inc.<br>License GPLv3+: GNU GPL version 3 or later &lt;http://gnu.org/licenses/gpl.html&gt;<br>This is free software: you are free to change and redistribute it.<br>There is NO WARRANTY, to the extent permitted by law.<br>Type &quot;show copying&quot; and &quot;show warranty&quot; for details.<br>This GDB was configured as &quot;x86_64-linux-gnu&quot;.<br>Type &quot;show configuration&quot; for configuration details.<br>For bug reporting instructions, please see:<br>&lt;http://www.gnu.org/software/gdb/bugs/&gt;.<br>Find the GDB manual and other documentation resources online at:<br>    &lt;http://www.gnu.org/software/gdb/documentation/&gt;.<br><br>For help, type &quot;help&quot;.<br>Type &quot;apropos word&quot; to search for commands related to &quot;word&quot;...<br>Reading symbols from /challenge/debug-me...<br>(No debugging symbols found in /challenge/debug-me)<br><br><br>You successfully started GDB!<br>Here is the secret number: 8789<br>Submit that with /challenge/submit-number. Goodbye!<br>hacker@introspecting~starting-gdb:~$ ^C<br>hacker@introspecting~starting-gdb:~$ /challenge/submit-number 8789<br>CORRECT! Here is your flag:<br>pwn.college&#123;YZRzuUATj8Rp6fxqYQ5U_a4CCZ2.QXxMjM1EDLxYDNzgzW&#125;<br>hacker@introspecting~starting-gdb:~$ <br></code></pre></td></tr></table></figure>
 
+<h3 id="Starting-Program-in-GDB"><a href="#Starting-Program-in-GDB" class="headerlink" title="Starting Program in GDB"></a>Starting Program in GDB</h3><p>Debuggers, including gdb, observe the debugged program <em>as it runs</em> to expose information about its runtime behavior. In the previous level, we automatically launched the program for you. Here, we will tone down the magic somewhat: you must start the execution of the program, and we’ll do the rest (e.g., recover the secret value from it).</p>
+<p>When you launch gdb now, it will eventually bring up a command prompt, that looks like this:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs gdb">(gdb) <br></code></pre></td></tr></table></figure>
 
-<h3 id="Digesting-Documentation"><a href="#Digesting-Documentation" class="headerlink" title="Digesting Documentation"></a>Digesting Documentation</h3><p>1.ls -a</p>
-<p>2.更复杂的方式熟悉联系</p>
-<p>3.man命令，manual的简称,作用就是查询命令相关信息,退出查询输入q</p>
-<p>4.说明书的阅读便捷指令</p>
-<p>5.man man操作</p>
-<p>6.–help选项，并不是所有的命令都有man</p>
-<p>7.help</p>
-<h3 id="File-Globbing"><a href="#File-Globbing" class="headerlink" title="File Globbing"></a>File Globbing</h3><p>1.*代表任何字符，可以代表多个</p>
-<p>2.?也代表任何字符，不过只代表一个</p>
-<p>3.通配符[ab]只筛选在其中的</p>
-<p>4.用[]通配符寻找路径</p>
-<p>5.综合使用</p>
-<p>6.[]中加上了！或者^含义是不需要找列出的字符的通配符</p>
-<h3 id="Practicing-Piping"><a href="#Practicing-Piping" class="headerlink" title="Practicing Piping"></a>Practicing Piping</h3><p>1.重定向输出 &gt;</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">hacker@dojo:~$ echo hi &gt; asdf<br></code></pre></td></tr></table></figure>
+<p>You start a program with the <code>starti</code> command:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs gdb">(gdb) starti<br></code></pre></td></tr></table></figure>
 
-<p>2.命令输出的重定向</p>
-<p>3.&gt;总是回创造一个新的重定向输出文件，同时删除内容，&gt;&gt;可以追加重定向</p>
-<p>4.文件描述符</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs shell">FD 0:标准输入#默认指向键盘输入<br>FD 1:标准输出#和正常情况相同<br>FD 2:标准错误#输入错误信息<br></code></pre></td></tr></table></figure>
+<p><code>starti</code> <strong>start</strong>s the program at the very first <strong>i</strong>nstruction. Give it a try now, and we’ll configure gdb to magically extract the secret value once the program is running.</p>
+<h4 id="翻译-2"><a href="#翻译-2" class="headerlink" title="翻译"></a>翻译</h4><p>调试器（包括gdb）通过观察被调试程序的运行状态来揭示其运行时行为信息。在上一关卡中，我们已自动为你启动程序。现在我们将适当减少自动化操作：你需要手动启动程序运行，其余工作（例如从中提取密钥值）将由我们完成。</p>
+<p>当你启动gdb后，最终会看到如下命令提示符：</p>
+<p>(gdb)<br>你可以使用starti命令启动程序：</p>
+<p>(gdb) starti<br>starti会从第一条指令开始启动程序。现在请尝试使用该命令，当程序运行后，我们将配置gdb自动提取密钥值。</p>
+<h4 id="SOLVE-2"><a href="#SOLVE-2" class="headerlink" title="SOLVE"></a>SOLVE</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><code class="hljs shell">hacker@introspecting~starting-programs-in-gdb:~$ gdb<br>You called gdb without any arguments. Please provide it the filename!<br>hacker@introspecting~starting-programs-in-gdb:~$ gdb /challenge/debug-me <br>GNU gdb (Ubuntu 9.2-0ubuntu1~20.04.2) 9.2<br>Copyright (C) 2020 Free Software Foundation, Inc.<br>License GPLv3+: GNU GPL version 3 or later &lt;http://gnu.org/licenses/gpl.html&gt;<br>This is free software: you are free to change and redistribute it.<br>There is NO WARRANTY, to the extent permitted by law.<br>Type &quot;show copying&quot; and &quot;show warranty&quot; for details.<br>This GDB was configured as &quot;x86_64-linux-gnu&quot;.<br>Type &quot;show configuration&quot; for configuration details.<br>For bug reporting instructions, please see:<br>&lt;http://www.gnu.org/software/gdb/bugs/&gt;.<br>Find the GDB manual and other documentation resources online at:<br>    &lt;http://www.gnu.org/software/gdb/documentation/&gt;.<br><br>For help, type &quot;help&quot;.<br>Type &quot;apropos word&quot; to search for commands related to &quot;word&quot;...<br>Reading symbols from /challenge/debug-me...<br>(No debugging symbols found in /challenge/debug-me)<br>(gdb) starti<br><br><br>You successfully started your program!<br>Here is the secret number: 5504<br>Submit that with /challenge/submit-number. Goodbye!<br>hacker@introspecting~starting-programs-in-gdb:~$ ^C<br>hacker@introspecting~starting-programs-in-gdb:~$ /challenge/submit-number 5504<br>CORRECT! Here is your flag:<br>pwn.college&#123;85CkzA1pGbgDmiesMRR6QRABvB4.QXyMjM1EDLxYDNzgzW&#125;<br>hacker@introspecting~starting-programs-in-gdb:~$ <br></code></pre></td></tr></table></figure>
 
-<p>5.重定向输入 &lt;</p>
-<p>6.grep</p>
-<p>7.grep实时输出的信息   |</p>
-<p>8.grep标准错误信息</p>
-<p>9.&gt;&amp;操作符，将一个文件描述符重定向给另一个文件描述符</p>
-<p>10.tee，T型分叉器，可以将管道上的数据复制到命令行上的任意数量的文件中去</p>
-<p>11.tee的更多用法</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell">hacker@dojo:~$ echo HACK | tee THE &gt; PLANET#将数据复制到两个文件中<br>hacker@dojo:~$ echo HACK | tee THE | cat#将数据复制到文件和命令<br></code></pre></td></tr></table></figure>
-
-<p>进程替换</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs shell">hacker@dojo:~$ echo &gt;(rev)<br>/dev/fd/63<br>hacker@dojo:~$<br></code></pre></td></tr></table></figure>
-
-<p>写入一个参数</p>
-<p>会将其输入连接到一个临时文件（它会创建）</p>
-<p>这不是一个真正的文件，它被称为<strong>命名管道</strong>，因为他有一个文件名</p>
-<p>随后bash会把命名管道文件的路径连接到rev</p>
-<p>示例及其过程：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs shell">hacker@dojo:~$ echo HACK | rev<br>KCAH<br>hacker@dojo:~$ echo HACK | tee &gt;(rev)<br>HACK<br>KCAH<br></code></pre></td></tr></table></figure>
-
-<ol>
-<li>bash 启动了 <code>rev</code> 命令，并将一个命名管道（可能是 <code>/dev/fd/63</code>）连接到 <code>rev</code> 的标准输入。</li>
-<li>bash 启动了 <code>tee</code> 命令，将管道连接到它的标准输入，并将 <code>tee</code> 的第一个参数替换为 <code>/dev/fd/63</code>。<code>tee</code> 甚至没有看到参数 <code>&gt;(rev)</code>； shell 在启动 <code>tee</code> 之前已经替换了它。</li>
-<li>bash 使用 <code>echo</code> 内置命令将 <code>HACK</code> 写入 <code>tee</code> 的标准输入。</li>
-<li><code>tee</code> 读取了 <code>HACK</code>，将其写入标准输出，然后写入 <code>/dev/fd/63</code>（它连接到 <code>rev</code> 的标准输入）。</li>
-<li><code>rev</code> 从其标准输入读取 <code>HACK</code>，将其反转，并将 <code>KCAH</code> 写入标准输出。</li>
-</ol>
-<p>12.综合利用</p>
-<h3 id="Shell-Variables"><a href="#Shell-Variables" class="headerlink" title="Shell Variables"></a>Shell Variables</h3><p>1.$变量名，存储在shell的工作目录路径中</p>
-<p>2.也可以用&#x3D;为变量赋值，注意&#x3D;周围不能有空格</p>
-<p>3.空格不能随便使用，复制后使用空格后的部分会被识别为命令</p>
-<p>若要为变量的值赋出含空格的内容可以参考</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">hacker@dojo:~$ VAR=&quot;1337 SAUCE&quot;<br></code></pre></td></tr></table></figure>
-
-<p>4.$最小提示符[shell]</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs shell">hacker@dojo:~$ VAR=1337<br>hacker@dojo:~$ echo &quot;VAR is: $VAR&quot;<br>VAR is: 1337<br>hacker@dojo:~$ sh<br><span class="hljs-meta prompt_">$ </span><span class="language-bash"><span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;VAR is: <span class="hljs-variable">$VAR</span>&quot;</span></span><br>VAR is: <br></code></pre></td></tr></table></figure>
-
-<p>5.env命令：打印出你在 Shell 中设置的所有导出变量</p>
-<p>6.命令替换</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs shell">hacker@dojo:~$ FLAG=$(cat /flag)<br>hacker@dojo:~$ echo &quot;$FLAG&quot;<br>pwn.college&#123;blahblahblah&#125;<br>hacker@dojo:~$<br></code></pre></td></tr></table></figure>
-
-<p>7.内置read函数读取标准数据</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs shell">hacker@dojo:~$ read -p &quot;INPUT: &quot; MY_VARIABLE<br>INPUT: Hello!<br>hacker@dojo:~$ echo &quot;You entered: $MY_VARIABLE&quot;<br>OUTPUT: You entered: Hello!<br></code></pre></td></tr></table></figure>
-
-<p>8.综合考察</p>
 
                 
               </div>
@@ -431,6 +372,13 @@
   <a href="/categories/CTF-PWN/pwn-college/" class="category-chain-item">pwn.college</a>
   
   
+    <span>></span>
+    
+  <a href="/categories/CTF-PWN/pwn-college/Computer-101/" class="category-chain-item">Computer 101</a>
+  
+  
+
+  
 
   
 
@@ -450,8 +398,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>Linux Luminarium</div>
-      <div>http://example.com/Linux Luminarium/</div>
+      <div>Software Introspection</div>
+      <div>http://example.com/Software Introspection/</div>
     </div>
     <div class="license-meta">
       
@@ -495,9 +443,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/Assembly%20Crash%20Course/" title="Assembly Crash Course">
+                      <a href="/Linux%20Luminarium/" title="Linux Luminarium">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Assembly Crash Course</span>
+                        <span class="hidden-mobile">Linux Luminarium</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -505,8 +453,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/Software%20Introspection/" title="Software Introspection">
-                        <span class="hidden-mobile">Software Introspection</span>
+                      <a href="/Your%20First%20Program/" title="Your First Program">
+                        <span class="hidden-mobile">Your First Program</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
